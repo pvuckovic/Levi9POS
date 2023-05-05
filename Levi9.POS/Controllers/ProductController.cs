@@ -20,7 +20,6 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<ProductDTO>> GetProductById(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);

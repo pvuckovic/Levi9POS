@@ -1,5 +1,7 @@
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DBContext;
+using Levi9.POS.Domain.Repository;
+using Levi9.POS.Domain.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +16,9 @@ builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(
 
 
 //register Product Repository
-builder.Services.AddScoped<IProductRepository,IProductRepository>();
+builder.Services.AddScoped<IProductRepository,ProductRepository>();
 //register Product Services
-builder.Services.AddScoped<IProductService,IProductService>();
+builder.Services.AddScoped<IProductService,ProductService>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -35,6 +37,22 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var dbContext = services.GetRequiredService<DataBaseContext>();
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+}
 
 app.MapControllers();
 
