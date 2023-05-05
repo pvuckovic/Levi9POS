@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Levi9.POS.Data.Migrations/Migrations
+/Levi9.POS/appsettings.json
