@@ -2,7 +2,6 @@
 
 namespace Levi9.POS.Domain.Models
 {
-
     public class Client
     {
         [Required]
@@ -16,7 +15,7 @@ namespace Levi9.POS.Domain.Models
         [Required]
         [StringLength(255)]
         public string Address { get; set; }
-        [Required]
+        [Required]       
         [StringLength(150)]
         public string Email { get; set; }
         [Required]

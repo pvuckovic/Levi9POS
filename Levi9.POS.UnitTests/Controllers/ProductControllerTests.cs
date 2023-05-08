@@ -2,7 +2,7 @@
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.WebApi.Controllers;
-using Levi9.POS.WebApi.Mappings;
+using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
