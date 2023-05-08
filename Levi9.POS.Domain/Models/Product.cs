@@ -11,18 +11,18 @@ namespace Levi9.POS.Domain.Models
         public Guid GlobalId { get; set; }
         [Required]
         [StringLength(50)]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
         [Required]
-        public string ProductImageUrl { get; set; } = string.Empty;
+        public string ProductImageUrl { get; set; }
         [Required]
         [Range(0, int.MaxValue)]
         public int AvailableQuantity { get; set; }
         [Required]
         [StringLength(18, MinimumLength = 18)]
-        public string LastUpdate { get; set; } = string.Empty;
+        public string LastUpdate { get; set; }
         [Required]
         [Range(0, float.MaxValue)]
         public float Price { get; set; }
-        public List<ProductDocument> ProductDocuments { get; set; } = new List<ProductDocument>();
+        public List<ProductDocument> ProductDocuments { get; set; }
     }
 }
