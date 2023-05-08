@@ -1,14 +1,7 @@
 ﻿using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 
-namespace Levi9.POS.Data.Migrations
+namespace Levi9.POS.Domain
 {
     public class DataBaseContext : DbContext
     {
@@ -16,7 +9,7 @@ namespace Levi9.POS.Data.Migrations
         public DbSet<Product> Products { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<ProductDocument> ProductDocuments { get; set; }
-        public DataBaseContext(DbContextOptions<DataBaseContext> options): base(options)
+        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
         {
         }
 
@@ -27,11 +20,11 @@ namespace Levi9.POS.Data.Migrations
 
             modelBuilder.Entity<ProductDocument>()
                 .HasOne(e => e.Product)
-                .WithMany(e=>e.ProductDocuments)
+                .WithMany(e => e.ProductDocuments)
             .HasForeignKey(e => e.ProductId);
             modelBuilder.Entity<ProductDocument>()
                 .HasOne(e => e.Document)
-                .WithMany(e=>e.ProductDocuments)
+                .WithMany(e => e.ProductDocuments)
                 .HasForeignKey(e => e.DocumentId);
 
             modelBuilder.Entity<Client>()
