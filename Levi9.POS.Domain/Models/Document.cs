@@ -12,14 +12,14 @@ namespace Levi9.POS.Domain.Models
         [Required]
         public int ClientId { get; set; }
         [Required]
-        [StringLength(18,MinimumLength =18)]
+        [StringLength(18, MinimumLength = 18)]
         public string LastUpdate { get; set; }
         [Required]
         [StringLength(20)]
         public string DocumetType { get; set; }
         [Required]
         [StringLength(18, MinimumLength = 18)]
-        public string CreationDay { get;set; }
+        public string CreationDay { get; set; }
         public Client Client { get; set; }
         public List<ProductDocument> ProductDocuments { get; set; }
     }

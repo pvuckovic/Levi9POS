@@ -5,11 +5,11 @@ namespace Levi9.POS.Domain
 {
     public class DataBaseContext : DbContext
     {
-        public DbSet<Client>? Clients { get; set; }
-        public DbSet<Product>? Products { get; set; }
-        public DbSet<Document>? Documents { get; set; }
-        public DbSet<ProductDocument>? ProductDocuments { get; set; }
-        public DataBaseContext(DbContextOptions<DataBaseContext> options): base(options)
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<ProductDocument> ProductDocuments { get; set; }
+        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
         {
         }
 
@@ -20,11 +20,11 @@ namespace Levi9.POS.Domain
 
             modelBuilder.Entity<ProductDocument>()
                 .HasOne(e => e.Product)
-                .WithMany(e=>e.ProductDocuments)
+                .WithMany(e => e.ProductDocuments)
             .HasForeignKey(e => e.ProductId);
             modelBuilder.Entity<ProductDocument>()
                 .HasOne(e => e.Document)
-                .WithMany(e=>e.ProductDocuments)
+                .WithMany(e => e.ProductDocuments)
                 .HasForeignKey(e => e.DocumentId);
 
             modelBuilder.Entity<Client>()

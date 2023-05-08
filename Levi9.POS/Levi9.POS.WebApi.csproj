@@ -26,12 +26,4 @@
     <Folder Include="Request\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\acopr\OneDrive\Desktop\New folder\GIT\Levi9POS\Levi9.POS\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\acopr\OneDrive\Desktop\New folder\GIT\Levi9POS\Levi9.POS\.editorconfig" />
-  </ItemGroup>
-
 </Project>

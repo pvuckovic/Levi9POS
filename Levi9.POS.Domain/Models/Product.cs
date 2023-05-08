@@ -7,7 +7,7 @@ namespace Levi9.POS.Domain.Models
         [Required]
         [Key]
         public int Id { get; set; }
-        [Required]  
+        [Required]
         public Guid GlobalId { get; set; }
         [Required]
         [StringLength(50)]
