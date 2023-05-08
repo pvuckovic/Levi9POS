@@ -1,9 +1,8 @@
 ﻿using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DBContext;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Levi9.POS.Domain.Repository
+namespace Levi9.POS.Domain.Repositories
 {
     public class ProductRepository : IProductRepository
     {
@@ -17,6 +16,6 @@ namespace Levi9.POS.Domain.Repository
         public async Task<Product> GetProductByIdAsync(int id)
         {
             return await _dataBaseContext.Products.FirstOrDefaultAsync(p => p.Id == id);
-        }        
+        }
     }
 }

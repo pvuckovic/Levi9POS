@@ -1,4 +1,4 @@
-﻿namespace Levi9.POS.WebApi.Responses
+﻿namespace Levi9.POS.WebApi.Response
 {
     public class ProductResponse
     {
@@ -7,7 +7,7 @@
         public string Name { get; set; }
         public string ProductImageUrl { get; set; }
         public int AvailableQuantity { get; set; }
-        public string LastUpdate { get; set; } = string.Empty;
+        public string LastUpdate { get; set; }
         public float Price { get; set; }
     }
 }

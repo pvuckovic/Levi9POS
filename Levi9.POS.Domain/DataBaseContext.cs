@@ -1,7 +1,7 @@
 ﻿using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Levi9.POS.Domain.DBContext
+namespace Levi9.POS.Domain
 {
     public class DataBaseContext : DbContext
     {

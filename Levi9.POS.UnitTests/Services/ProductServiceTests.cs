@@ -2,7 +2,7 @@
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
-using Levi9.POS.Domain.Service;
+using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mappings;
 using Moq;
 using NUnit.Framework;

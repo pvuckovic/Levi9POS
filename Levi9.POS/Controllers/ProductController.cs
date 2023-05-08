@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common;
-using Levi9.POS.WebApi.Responses;
+using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Levi9.POS.WebApi.Controllers
@@ -21,10 +21,15 @@ namespace Levi9.POS.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest("Id must be a positive integer");
+            }
+
             var product = await _productService.GetProductByIdAsync(id);
             if (product == null)
             {
-                return NotFound();
+                return NotFound($"Product with Id {id} not found");
             }
 
             var productResponse = _mapper.Map<ProductResponse>(product);

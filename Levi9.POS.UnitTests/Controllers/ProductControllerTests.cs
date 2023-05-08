@@ -3,7 +3,7 @@ using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mappings;
-using Levi9.POS.WebApi.Responses;
+using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -74,9 +74,39 @@ namespace Levi9.POS.UnitTests.Controllers
             var result = await _productController.GetProductById(productId);
 
             // Assert
-            Assert.That(result, Is.InstanceOf<NotFoundResult>());
-            var notFoundResult = (NotFoundResult)result;
-            Assert.That(notFoundResult.StatusCode, Is.EqualTo(404));
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var notFoundResult = (NotFoundObjectResult)result;
+            Assert.That(notFoundResult.Value, Is.EqualTo($"Product with Id {productId} not found"));
+        }
+        [Test]
+        public async Task GetProductById_ReturnsBadRequest_WhenIdIsZero()
+        {
+            // Arrange
+            int productId = 0;
+            var controller = new ProductController(_productServiceMock.Object, _mapper);
+
+            // Act
+            var result = await controller.GetProductById(productId);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            var badRequestResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestResult.Value, Is.EqualTo("Id must be a positive integer"));
+        }
+        [Test]
+        public async Task GetProductById_ReturnsBadRequest_WhenIdIsNegative()
+        {
+            // Arrange
+            int productId = -1;
+            var controller = new ProductController(_productServiceMock.Object, _mapper);
+
+            // Act
+            var result = await controller.GetProductById(productId);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            var badRequestResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestResult.Value, Is.EqualTo("Id must be a positive integer"));
         }
 
     }

@@ -6,5 +6,4 @@ namespace Levi9.POS.Domain.Common
     {
         Task<ProductDTO> GetProductByIdAsync(int id);
     }
-
 }
