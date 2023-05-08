@@ -1,4 +1,5 @@
-﻿using Levi9.POS.Domain.Common;
+﻿using AutoMapper;
+using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,11 @@ namespace Levi9.POS.Domain.Service
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-        public ProductService(IProductRepository productRepository)
+        private readonly IMapper _mapper;
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
         public async Task<ProductDTO> GetProductByIdAsync(int id)
         {
@@ -23,16 +26,7 @@ namespace Levi9.POS.Domain.Service
                 return null;
             }
 
-            var productDTO = new ProductDTO
-            {
-                Id = product.Id,
-                GlobalId = product.GlobalId,
-                Name = product.Name,
-                ProductImageUrl = product.ProductImageUrl,
-                AvailableQuantity = product.AvailableQuantity,
-                LastUpdate = product.LastUpdate,
-                Price = product.Price
-            };
+            var productDTO = _mapper.Map<ProductDTO>(product);
 
             return productDTO;
         }

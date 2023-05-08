@@ -1,4 +1,5 @@
-﻿using Levi9.POS.Domain;
+﻿using AutoMapper;
+using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
@@ -13,10 +14,12 @@ namespace Levi9.POS.WebApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IMapper _mapper;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IMapper mapper)
         {
             _productService = productService;
+            _mapper = mapper;
         }
 
         [HttpGet("{id}")]
@@ -27,8 +30,9 @@ namespace Levi9.POS.WebApi.Controllers
             {
                 return NotFound();
             }
-
-            return Ok(product);
+            
+            var productDTO = _mapper.Map<ProductDTO>(product);
+            return Ok(productDTO);
         }
     }
 }

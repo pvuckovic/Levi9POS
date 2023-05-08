@@ -2,6 +2,8 @@ using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DBContext;
 using Levi9.POS.Domain.Repository;
 using Levi9.POS.Domain.Service;
+using Levi9.POS.WebApi.Mappings;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,9 @@ builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+// Register Auto Mapper
+builder.Services.AddAutoMapper(typeof(Program)); 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 //register Product Repository
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
