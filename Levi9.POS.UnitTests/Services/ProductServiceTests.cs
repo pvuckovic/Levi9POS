@@ -6,11 +6,6 @@ using Levi9.POS.Domain.Service;
 using Levi9.POS.WebApi.Mappings;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Levi9.POS.UnitTests.Services
 {

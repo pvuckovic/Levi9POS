@@ -3,7 +3,6 @@ using Levi9.POS.Domain.DBContext;
 using Levi9.POS.Domain.Repository;
 using Levi9.POS.Domain.Service;
 using Levi9.POS.WebApi.Mappings;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

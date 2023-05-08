@@ -1,19 +1,12 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
-using Levi9.POS.Domain.Models;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mappings;
 using Levi9.POS.WebApi.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Levi9.POS.UnitTests.Controllers
 {

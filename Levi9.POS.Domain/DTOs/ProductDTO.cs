@@ -1,12 +1,4 @@
-﻿using Levi9.POS.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Levi9.POS.Domain.DTOs
+﻿namespace Levi9.POS.Domain.DTOs
 {
     public class ProductDTO
     {

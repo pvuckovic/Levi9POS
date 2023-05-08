@@ -1,12 +1,5 @@
 ﻿using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 
 namespace Levi9.POS.Domain.DBContext
 {
