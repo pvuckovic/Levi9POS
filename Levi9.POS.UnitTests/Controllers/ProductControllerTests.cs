@@ -16,6 +16,7 @@ namespace Levi9.POS.UnitTests.Controllers
     public class ProductControllerTests
     {
         private Mock<IProductService> _productServiceMock;
+        private Mock<IMapper> _mapperMock;
         private ProductController _productController;
 
         [SetUp]
