@@ -1,4 +1,8 @@
-using Levi9.POS.Data.Migrations;
+using Levi9.POS.Domain;
+using Levi9.POS.Domain.Common;
+using Levi9.POS.Domain.Repositories;
+using Levi9.POS.Domain.Services;
+using Levi9.POS.WebApi.Mapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +17,10 @@ builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 
 var app = builder.Build();
 

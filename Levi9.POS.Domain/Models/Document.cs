@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.SymbolStore;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Levi9.POS.Domain.Models
 {
@@ -20,19 +13,14 @@ namespace Levi9.POS.Domain.Models
         public int ClientId { get; set; }
         [Required]
         [StringLength(18,MinimumLength =18)]
-        public string LastUpdate { get; set; } = string.Empty;
+        public string LastUpdate { get; set; }
         [Required]
         [StringLength(20)]
-        public string DocumetType { get; set; }= string.Empty;
+        public string DocumetType { get; set; }
         [Required]
         [StringLength(18, MinimumLength = 18)]
-        public string CreationDay { get;set; } = string.Empty;
-
-
-
-
-
-        public Client Client { get; set; } = null!;
-        public List<ProductDocument> ProductDocuments { get; set; } = new List<ProductDocument>();
+        public string CreationDay { get;set; }
+        public Client Client { get; set; }
+        public List<ProductDocument> ProductDocuments { get; set; }
     }
 }
