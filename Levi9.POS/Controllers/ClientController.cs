@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
+using Levi9.POS.WebApi.Request;
 using Levi9.POS.WebApi.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Levi9.POS.WebApi.Controllers
@@ -14,8 +14,6 @@ namespace Levi9.POS.WebApi.Controllers
 
         private readonly IClientService _clientService;
         private readonly IMapper _mapper;
-
-
         public ClientController(IClientService clientService, IMapper mapper)
         {
             _clientService = clientService;
@@ -23,13 +21,12 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AddClientResponse>> AddClient(AddClientDto addClientDto)
+        public async Task<ActionResult<ClientResponse>> AddClient(ClientRequest clientRequest)
         {
-            var newClient = await _clientService.AddClient(addClientDto);
+            AddClientDto clientMap = _mapper.Map<AddClientDto>(clientRequest);
+            AddClientDto clientDto = await _clientService.AddClient(clientMap);
 
-            var addClientResponse = _mapper.Map<AddClientResponse>(newClient);
-
-            return CreatedAtAction(nameof(addClientResponse), new { id = addClientResponse.Id }, addClientResponse);
+            return Ok(_mapper.Map<ClientResponse>(clientDto));
         }
     }
 }

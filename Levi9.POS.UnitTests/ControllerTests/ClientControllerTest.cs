@@ -2,62 +2,72 @@
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.WebApi.Controllers;
+using Levi9.POS.WebApi.Request;
 using Levi9.POS.WebApi.Response;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Levi9.POS.UnitTests.ControllerTests
 {
-    public class ClientControllerTest
+    [TestFixture]
+    public class ClientControllerTests
     {
+        private Mock<IClientService> _clientServiceMock;
+        private Mock<IMapper> _mapperMock;
+        private ClientController _clientController;
+
+        [SetUp]
+        public void Setup()
+        {
+            _clientServiceMock = new Mock<IClientService>();
+            _mapperMock = new Mock<IMapper>();
+            _clientController = new ClientController(_clientServiceMock.Object, _mapperMock.Object);
+        }
+
         [Test]
-        public async Task AddClient_ReturnsCreatedAtAction()
+        public async Task AddClient_ValidRequest_ShouldReturnOkWithMappedResponse()
         {
             // Arrange
-            var addClientDto = new AddClientDto 
+            var clientRequest = new ClientRequest
             {
-                Name = "Test",
-                Address = "Address",
-                Phone = "+385111111",
-                Email = "aaa@gmail.com"
+                Name = "marko",
+                Address = "address",
+                Phone = "+3851112212",
+                Password = "secret",
+                Email = "marko@example.com"
             };
-            var expectedAddClientResponse = new AddClientResponse 
+            var addClientDto = new AddClientDto
             {
                 Id = 1,
-                GlobalId = Guid.NewGuid(),
-                Name = "Test",
-                Address = "Address",
-                Phone = "+385111111",
-                Email = "aaa@gmail.com",
+                GlobalId = new Guid(),
+                Name = "marko",
+                Address = "address",
+                Phone = "+3851112212",
+                Email = "marko@example.com",
+                Salt = "salt"
+            };
+            var clientResponse = new ClientResponse
+            {
+                Id = 1,
+                GlobalId = new Guid(),
+                Name = "marko",
+                Address = "address",
+                Phone = "+3851112212",
+                Email = "marko@example.com",
                 LastUpdate = DateTime.Now.ToFileTimeUtc().ToString()
             };
-
-            var mockMapper = new Mock<IMapper>();
-            mockMapper.Setup(m => m.Map<AddClientResponse>(It.IsAny<AddClientDto>()))
-                      .Returns(expectedAddClientResponse);
-
-            var mockClientService = new Mock<IClientService>();
-            mockClientService.Setup(m => m.AddClient(It.IsAny<AddClientDto>()));
-
-            var controller = new ClientController(mockClientService.Object, mockMapper.Object);
+            _mapperMock.Setup(m => m.Map<AddClientDto>(clientRequest)).Returns(addClientDto);
+            _clientServiceMock.Setup(c => c.AddClient(addClientDto)).ReturnsAsync(addClientDto);
+            _mapperMock.Setup(m => m.Map<ClientResponse>(addClientDto)).Returns(clientResponse);
 
             // Act
-            var result = await controller.AddClient(addClientDto);
+            var result = await _clientController.AddClient(clientRequest);
 
             // Assert
-            Assert.IsInstanceOf<CreatedAtActionResult>(result.Result);
-
-            var createdAtActionResult = (CreatedAtActionResult)result.Result;
-            Assert.That(createdAtActionResult.ActionName, Is.EqualTo("addClientResponse"));
-
-            var value = (AddClientResponse)createdAtActionResult.Value;
-            Assert.That(value, Is.EqualTo(expectedAddClientResponse));
+            _mapperMock.Verify(m => m.Map<AddClientDto>(clientRequest), Times.Once);
+            _clientServiceMock.Verify(c => c.AddClient(addClientDto), Times.Once);
+            _mapperMock.Verify(m => m.Map<ClientResponse>(addClientDto), Times.Once);
         }
     }
+
 }

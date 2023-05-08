@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
-using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Service;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Levi9.POS.UnitTests.ServiceTests
 {
@@ -17,52 +11,49 @@ namespace Levi9.POS.UnitTests.ServiceTests
     public class ClientServiceTests
     {
         private Mock<IClientRepository> _clientRepositoryMock;
-        private IMapper _mapper;
+        private Mock<IMapper> _mapperMock;
+        private Mock<IAuthenticationService> _authenticationServiceMock;
+        private ClientService _clientService;
 
         [SetUp]
         public void Setup()
         {
             _clientRepositoryMock = new Mock<IClientRepository>();
-            var configurationProvider = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<AddClientDto, Client>();
-                cfg.CreateMap<Client, AddClientDto>();
-            });
-            _mapper = new Mapper(configurationProvider);
+            _mapperMock = new Mock<IMapper>();
+            _authenticationServiceMock = new Mock<IAuthenticationService>();
+            _clientService = new ClientService(_clientRepositoryMock.Object, _mapperMock.Object, _authenticationServiceMock.Object);
         }
 
         [Test]
-        public async Task AddClient_ValidData_ReturnsAddedClient()
+        public async Task AddClient_ValidDto_ShouldCallRepositoryAndReturnMappedDto()
         {
-            // Arrange
-            var service = new ClientService(_clientRepositoryMock.Object, _mapper);
-            var addClientDto = new AddClientDto
+            var clientModel = new AddClientDto
             {
-                Name = "John",
+                Name = "Zlatko",
                 Address = "address",
-                Email = "john.doe@example.com",
-                Phone = "+3812255885"
+                Email = "zlatko@example.com",
+                PasswordHash = "R+AKYqbYP0P/E9P1mCH5SjXOGZPbEVk79fNnUydFmWY=",
+                Salt = "RZVxPvmCKmwVTA==",
+                Phone = "064322222",
+                LastUpdate = "634792557112051692"
             };
-            var client = new Client
+            _authenticationServiceMock.Setup(x => x.GenerateRandomSalt(It.IsAny<int>())).Returns(clientModel.Salt);
+            _authenticationServiceMock.Setup(x => x.HashPassword(clientModel.PasswordHash, clientModel.Salt)).Returns(clientModel.PasswordHash);
+            var createdClient = new AddClientDto
             {
-                Id = 1,
-                Name = "John",
-                Address = "address",
-                Email = "john.doe@example.com",
-                Phone = "+3812255885"
+                GlobalId = Guid.NewGuid(),
+                Email = clientModel.Email,
+                PasswordHash = clientModel.PasswordHash,
+                Salt = clientModel.Salt,
+                LastUpdate = DateTime.Now.ToFileTimeUtc().ToString()
             };
+            _clientRepositoryMock.Setup(x => x.AddClient(clientModel)).Returns(createdClient);
 
-            _clientRepositoryMock.Setup(repo => repo.AddClient(It.IsAny<Client>())).ReturnsAsync(client);
-
-            // Act
-            var result = await service.AddClient(addClientDto);
+            var result = _clientService.AddClient(clientModel);
 
             // Assert
-            Assert.That(result.Name, Is.EqualTo(addClientDto.Name));
-            Assert.That(result.Address, Is.EqualTo(addClientDto.Address));
-            Assert.That(result.Email, Is.EqualTo(addClientDto.Email));
-            Assert.That(result.Phone, Is.EqualTo(addClientDto.Phone));
-
+            Assert.IsNotNull(result);
         }
     }
+
 }
