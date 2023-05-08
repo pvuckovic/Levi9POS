@@ -24,7 +24,9 @@ namespace Levi9.POS.Domain.Service
 
         public async Task<AddClientDto> AddClient(AddClientDto addClientDto)
         {
+            var guid = Guid.NewGuid();
             var client = _mapper.Map<Client>(addClientDto);
+            client.GlobalId = guid;
 
             await _clientRepository.AddClient(client);
 

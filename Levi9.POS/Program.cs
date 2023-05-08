@@ -1,5 +1,5 @@
+using Levi9.POS.Data.Migrations;
 using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DBContext;
 using Levi9.POS.Domain.Repository;
 using Levi9.POS.Domain.Service;
 using Microsoft.EntityFrameworkCore;

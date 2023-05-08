@@ -58,10 +58,10 @@ namespace Levi9.POS.UnitTests.ServiceTests
             var result = await service.AddClient(addClientDto);
 
             // Assert
-            Assert.AreEqual(addClientDto.Name, result.Name);
-            Assert.AreEqual(addClientDto.Address, result.Address);
-            Assert.AreEqual(addClientDto.Email, result.Email);
-            Assert.AreEqual(addClientDto.Phone, result.Phone);
+            Assert.That(result.Name, Is.EqualTo(addClientDto.Name));
+            Assert.That(result.Address, Is.EqualTo(addClientDto.Address));
+            Assert.That(result.Email, Is.EqualTo(addClientDto.Email));
+            Assert.That(result.Phone, Is.EqualTo(addClientDto.Phone));
 
         }
     }

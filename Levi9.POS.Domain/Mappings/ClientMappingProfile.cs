@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Levi9.POS.Domain.AutoMapper
 {
-    internal class ClientMappingProfile : Profile
+    public class ClientMappingProfile : Profile
     {
         public ClientMappingProfile() 
         {
