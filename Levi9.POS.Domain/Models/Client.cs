@@ -22,7 +22,7 @@ namespace Levi9.POS.Domain.Models
         [StringLength(50)]
         public string Phone { get; set; }
         [Required]
-        [StringLength(18,MinimumLength =18)]
+        [StringLength(18, MinimumLength = 18)]
         public string LastUpdate { get; set; }
         public List<Document> Documents { get; set; }
     }
