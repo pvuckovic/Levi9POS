@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
+using Levi9.POS.WebApi.Responses;
 
 namespace Levi9.POS.WebApi.Mappings
 {
@@ -14,6 +15,7 @@ namespace Levi9.POS.WebApi.Mappings
         private void ConfigureMappings()
         {
             CreateMap<Product,ProductDTO>();
+            CreateMap<ProductDTO, ProductResponse>();
         }
     }
 }

@@ -4,6 +4,7 @@ using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mappings;
+using Levi9.POS.WebApi.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -21,6 +22,7 @@ namespace Levi9.POS.UnitTests.Controllers
     {
         private Mock<IProductService> _productServiceMock;
         private IMapper _mapper;
+        private ProductController _productController;
 
         [SetUp]
         public void Setup()
@@ -28,13 +30,15 @@ namespace Levi9.POS.UnitTests.Controllers
             _productServiceMock = new Mock<IProductService>();
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             _mapper = config.CreateMapper();
+            _productController = new ProductController(_productServiceMock.Object, _mapper);
+
         }
         [Test]
         public async Task GetProductById_ReturnsOkResult_WhenProductExists()
         {
             // Arrange
-            int productId = 1;
-            var product = new Product
+
+            var product = new ProductDTO
             {
                 Id = 1,
                 GlobalId = Guid.NewGuid(),
@@ -44,53 +48,42 @@ namespace Levi9.POS.UnitTests.Controllers
                 LastUpdate = "133277539861042364",
                 Price = 99.99f
             };
-            var expectedProductDTO = new ProductDTO
-            {
-                Id = 1,
-                GlobalId = product.GlobalId,
-                Name = product.Name,
-                ProductImageUrl = product.ProductImageUrl,
-                AvailableQuantity = product.AvailableQuantity,
-                LastUpdate = product.LastUpdate,
-                Price = product.Price
-            };
-            _productServiceMock.Setup(repo => repo.GetProductByIdAsync(productId))
-                .ReturnsAsync(expectedProductDTO);
-            var controller = new ProductController(_productServiceMock.Object, _mapper);
+
+            _productServiceMock.Setup(p => p.GetProductByIdAsync(product.Id))
+                                   .ReturnsAsync(product);
 
             // Act
-            var result = await controller.GetProductById(productId);
+            var result = await _productController.GetProductById(product.Id);
 
             // Assert
-            Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
-            var okResult = result.Result as OkObjectResult;
-            Assert.That(okResult.Value, Is.InstanceOf<ProductDTO>());
-            var productDTO = okResult.Value as ProductDTO;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var response = ((OkObjectResult)result).Value as ProductResponse;
+            Assert.That(response, Is.Not.Null);
             Assert.Multiple(() =>
             {
-                Assert.That(productDTO.Id, Is.EqualTo(expectedProductDTO.Id));
-                Assert.That(productDTO.GlobalId, Is.EqualTo(expectedProductDTO.GlobalId));
-                Assert.That(productDTO.Name, Is.EqualTo(expectedProductDTO.Name));
-                Assert.That(productDTO.ProductImageUrl, Is.EqualTo(expectedProductDTO.ProductImageUrl));
-                Assert.That(productDTO.AvailableQuantity, Is.EqualTo(expectedProductDTO.AvailableQuantity));
-                Assert.That(productDTO.LastUpdate, Is.EqualTo(expectedProductDTO.LastUpdate));
-                Assert.That(productDTO.Price, Is.EqualTo(expectedProductDTO.Price));
+                Assert.That(response.Id, Is.EqualTo(product.Id));
+                Assert.That(response.GlobalId, Is.EqualTo(product.GlobalId));
+                Assert.That(response.Name, Is.EqualTo(product.Name));
+                Assert.That(response.ProductImageUrl, Is.EqualTo(product.ProductImageUrl));
+                Assert.That(response.AvailableQuantity, Is.EqualTo(product.AvailableQuantity));
+                Assert.That(response.LastUpdate, Is.EqualTo(product.LastUpdate));
+                Assert.That(response.Price, Is.EqualTo(product.Price));
             });
         }
 
         [Test]
         public async Task GetProductById_ReturnsNotFoundResult_WhenProductDoesNotExist()
-        {
-            // Arrange
+        {// Arrange
             int productId = 1;
-            _productServiceMock.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(null as ProductDTO);
-            var controller = new ProductController(_productServiceMock.Object, _mapper);
+            _productServiceMock.Setup(x => x.GetProductByIdAsync(productId)).ReturnsAsync(null as ProductDTO);
 
             // Act
-            var result = await controller.GetProductById(productId);
+            var result = await _productController.GetProductById(productId);
 
             // Assert
-            Assert.That(result.Result, Is.InstanceOf<NotFoundResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+            var notFoundResult = (NotFoundResult)result;
+            Assert.That(notFoundResult.StatusCode, Is.EqualTo(404));
         }
 
     }

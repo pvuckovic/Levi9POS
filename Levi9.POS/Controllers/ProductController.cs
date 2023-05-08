@@ -3,6 +3,7 @@ using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
+using Levi9.POS.WebApi.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,16 +24,16 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductDTO>> GetProductById(int id)
+        public async Task<ActionResult> GetProductById(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
-            
-            var productDTO = _mapper.Map<ProductDTO>(product);
-            return Ok(productDTO);
+
+            var productResponse = _mapper.Map<ProductResponse>(product);
+            return Ok(productResponse);
         }
     }
 }
