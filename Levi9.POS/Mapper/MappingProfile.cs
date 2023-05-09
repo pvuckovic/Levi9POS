@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
+using Levi9.POS.WebApi.Request;
 using Levi9.POS.WebApi.Response;
 
 namespace Levi9.POS.WebApi.Mapper
@@ -22,6 +23,14 @@ namespace Levi9.POS.WebApi.Mapper
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.DocumentItems))
                 .ReverseMap();
             CreateMap<DocumentItemDTO, DocumentItemResponse>().ReverseMap();
+            CreateMap<DocumentRequest, CreateDocumentDTO>()
+                .ForMember(dest => dest.DocumentItems, opt => opt.MapFrom(src => src.Items))
+                .ReverseMap();
+            CreateMap<CreateDocumentDTO, Document>()
+                .ForMember(dest => dest.ProductDocuments, opt => opt.MapFrom(src => src.DocumentItems))
+                .ReverseMap();
+            CreateMap<DocumentItemRequest, CreateDocumentItemDTO>();
+            CreateMap<CreateDocumentItemDTO, ProductDocument>();
         }
     }
 }

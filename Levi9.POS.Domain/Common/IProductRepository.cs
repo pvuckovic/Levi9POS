@@ -4,6 +4,7 @@ namespace Levi9.POS.Domain.Common
 {
     public interface IProductRepository
     {
-        Task<Product> GetProductByIdAsync(int id);       
+        Task<Product> GetProductByIdAsync(int id);
+        public Task<bool> DoesProductExist(int productId, string name);
     }
 }

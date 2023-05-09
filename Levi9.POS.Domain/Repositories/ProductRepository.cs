@@ -1,6 +1,7 @@
 ﻿using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace Levi9.POS.Domain.Repositories
 {
@@ -16,6 +17,11 @@ namespace Levi9.POS.Domain.Repositories
         public async Task<Product> GetProductByIdAsync(int id)
         {
             return await _dataBaseContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+        }
+        public async Task<bool> DoesProductExist(int productId, string name)
+        {
+            var product = await _dataBaseContext.Products.FirstOrDefaultAsync(c => c.Id == productId && c.Name == name);
+            return product != null;
         }
     }
 }

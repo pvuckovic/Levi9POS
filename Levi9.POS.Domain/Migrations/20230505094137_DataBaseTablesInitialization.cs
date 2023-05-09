@@ -53,7 +53,7 @@ namespace Levi9.POS.Domain.Migrations
                     GlobalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
                     LastUpdate = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
-                    DocumetType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    DocumentType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreationDay = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false)
                 },
                 constraints: table =>

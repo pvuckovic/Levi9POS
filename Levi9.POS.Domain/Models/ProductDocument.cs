@@ -17,7 +17,5 @@ namespace Levi9.POS.Domain.Models
         public string Currency { get; set; }
         public Product Product { get; set; } 
         public Document Document { get; set; }
-
-
     }
 }
