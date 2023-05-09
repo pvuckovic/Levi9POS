@@ -53,10 +53,20 @@ namespace Levi9.POS.Domain.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -74,7 +84,9 @@ namespace Levi9.POS.Domain.Migrations
                             GlobalId = new Guid("c6029928-076f-44a4-a01f-37ad0e4b0e09"),
                             LastUpdate = "133280975643412338",
                             Name = "Marko",
-                            Phone = "+387 65 132 527"
+                            Password = "password",
+                            Phone = "+387 65 132 527",
+                            Salt = "Salt"
                         },
                         new
                         {
@@ -84,7 +96,9 @@ namespace Levi9.POS.Domain.Migrations
                             GlobalId = new Guid("606ea448-f69b-413f-9471-7e4a7912491a"),
                             LastUpdate = "133280975643412363",
                             Name = "Aleksa",
-                            Phone = "+387 64 862 476"
+                            Password = "password123",
+                            Phone = "+387 64 862 476",
+                            Salt = "Salt123"
                         },
                         new
                         {
@@ -94,7 +108,9 @@ namespace Levi9.POS.Domain.Migrations
                             GlobalId = new Guid("41c3ebae-ca20-43ea-b048-cf9489163f21"),
                             LastUpdate = "133280975643412379",
                             Name = "Milos",
-                            Phone = "+387 65 912 127"
+                            Password = "password123",
+                            Phone = "+387 65 912 127",
+                            Salt = "Salt123"
                         });
                 });
 

@@ -15,7 +15,7 @@ namespace Levi9.POS.Domain.Models
         [Required]
         [StringLength(255)]
         public string Address { get; set; }
-        [Required]       
+        [Required]
         [StringLength(150)]
         public string Email { get; set; }
         [Required]
@@ -24,6 +24,12 @@ namespace Levi9.POS.Domain.Models
         [Required]
         [StringLength(18, MinimumLength = 18)]
         public string LastUpdate { get; set; }
+        [Required]
+        [StringLength (100)]
+        public string PasswordHash { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string Salt { get; set; }
         public List<Document> Documents { get; set; }
     }
 }
