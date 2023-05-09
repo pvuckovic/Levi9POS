@@ -11,6 +11,5 @@
         public string LastUpdate { get; set; }
         public string PasswordHash { get; set; }
         public string Salt { get; set; }
-
     }
 }

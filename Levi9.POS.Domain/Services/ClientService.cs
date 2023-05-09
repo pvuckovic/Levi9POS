@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
-using Levi9.POS.Domain.Models;
+using Levi9.POS.Domain.Helpers;
 
 namespace Levi9.POS.Domain.Service
 {
@@ -9,21 +9,19 @@ namespace Levi9.POS.Domain.Service
     {
         private readonly IClientRepository _clientRepository;
         private readonly IMapper _mapper;
-        private readonly IAuthenticationService _authenticationService;
 
 
-        public ClientService(IClientRepository clientRepository, IMapper mapper, IAuthenticationService authenticationService)
+        public ClientService(IClientRepository clientRepository, IMapper mapper)
         {
             _clientRepository = clientRepository;
             _mapper = mapper;
-            _authenticationService = authenticationService;
         }
 
         public async Task<AddClientDto> AddClient(AddClientDto addClientDto)
         {
             addClientDto.GlobalId = Guid.NewGuid();
-            addClientDto.Salt = _authenticationService.GenerateRandomSalt();
-            addClientDto.PasswordHash = _authenticationService.HashPassword(addClientDto.PasswordHash, addClientDto.Salt);
+            addClientDto.Salt = AuthenticationHelper.GenerateRandomSalt();
+            addClientDto.PasswordHash = AuthenticationHelper.HashPassword(addClientDto.PasswordHash, addClientDto.Salt);
             addClientDto.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
 
             _clientRepository.AddClient(addClientDto);

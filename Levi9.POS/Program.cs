@@ -1,5 +1,6 @@
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DBContext;
+using Levi9.POS.Domain.Helpers;
 using Levi9.POS.Domain.Repository;
 using Levi9.POS.Domain.Service;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 
 var app = builder.Build();

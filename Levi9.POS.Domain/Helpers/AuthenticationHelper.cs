@@ -1,12 +1,11 @@
-﻿using Levi9.POS.Domain.Common;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Levi9.POS.Domain.Service
+namespace Levi9.POS.Domain.Helpers
 {
-    public class AuthenticationService : IAuthenticationService
+    public static class AuthenticationHelper
     {
-        public string HashPassword(string password, string salt)
+        public static string HashPassword(string password, string salt)
         {
             var bytes = Encoding.UTF8.GetBytes(password + salt);
             using (var sha256 = SHA256.Create())
@@ -16,7 +15,7 @@ namespace Levi9.POS.Domain.Service
             }
         }
 
-        public string GenerateRandomSalt(int length = 32)
+        public static string GenerateRandomSalt(int length = 32)
         {
             string randomString = Convert.ToBase64String(RandomNumberGenerator.GetBytes(length));
             return new string(randomString);

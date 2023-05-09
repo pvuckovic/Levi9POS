@@ -21,7 +21,7 @@ namespace Levi9.POS.UnitTests.ServiceTests
             _clientRepositoryMock = new Mock<IClientRepository>();
             _mapperMock = new Mock<IMapper>();
             _authenticationServiceMock = new Mock<IAuthenticationService>();
-            _clientService = new ClientService(_clientRepositoryMock.Object, _mapperMock.Object, _authenticationServiceMock.Object);
+            _clientService = new ClientService(_clientRepositoryMock.Object, _mapperMock.Object);
         }
 
         [Test]
@@ -37,8 +37,6 @@ namespace Levi9.POS.UnitTests.ServiceTests
                 Phone = "064322222",
                 LastUpdate = "634792557112051692"
             };
-            _authenticationServiceMock.Setup(x => x.GenerateRandomSalt(It.IsAny<int>())).Returns(clientModel.Salt);
-            _authenticationServiceMock.Setup(x => x.HashPassword(clientModel.PasswordHash, clientModel.Salt)).Returns(clientModel.PasswordHash);
             var createdClient = new AddClientDto
             {
                 GlobalId = Guid.NewGuid(),

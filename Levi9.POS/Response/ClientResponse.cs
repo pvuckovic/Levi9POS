@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Levi9.POS.WebApi.Response
+﻿namespace Levi9.POS.WebApi.Response
 {
     public class ClientResponse
     {
