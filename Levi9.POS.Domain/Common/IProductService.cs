@@ -5,5 +5,6 @@ namespace Levi9.POS.Domain.Common
     public interface IProductService
     {
         Task<ProductDTO> GetProductByIdAsync(int id);
+        Task<IEnumerable<ProductDTO>> SearchProductsAsync(ProductSearchRequestDTO request);
     }
 }

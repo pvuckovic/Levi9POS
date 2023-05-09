@@ -2,7 +2,7 @@ using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.Repositories;
 using Levi9.POS.Domain.Services;
-using Levi9.POS.WebApi.Mappings;
+using Levi9.POS.WebApi.Mapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

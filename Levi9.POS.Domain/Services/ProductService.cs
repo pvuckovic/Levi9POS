@@ -25,5 +25,12 @@ namespace Levi9.POS.Domain.Services
 
             return productDTO;
         }
+        public async Task<IEnumerable<ProductDTO>> SearchProductsAsync(ProductSearchRequestDTO requestDTO)
+        {
+            var products = await _productRepository.SearchProductsAsync(requestDTO.Page, requestDTO.Name, requestDTO.OrderBy, requestDTO.Direction);
+            var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
+            return productDTOs;
+        }
     }
 }
