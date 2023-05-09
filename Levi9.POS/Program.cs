@@ -1,8 +1,8 @@
+using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DBContext;
-using Levi9.POS.Domain.Helpers;
-using Levi9.POS.Domain.Repository;
-using Levi9.POS.Domain.Service;
+using Levi9.POS.Domain.Repositories;
+using Levi9.POS.Domain.Services;
+using Levi9.POS.WebApi.Mapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +18,11 @@ builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IClientRepository, ClientRepository>();
-builder.Services.AddScoped<IClientService, ClientService>();
-
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 
