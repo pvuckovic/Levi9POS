@@ -14,19 +14,15 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
-
-// Register Auto Mapper
-builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
-
-//register Product Repository
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-//register Product Services
-builder.Services.AddScoped<IProductService, ProductService>();
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 
