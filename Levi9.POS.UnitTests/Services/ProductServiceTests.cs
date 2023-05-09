@@ -23,6 +23,7 @@ namespace Levi9.POS.UnitTests.Services
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
             _productService = new ProductService(_productRepositoryMock.Object, _mapper);
         }
+        #region GetProductByIdAsync Tests
         [Test]
         public async Task GetProductByIdAsync_WithExistingProductId_ReturnsProductDTO()
         {
@@ -69,6 +70,8 @@ namespace Levi9.POS.UnitTests.Services
             // Assert
             Assert.That(result, Is.Null);
         }
+        #endregion
+        #region SearchProductsAsync Tests
         [Test]
         public async Task SearchProductsAsync_ReturnsListOfProductDTOs()
         {
@@ -210,7 +213,6 @@ namespace Levi9.POS.UnitTests.Services
             Assert.That(result, Is.InstanceOf<IEnumerable<ProductDTO>>());
             Assert.That(result.Any(), Is.False);
         }
-
-
+        #endregion
     }
 }

@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
-using Levi9.POS.Domain.Models;
-using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Request;
 using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestPlatform.Common;
 using Moq;
 using NUnit.Framework;
 
@@ -68,7 +65,6 @@ namespace Levi9.POS.UnitTests.Controllers
                 Assert.That(response.Price, Is.EqualTo(product.Price));
             });
         }
-
         [Test]
         public async Task GetProductById_ReturnsNotFoundResult_WhenProductDoesNotExist()
         {// Arrange
