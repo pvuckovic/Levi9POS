@@ -1,5 +1,6 @@
 using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
+using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.Repositories;
 using Levi9.POS.Domain.Repository;
 using Levi9.POS.Domain.Service;
@@ -23,11 +24,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
 
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

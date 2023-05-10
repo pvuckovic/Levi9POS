@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
-
+using Levi9.POS.Domain.Common.IProduct;
+using Levi9.POS.Domain.DTOs.ProductDTOs;
 namespace Levi9.POS.Domain.Services
 {
     public class ProductService : IProductService
@@ -24,6 +23,13 @@ namespace Levi9.POS.Domain.Services
             var productDTO = _mapper.Map<ProductDTO>(product);
 
             return productDTO;
+        }
+        public async Task<IEnumerable<ProductDTO>> SearchProductsAsync(ProductSearchRequestDTO requestDTO)
+        {
+            var products = await _productRepository.SearchProductsAsync(requestDTO.Page, requestDTO.Name, requestDTO.OrderBy, requestDTO.Direction);
+            var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
+            return productDTOs;
         }
     }
 }

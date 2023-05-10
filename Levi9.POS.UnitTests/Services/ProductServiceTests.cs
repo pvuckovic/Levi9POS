@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
+using Levi9.POS.Domain.Common.IProduct;
+using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mapper;
 using Moq;
 using NUnit.Framework;
-
 namespace Levi9.POS.UnitTests.Services
 {
     [TestFixture]
@@ -20,10 +19,10 @@ namespace Levi9.POS.UnitTests.Services
         public void Setup()
         {
             _productRepositoryMock = new Mock<IProductRepository>();
-            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<ProductMappingProfile>()).CreateMapper();
             _productService = new ProductService(_productRepositoryMock.Object, _mapper);
         }
-
+        #region GetProductByIdAsync Tests
         [Test]
         public async Task GetProductByIdAsync_WithExistingProductId_ReturnsProductDTO()
         {
@@ -57,7 +56,6 @@ namespace Levi9.POS.UnitTests.Services
                 Assert.That(result.Price, Is.EqualTo(product.Price));
             });
         }
-
         [Test]
         public async Task GetProductByIdAsync_WithNonExistingProductId_ReturnsNull()
         {
@@ -71,5 +69,149 @@ namespace Levi9.POS.UnitTests.Services
             // Assert
             Assert.That(result, Is.Null);
         }
+        #endregion
+        #region SearchProductsAsync Tests
+        [Test]
+        public async Task SearchProductsAsync_ReturnsListOfProductDTOs()
+        {
+            // Arrange
+            var requestDTO = new ProductSearchRequestDTO
+            {
+                Page = 1,
+                Name = "search query",
+                OrderBy = "name",
+                Direction = "asc"
+            };
+            var expectedProducts = new List<Product>
+            {
+                new Product { 
+                    Id = 1,
+                    GlobalId = Guid.NewGuid(),
+                    Name = "Test Product 1",
+                    ProductImageUrl = "https://example.com/product1.jpg",
+                    AvailableQuantity = 10,
+                    LastUpdate = "133277539861042364",
+                    Price = 9.99f
+                },
+                new Product { 
+                    Id = 2,
+                    GlobalId = Guid.NewGuid(),
+                    Name = "Test Product 2",
+                    ProductImageUrl = "https://example.com/product2.jpg",
+                    AvailableQuantity = 10,
+                    LastUpdate = "133277539861042364",
+                    Price = 8.88f
+                }
+            };
+            _productRepositoryMock.Setup(x => x.SearchProductsAsync(requestDTO.Page, requestDTO.Name, requestDTO.OrderBy, requestDTO.Direction))
+                                  .ReturnsAsync(expectedProducts);
+            var expectedProductDTOs = new List<ProductDTO>
+            {
+                new ProductDTO {
+                    Id = 1,
+                    GlobalId = Guid.NewGuid(),
+                    Name = "Test Product 1",
+                    ProductImageUrl = "https://example.com/product1.jpg",
+                    AvailableQuantity = 10,
+                    LastUpdate = "133277539861042364",
+                    Price = 9.99f
+                },
+                new ProductDTO {
+                    Id = 2,
+                    GlobalId = Guid.NewGuid(),
+                    Name = "Test Product 2",
+                    ProductImageUrl = "https://example.com/product2.jpg",
+                    AvailableQuantity = 10,
+                    LastUpdate = "133277539861042364",
+                    Price = 8.88f
+                }
+            };
+           
+            // Act
+            var result = await _productService.SearchProductsAsync(requestDTO);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<IEnumerable<ProductDTO>>());
+            Assert.That(result.Count(), Is.EqualTo(expectedProductDTOs.Count));
+            Assert.That(result.First().Name, Is.EqualTo(expectedProductDTOs.First().Name));
+            Assert.That(result.Last().Price, Is.EqualTo(expectedProductDTOs.Last().Price));
+        }
+        [Test]
+        public async Task SearchProductsAsync_Returns_ProductDTOs()
+        {
+            // Arrange
+            var requestDTO = new ProductSearchRequestDTO
+            {
+                Page = 1,
+                Name = "test",
+                OrderBy = "price",
+                Direction = "asc"
+            };
+
+            var products = new List<Product>
+            {
+                new Product {
+                    Id = 1,
+                    GlobalId = Guid.NewGuid(),
+                    Name = "Test Product 1",
+                    ProductImageUrl = "https://example.com/product1.jpg",
+                    AvailableQuantity = 10,
+                    LastUpdate = "133277539861042364",
+                    Price = 9.99f
+                },
+                new Product {
+                    Id = 2,
+                    GlobalId = Guid.NewGuid(),
+                    Name = "Test Product 2",
+                    ProductImageUrl = "https://example.com/product2.jpg",
+                    AvailableQuantity = 10,
+                    LastUpdate = "133277539861042364",
+                    Price = 8.88f
+                }
+            };
+
+            _productRepositoryMock
+                .Setup(x => x.SearchProductsAsync(requestDTO.Page, requestDTO.Name, requestDTO.OrderBy, requestDTO.Direction))
+                .ReturnsAsync(products);
+
+            // Act
+            var result = await _productService.SearchProductsAsync(requestDTO);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<IEnumerable<ProductDTO>>());
+            Assert.That(result.Count(), Is.EqualTo(products.Count));
+            Assert.That(result.ElementAt(0).Id, Is.EqualTo(products[0].Id));
+            Assert.That(result.ElementAt(0).Name, Is.EqualTo(products[0].Name));
+            Assert.That(result.ElementAt(0).Price, Is.EqualTo(products[0].Price));
+            Assert.That(result.ElementAt(1).Id, Is.EqualTo(products[1].Id));
+            Assert.That(result.ElementAt(1).Name, Is.EqualTo(products[1].Name));
+            Assert.That(result.ElementAt(1).Price, Is.EqualTo(products[1].Price));
+        }
+        [Test]
+        public async Task SearchProductsAsync_Returns_Empty_List_When_No_Products_Found()
+        {
+            // Arrange
+            var requestDTO = new ProductSearchRequestDTO
+            {
+                Page = 1,
+                Name = "non-existing-product",
+                OrderBy = "price",
+                Direction = "asc"
+            };
+
+            var products = new List<Product>();
+
+            _productRepositoryMock.Setup(x => x.SearchProductsAsync(requestDTO.Page, requestDTO.Name, requestDTO.OrderBy, requestDTO.Direction))
+                .ReturnsAsync(products);
+
+            // Act
+            var result = await _productService.SearchProductsAsync(requestDTO);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<IEnumerable<ProductDTO>>());
+            Assert.That(result.Any(), Is.False);
+        }
+        #endregion
     }
 }
