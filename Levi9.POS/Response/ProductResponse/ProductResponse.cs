@@ -1,6 +1,6 @@
-﻿namespace Levi9.POS.Domain.DTOs
+﻿namespace Levi9.POS.WebApi.Response.ProductResponse
 {
-    public class ProductDTO
+    public class ProductResponse
     {
         public int Id { get; set; }
         public Guid GlobalId { get; set; }

@@ -20,8 +20,8 @@ namespace Levi9.POS.Domain.Migrations
                     Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastUpdate = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Salt = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    PasswordHash = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Salt = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,12 +98,12 @@ namespace Levi9.POS.Domain.Migrations
 
             migrationBuilder.InsertData(
                 table: "Clients",
-                columns: new[] { "Id", "Address", "Email", "GlobalId", "LastUpdate", "Name", "Password", "Phone", "Salt" },
+                columns: new[] { "Id", "Address", "Email", "GlobalId", "LastUpdate", "Name", "PasswordHash", "Phone", "Salt" },
                 values: new object[,]
                 {
-                    { 1, "1.maja, Derventa", "marko@gmail.com", new Guid("2c4661b9-897c-4053-80f8-dda5f382857c"), "133280217345321113", "Marko", "password", "+387 65 132 527", "Salt" },
-                    { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("7443ac60-8b5d-4786-9675-42b6f3c1ff7e"), "133280217345321135", "Aleksa", "password123", "+387 64 862 476", "Salt123" },
-                    { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("86e36676-8c8c-43ed-acf6-582c205d5ba2"), "133280217345321150", "Milos", "password123", "+387 65 912 127", "Salt123" }
+                    { 1, "1.maja, Derventa", "marko@gmail.com", new Guid("f6f8b863-0268-499b-afab-f4ca25f663e9"), "133281255386347709", "Marko", "password", "+387 65 132 527", "Salt" },
+                    { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("bb253e8c-6b2a-42df-81b9-114db11fa718"), "133281255386347718", "Aleksa", "password123", "+387 64 862 476", "Salt123" },
+                    { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("58854395-6000-4c8c-a54a-327aa0bfd2c8"), "133281255386347723", "Milos", "password123", "+387 65 912 127", "Salt123" }
                 });
 
             migrationBuilder.InsertData(
@@ -111,25 +111,25 @@ namespace Levi9.POS.Domain.Migrations
                 columns: new[] { "Id", "AvailableQuantity", "GlobalId", "LastUpdate", "Name", "Price", "ProductImageUrl" },
                 values: new object[,]
                 {
-                    { 1, 30, new Guid("d9da34a0-a6ec-4428-8674-c0fca1b43fc1"), "133280217345320737", "Levi 9 T-Shirt", 10f, "baseURL//nekiurl1.png" },
-                    { 2, 10, new Guid("b3f20159-45e9-4a3c-b5e5-725a99e63e6e"), "133280217345320844", "Novis T-Shirt", 15f, "baseURL//nekiurl2.png" },
-                    { 3, 20, new Guid("ca6962b5-7cd3-4709-8328-8878301e0155"), "133280217345320876", "Vega IT T-Shirt", 20f, "baseURL//nekiurl3.png" }
+                    { 1, 30, new Guid("5f99a16d-e789-4bfb-9623-e3dc29a3b8d0"), "133281255386347547", "Levi 9 T-Shirt", 10f, "baseURL//nekiurl1.png" },
+                    { 2, 10, new Guid("15b57178-fa2d-4748-87ca-18669139b6ed"), "133281255386347605", "Novis T-Shirt", 15f, "baseURL//nekiurl2.png" },
+                    { 3, 20, new Guid("8c9783c5-a267-4088-b5f8-738a2da49a88"), "133281255386347622", "Vega IT T-Shirt", 20f, "baseURL//nekiurl3.png" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Documents",
                 columns: new[] { "Id", "ClientId", "CreationDay", "DocumetType", "GlobalId", "LastUpdate" },
-                values: new object[] { 1, 1, "133280217345321182", "INVOICE", new Guid("f40d84b7-f90b-446a-b3dc-3caf22816436"), "133280217345321193" });
+                values: new object[] { 1, 1, "133281255386347739", "INVOICE", new Guid("67bead56-76b8-4082-95e8-c04a2732eb5a"), "133281255386347744" });
 
             migrationBuilder.InsertData(
                 table: "Documents",
                 columns: new[] { "Id", "ClientId", "CreationDay", "DocumetType", "GlobalId", "LastUpdate" },
-                values: new object[] { 2, 2, "133280217345321205", "INVOICE", new Guid("943546af-6640-4256-9c99-e26f89fcb885"), "133280217345321217" });
+                values: new object[] { 2, 2, "133281255386347749", "INVOICE", new Guid("e684a4ea-62f3-4f87-88cc-bdc389c9bcc1"), "133281255386347753" });
 
             migrationBuilder.InsertData(
                 table: "Documents",
                 columns: new[] { "Id", "ClientId", "CreationDay", "DocumetType", "GlobalId", "LastUpdate" },
-                values: new object[] { 3, 3, "133280217345321231", "INVOICE", new Guid("cb2d859d-59a6-44d8-93d7-059d4649cb77"), "133280217345321242" });
+                values: new object[] { 3, 3, "133281255386347758", "INVOICE", new Guid("f3e4739a-e4e0-4fb3-bab2-198d26531eef"), "133281255386347761" });
 
             migrationBuilder.InsertData(
                 table: "ProductDocuments",

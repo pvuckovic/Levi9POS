@@ -9,9 +9,7 @@ namespace Levi9.POS.WebApi.Mapper
     public class MappingProfile : Profile
     {
         public MappingProfile()
-        {
-            CreateMap<Product, ProductDTO>();
-            CreateMap<ProductDTO, ProductResponse>();
+        {           
             CreateMap<Document, DocumentDTO>()
                 .ForMember(dest => dest.DocumentItems, opt => opt.MapFrom(src => src.ProductDocuments))
                 .ReverseMap();

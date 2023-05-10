@@ -53,10 +53,10 @@ namespace Levi9.POS.Domain.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -65,8 +65,8 @@ namespace Levi9.POS.Domain.Migrations
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -81,10 +81,10 @@ namespace Levi9.POS.Domain.Migrations
                             Id = 1,
                             Address = "1.maja, Derventa",
                             Email = "marko@gmail.com",
-                            GlobalId = new Guid("c6029928-076f-44a4-a01f-37ad0e4b0e09"),
-                            LastUpdate = "133280975643412338",
+                            GlobalId = new Guid("f6f8b863-0268-499b-afab-f4ca25f663e9"),
+                            LastUpdate = "133281255386347709",
                             Name = "Marko",
-                            Password = "password",
+                            PasswordHash = "password",
                             Phone = "+387 65 132 527",
                             Salt = "Salt"
                         },
@@ -93,10 +93,10 @@ namespace Levi9.POS.Domain.Migrations
                             Id = 2,
                             Address = "Koste Racina 24, Novi Sad",
                             Email = "aleksa@gmail.com",
-                            GlobalId = new Guid("606ea448-f69b-413f-9471-7e4a7912491a"),
-                            LastUpdate = "133280975643412363",
+                            GlobalId = new Guid("bb253e8c-6b2a-42df-81b9-114db11fa718"),
+                            LastUpdate = "133281255386347718",
                             Name = "Aleksa",
-                            Password = "password123",
+                            PasswordHash = "password123",
                             Phone = "+387 64 862 476",
                             Salt = "Salt123"
                         },
@@ -105,10 +105,10 @@ namespace Levi9.POS.Domain.Migrations
                             Id = 3,
                             Address = "Strumicka 13, Novi Sad",
                             Email = "milos@gmail.com",
-                            GlobalId = new Guid("41c3ebae-ca20-43ea-b048-cf9489163f21"),
-                            LastUpdate = "133280975643412379",
+                            GlobalId = new Guid("58854395-6000-4c8c-a54a-327aa0bfd2c8"),
+                            LastUpdate = "133281255386347723",
                             Name = "Milos",
-                            Password = "password123",
+                            PasswordHash = "password123",
                             Phone = "+387 65 912 127",
                             Salt = "Salt123"
                         });
@@ -154,28 +154,28 @@ namespace Levi9.POS.Domain.Migrations
                         {
                             Id = 1,
                             ClientId = 1,
-                            CreationDay = "133280975643412437",
-                            DocumentType = "INVOICE",
-                            GlobalId = new Guid("87e4a1fc-469d-422e-9d7d-efbcdc7340e5"),
-                            LastUpdate = "133280975643412450"
+                            CreationDay = "133281255386347739",
+                            DocumetType = "INVOICE",
+                            GlobalId = new Guid("67bead56-76b8-4082-95e8-c04a2732eb5a"),
+                            LastUpdate = "133281255386347744"
                         },
                         new
                         {
                             Id = 2,
                             ClientId = 2,
-                            CreationDay = "133280975643412467",
-                            DocumentType = "INVOICE",
-                            GlobalId = new Guid("9be581d0-26ac-4d37-85ef-30c75ac2734c"),
-                            LastUpdate = "133280975643412479"
+                            CreationDay = "133281255386347749",
+                            DocumetType = "INVOICE",
+                            GlobalId = new Guid("e684a4ea-62f3-4f87-88cc-bdc389c9bcc1"),
+                            LastUpdate = "133281255386347753"
                         },
                         new
                         {
                             Id = 3,
                             ClientId = 3,
-                            CreationDay = "133280975643412494",
-                            DocumentType = "INVOICE",
-                            GlobalId = new Guid("0a60bdba-d6e5-43ae-9a03-8dd6982516d8"),
-                            LastUpdate = "133280975643412507"
+                            CreationDay = "133281255386347758",
+                            DocumetType = "INVOICE",
+                            GlobalId = new Guid("f3e4739a-e4e0-4fb3-bab2-198d26531eef"),
+                            LastUpdate = "133281255386347761"
                         });
                 });
 
@@ -222,8 +222,8 @@ namespace Levi9.POS.Domain.Migrations
                         {
                             Id = 1,
                             AvailableQuantity = 30,
-                            GlobalId = new Guid("ff8f3305-a43b-43a8-9798-ae62a772d54b"),
-                            LastUpdate = "133280975643411949",
+                            GlobalId = new Guid("5f99a16d-e789-4bfb-9623-e3dc29a3b8d0"),
+                            LastUpdate = "133281255386347547",
                             Name = "Levi 9 T-Shirt",
                             Price = 10f,
                             ProductImageUrl = "baseURL//nekiurl1.png"
@@ -232,8 +232,8 @@ namespace Levi9.POS.Domain.Migrations
                         {
                             Id = 2,
                             AvailableQuantity = 10,
-                            GlobalId = new Guid("c4679aca-669b-4264-b086-4384560e3550"),
-                            LastUpdate = "133280975643412049",
+                            GlobalId = new Guid("15b57178-fa2d-4748-87ca-18669139b6ed"),
+                            LastUpdate = "133281255386347605",
                             Name = "Novis T-Shirt",
                             Price = 15f,
                             ProductImageUrl = "baseURL//nekiurl2.png"
@@ -242,8 +242,8 @@ namespace Levi9.POS.Domain.Migrations
                         {
                             Id = 3,
                             AvailableQuantity = 20,
-                            GlobalId = new Guid("d7a3bde3-16fc-4470-b9aa-5ae81f590fb3"),
-                            LastUpdate = "133280975643412066",
+                            GlobalId = new Guid("8c9783c5-a267-4088-b5f8-738a2da49a88"),
+                            LastUpdate = "133281255386347622",
                             Name = "Vega IT T-Shirt",
                             Price = 20f,
                             ProductImageUrl = "baseURL//nekiurl3.png"
