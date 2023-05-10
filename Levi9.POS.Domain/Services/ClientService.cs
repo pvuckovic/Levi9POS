@@ -3,7 +3,7 @@ using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Helpers;
 
-namespace Levi9.POS.Domain.Service
+namespace Levi9.POS.Domain.Services
 {
     public class ClientService : IClientService
     {
