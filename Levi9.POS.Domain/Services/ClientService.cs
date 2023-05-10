@@ -2,8 +2,9 @@
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Helpers;
+using Microsoft.EntityFrameworkCore;
 
-namespace Levi9.POS.Domain.Service
+namespace Levi9.POS.Domain.Services
 {
     public class ClientService : IClientService
     {
@@ -28,7 +29,23 @@ namespace Levi9.POS.Domain.Service
 
             return addClientDto;
         }
+        public async Task<ClientDto> GetClientById(int id)
+        {
+            var client = await _clientRepository.GetClientById(id);
+            var clientDto = _mapper.Map<ClientDto>(client);
+            return clientDto;
+        }
+        public async Task<ClientDto> GetClientByGlobalId(Guid id)
+        {
+            var client = await _clientRepository.GetClientByGlobalId(id);
+            var clientDto = _mapper.Map<ClientDto>(client);
+            return clientDto;
+        }
+        public async Task<ClientDto> GetClientByEmail(string email)
+        {
+            var client = await _clientRepository.GetClientByEmail(email);
 
-
+            return _mapper.Map<ClientDto>(client);
+        }
     }
 }

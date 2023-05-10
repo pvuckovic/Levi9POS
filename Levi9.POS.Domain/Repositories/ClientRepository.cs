@@ -26,6 +26,23 @@ namespace Levi9.POS.Domain.Repository
 
             return client;
         }
-        
+
+        public async Task<Client> GetClientByGlobalId(Guid globalId)
+        {
+            return await _dbContext.Clients.FirstOrDefaultAsync(c => c.GlobalId == globalId);
+        }
+
+        public async Task<Client> GetClientById(int id)
+        {
+            return await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == id);
+        }
+        public async Task<Client> GetClientByEmail(string email)
+        {
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Email == email);
+
+            return client;
+        }
+
+
     }
 }

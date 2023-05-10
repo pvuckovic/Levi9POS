@@ -11,7 +11,6 @@ namespace Levi9.POS.WebApi.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-
         private readonly IClientService _clientService;
         private readonly IMapper _mapper;
         public ClientController(IClientService clientService, IMapper mapper)

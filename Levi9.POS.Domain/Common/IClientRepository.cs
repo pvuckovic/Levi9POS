@@ -4,6 +4,9 @@ namespace Levi9.POS.Domain.Common
 {
     public interface IClientRepository
     {
-        AddClientDto AddClient(AddClientDto client);
+        ClientDto AddClient(ClientDto client);
+        Task<Client> GetClientById(int id);
+        Task<Client> GetClientByGlobalId(Guid id);
+        Task<Client> GetClientByEmail(string email);
     }
 }
