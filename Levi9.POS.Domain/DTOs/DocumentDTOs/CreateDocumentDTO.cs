@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Levi9.POS.Domain.DTOs
+namespace Levi9.POS.Domain.DTOs.DocumentDTOs
 {
     public class CreateDocumentDTO
     {

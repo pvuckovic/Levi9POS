@@ -1,6 +1,6 @@
-﻿using Levi9.POS.Domain.DTOs;
+﻿using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models;
-using Levi9.POS.WebApi.Request;
+using Levi9.POS.WebApi.Request.DocumentRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,15 +34,15 @@ namespace Levi9.POS.UnitTests.Fixtures
                 }
             };
         }
-        public static DocumentRequest GetDataForCreateDocumentController()
+        public static CreateDocumentRequest GetDataForCreateDocumentController()
         {
-            return new DocumentRequest
+            return new CreateDocumentRequest
             {
                 ClientId = 1,
                 DocumentType = "INVOICE",
-                Items = new List<DocumentItemRequest>
+                Items = new List<CreateDocumentItemRequest>
             {
-                new DocumentItemRequest
+                new CreateDocumentItemRequest
                 {
                     Name = "Item 1",
                     ProductId = 1,
@@ -50,40 +50,13 @@ namespace Levi9.POS.UnitTests.Fixtures
                     Currency = "USD",
                     Quantity = 2
                 },
-                new DocumentItemRequest
+                new CreateDocumentItemRequest
                 {
                     Name = "Item 2",
                     ProductId = 2,
                     Price = 15.25f,
                     Currency = "EUR",
                     Quantity = 1
-                }
-            }
-            };
-        }
-        public static DocumentRequest GetInvalidDataForCreateDocumentController()
-        {
-            return new DocumentRequest
-            {
-                ClientId = 0,
-                DocumentType = "invoicee",
-                Items = new List<DocumentItemRequest>
-            {
-                new DocumentItemRequest
-                {
-                    Name = "",
-                    ProductId = -1,
-                    Price = -34,
-                    Currency = "KIP",
-                    Quantity = 0
-                },
-                new DocumentItemRequest
-                {
-                    Name = "",
-                    ProductId = -2,
-                    Price = -52,
-                    Currency = "ELS",
-                    Quantity = -23
                 }
             }
             };

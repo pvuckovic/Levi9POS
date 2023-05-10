@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
+using Levi9.POS.Domain.Common.IDocument;
+using Levi9.POS.Domain.Common.IProduct;
+using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Models.Enum;
 

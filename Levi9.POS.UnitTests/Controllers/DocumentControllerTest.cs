@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
+using Levi9.POS.Domain.Common.IDocument;
+using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models.Enum;
 using Levi9.POS.UnitTests.Fixtures;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Request;
-using Levi9.POS.WebApi.Response;
+using Levi9.POS.WebApi.Response.DocumentResponse;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -26,7 +26,7 @@ namespace Levi9.POS.UnitTests.Controllers
             _documentServiceMock = new Mock<IDocumentService>();
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingProfile());
+                mc.AddProfile(new DocumentMappingProfile());
             });
             _mapper = mapperConfig.CreateMapper();
         }
@@ -47,7 +47,7 @@ namespace Levi9.POS.UnitTests.Controllers
             Assert.IsInstanceOf<OkObjectResult>(result);
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            var response = okResult.Value as DocumentResponse;
+            var response = okResult.Value as GetByIdDocumentResponse;
             Assert.IsNotNull(response);
             Assert.IsNotNull(response.Items);
             Assert.AreEqual(documentId, response.Id);

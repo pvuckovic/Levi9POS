@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
+using Levi9.POS.Domain.Common.IDocument;
+using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Models.Enum;
@@ -25,7 +26,7 @@ namespace Levi9.POS.UnitTests.Services
             _productRepositoryMock = new Mock<IProductRepository>();
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile<MappingProfile>();
+                cfg.AddProfile<DocumentMappingProfile>();
             });
             _mapper = config.CreateMapper();
         }

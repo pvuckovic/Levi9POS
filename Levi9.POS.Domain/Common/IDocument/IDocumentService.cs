@@ -1,6 +1,6 @@
-﻿using Levi9.POS.Domain.DTOs;
+﻿using Levi9.POS.Domain.DTOs.DocumentDTOs;
 
-namespace Levi9.POS.Domain.Common
+namespace Levi9.POS.Domain.Common.IDocument
 {
     public interface IDocumentService
     {

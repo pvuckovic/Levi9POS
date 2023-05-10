@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
+using Levi9.POS.Domain.Common.IDocument;
+using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models.Enum;
-using Levi9.POS.WebApi.Request;
-using Levi9.POS.WebApi.Response;
+using Levi9.POS.WebApi.Request.DocumentRequest;
+using Levi9.POS.WebApi.Response.DocumentResponse;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Levi9.POS.WebApi.Controllers
@@ -30,12 +30,12 @@ namespace Levi9.POS.WebApi.Controllers
             if (document == null)
                 return NotFound("There is no document with the desired ID.");
 
-            var result = _mapper.Map<DocumentResponse>(document);
+            var result = _mapper.Map<GetByIdDocumentResponse>(document);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDocument(DocumentRequest newDocument)
+        public async Task<IActionResult> CreateDocument(CreateDocumentRequest newDocument)
         {
             var document = _mapper.Map<CreateDocumentDTO>(newDocument);
             var result = await _documentService.CreateDocument(document);

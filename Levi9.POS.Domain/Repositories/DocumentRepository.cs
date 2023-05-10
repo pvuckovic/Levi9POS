@@ -1,4 +1,4 @@
-﻿using Levi9.POS.Domain.Common;
+﻿using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 

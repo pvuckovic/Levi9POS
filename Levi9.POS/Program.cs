@@ -1,9 +1,14 @@
 using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
+using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.Repositories;
+using Levi9.POS.Domain.Repository;
+using Levi9.POS.Domain.Service;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mapper;
+using Levi9.POS.WebApi.Mappings;
+using Levi9.POS.WebApi.Response;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,13 +24,18 @@ builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
-builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-builder.Services.AddScoped<IDocumentService, DocumentService>();
+//mapper
+builder.Services.AddAutoMapper(typeof(DocumentMappingProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(ClientMappingProfile).Assembly);
+//repositories
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+//services
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
