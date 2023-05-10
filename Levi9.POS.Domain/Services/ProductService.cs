@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
-
+using Levi9.POS.Domain.Common.IProduct;
+using Levi9.POS.Domain.DTOs.ProductDTOs;
 namespace Levi9.POS.Domain.Services
 {
     public class ProductService : IProductService

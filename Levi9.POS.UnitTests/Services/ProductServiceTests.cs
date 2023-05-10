@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
+using Levi9.POS.Domain.Common.IProduct;
+using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mapper;
 using Moq;
 using NUnit.Framework;
-
 namespace Levi9.POS.UnitTests.Services
 {
     [TestFixture]
@@ -20,7 +19,7 @@ namespace Levi9.POS.UnitTests.Services
         public void Setup()
         {
             _productRepositoryMock = new Mock<IProductRepository>();
-            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<ProductMappingProfile>()).CreateMapper();
             _productService = new ProductService(_productRepositoryMock.Object, _mapper);
         }
         #region GetProductByIdAsync Tests

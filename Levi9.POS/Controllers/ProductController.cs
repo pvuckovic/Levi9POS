@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
-using Levi9.POS.WebApi.Request;
-using Levi9.POS.WebApi.Response;
+using Levi9.POS.Domain.Common.IProduct;
+using Levi9.POS.Domain.DTOs.ProductDTOs;
+using Levi9.POS.WebApi.Request.ProductRequest;
+using Levi9.POS.WebApi.Response.ProductResponse;
 using Microsoft.AspNetCore.Mvc;
-
 namespace Levi9.POS.WebApi.Controllers
 {
     [ApiController]
@@ -60,6 +59,6 @@ namespace Levi9.POS.WebApi.Controllers
             };
 
             return Ok(response);
-        }
+        }        
     }
 }

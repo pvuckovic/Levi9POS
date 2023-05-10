@@ -1,23 +1,19 @@
-﻿using Levi9.POS.Domain.Common;
+﻿using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-
 namespace Levi9.POS.Domain.Repositories
 {
     public class ProductRepository : IProductRepository
     {
         private readonly DataBaseContext _dataBaseContext;
-
         public ProductRepository(DataBaseContext dataBaseContext)
         {
             _dataBaseContext = dataBaseContext;
         }
-
         public async Task<Product> GetProductByIdAsync(int id)
         {
             return await _dataBaseContext.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
-
         public async Task<IEnumerable<Product>> SearchProductsAsync(int page, string name, string orderBy, string direction)
         {
             IQueryable<Product> query = _dataBaseContext.Products;
@@ -55,6 +51,5 @@ namespace Levi9.POS.Domain.Repositories
 
             return await query.ToListAsync();
         }
-
     }
 }

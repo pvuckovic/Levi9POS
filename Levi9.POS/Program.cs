@@ -1,5 +1,6 @@
 using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
+using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.Repositories;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mapper;
@@ -21,6 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 

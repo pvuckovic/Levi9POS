@@ -1,6 +1,4 @@
-﻿using Levi9.POS.Domain.DTOs;
-
-namespace Levi9.POS.WebApi.Response
+﻿namespace Levi9.POS.WebApi.Response.ProductResponse
 {
     public class ProductSearchResponse
     {
