@@ -20,5 +20,16 @@ namespace Levi9.POS.Domain.Helpers
             string randomString = Convert.ToBase64String(RandomNumberGenerator.GetBytes(length));
             return new string(randomString);
         }
+        public static bool Validate(string password, string salt, string passwordHash)
+        {
+            if (HashPassword(password, salt) == passwordHash)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

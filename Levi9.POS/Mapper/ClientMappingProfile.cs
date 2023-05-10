@@ -10,10 +10,10 @@ namespace Levi9.POS.WebApi.Mappings
     {
         public ClientMappingProfile()
         {
-            CreateMap<ClientRequest, AddClientDto>();
-            CreateMap<AddClientDto, ClientResponse>();
-            CreateMap<AddClientDto, Client>();
-            CreateMap<Client, AddClientDto>();
+            CreateMap<ClientRequest, ClientDto>();
+            CreateMap<ClientDto, ClientResponse>();
+            CreateMap<ClientDto, Client>();
+            CreateMap<Client, ClientDto>();
 
         }
     }

@@ -16,8 +16,7 @@ namespace Levi9.POS.Domain.Service
             _clientRepository = clientRepository;
             _mapper = mapper;
         }
-
-        public async Task<AddClientDto> AddClient(AddClientDto addClientDto)
+        public async Task<ClientDto> AddClient(ClientDto addClientDto)
         {
             addClientDto.GlobalId = Guid.NewGuid();
             addClientDto.Salt = AuthenticationHelper.GenerateRandomSalt();
@@ -28,7 +27,17 @@ namespace Levi9.POS.Domain.Service
 
             return addClientDto;
         }
-
-
+        public async Task<ClientDto> GetClientById(int id)
+        {
+            var client = await _clientRepository.GetClientById(id);
+            var clientDto = _mapper.Map<ClientDto>(client);
+            return clientDto;
+        }
+        public async Task<ClientDto> GetClientByGlobalId(Guid id)
+        {
+            var client = await _clientRepository.GetClientByGlobalId(id);
+            var clientDto = _mapper.Map<ClientDto>(client);
+            return clientDto;
+        }
     }
 }

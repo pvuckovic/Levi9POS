@@ -1,6 +1,8 @@
 using Levi9.POS.Domain;
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.Repositories;
+using Levi9.POS.Domain.Repository;
+using Levi9.POS.Domain.Service;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mapper;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,9 @@ builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IClientService, ClientService>();
+
 
 var app = builder.Build();
 
