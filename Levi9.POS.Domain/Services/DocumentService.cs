@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.DocumentDTOs;
@@ -11,11 +12,16 @@ namespace Levi9.POS.Domain.Services
     {
         private readonly IDocumentRepository _documentRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IClientRepository _clientRepository;
         private readonly IMapper _mapper;
-        public DocumentService(IDocumentRepository documentRepository, IProductRepository productRepository, IMapper mapper) 
+        public DocumentService(IDocumentRepository documentRepository, 
+                               IProductRepository productRepository, 
+                               IClientRepository clientRepository, 
+                               IMapper mapper) 
         {
             _documentRepository = documentRepository;
             _productRepository = productRepository;
+            _clientRepository = clientRepository;
             _mapper = mapper;
         }
 
@@ -31,7 +37,7 @@ namespace Levi9.POS.Domain.Services
 
         public async Task<Enum> CreateDocument(CreateDocumentDTO newDocument)
         {
-            if (!await _documentRepository.DoesClientExist(newDocument.ClientId))
+            if (!await _clientRepository.DoesClientExist(newDocument.ClientId))
                 return CreateDocumentResult.ClientNotFound;
 
             foreach (var productDocument in newDocument.DocumentItems)

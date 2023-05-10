@@ -25,11 +25,5 @@ namespace Levi9.POS.Domain.Repositories
             await _data.SaveChangesAsync();
             return newDocument;
         }
-        // This will be in Clinet repository, but for now it will be here
-        public async Task<bool> DoesClientExist(int clientId)
-        {
-            var client = await _data.Clients.FirstOrDefaultAsync(c => c.Id == clientId);
-            return client != null;
-        }
     }
 }
