@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Levi9.POS.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -106,9 +106,9 @@ namespace Levi9.POS.Domain.Migrations
                 columns: new[] { "Id", "Address", "Email", "GlobalId", "LastUpdate", "Name", "PasswordHash", "Phone", "Salt" },
                 values: new object[,]
                 {
-                    { 1, "1.maja, Derventa", "marko@gmail.com", new Guid("e9efe787-01f6-4185-969b-2c270d0ca85d"), "133281953975052071", "Marko", "password", "+387 65 132 527", "Salt" },
-                    { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("ebcbb4cf-b09d-4363-8c47-aaaf374d8d74"), "133281953975052084", "Aleksa", "password123", "+387 64 862 476", "Salt123" },
-                    { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("4e835e2d-e6e4-423b-91d7-065a04fe9539"), "133281953975052091", "Milos", "password123", "+387 65 912 127", "Salt123" }
+                    { 1, "1.maja, Derventa", "marko@gmail.com", new Guid("489322bc-460b-4ffa-952d-b5ab81a41afd"), "133281975060342291", "Marko", "password", "+387 65 132 527", "Salt" },
+                    { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("ac497f15-59ef-4cf9-81ad-35b8880abbd6"), "133281975060342306", "Aleksa", "password123", "+387 64 862 476", "Salt123" },
+                    { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("ef0cef6e-7adc-4a9e-bf8e-203a8f7db718"), "133281975060342314", "Milos", "password123", "+387 65 912 127", "Salt123" }
                 });
 
             migrationBuilder.InsertData(
@@ -116,9 +116,9 @@ namespace Levi9.POS.Domain.Migrations
                 columns: new[] { "Id", "AvailableQuantity", "GlobalId", "LastUpdate", "Name", "Price", "ProductImageUrl" },
                 values: new object[,]
                 {
-                    { 1, 30, new Guid("8419e5f6-00e6-48e1-9ba6-db7d02455184"), "133281953975051861", "Levi 9 T-Shirt", 10f, "baseURL//nekiurl1.png" },
-                    { 2, 10, new Guid("c4650998-4480-4636-b6fc-bd783bd6e8ee"), "133281953975051935", "Novis T-Shirt", 15f, "baseURL//nekiurl2.png" },
-                    { 3, 20, new Guid("fced7455-8b25-4a78-9aee-89e8cf791f69"), "133281953975051944", "Vega IT T-Shirt", 20f, "baseURL//nekiurl3.png" }
+                    { 1, 30, new Guid("5533268a-fbad-4817-ac83-cdb057d9fc01"), "133281975060342021", "Levi 9 T-Shirt", 10f, "baseURL//nekiurl1.png" },
+                    { 2, 10, new Guid("58e72cde-0802-447b-bf19-008017f4af69"), "133281975060342108", "Novis T-Shirt", 15f, "baseURL//nekiurl2.png" },
+                    { 3, 20, new Guid("4535b569-e936-4120-9054-c6b301f9495e"), "133281975060342130", "Vega IT T-Shirt", 20f, "baseURL//nekiurl3.png" }
                 });
 
             migrationBuilder.InsertData(
@@ -126,9 +126,9 @@ namespace Levi9.POS.Domain.Migrations
                 columns: new[] { "Id", "ClientId", "CreationDay", "DocumetType", "GlobalId", "LastUpdate" },
                 values: new object[,]
                 {
-                    { 1, 1, "133281953975052112", "INVOICE", new Guid("792859e6-1a29-4f2a-ac89-df5a7c32813f"), "133281953975052119" },
-                    { 2, 2, "133281953975052126", "INVOICE", new Guid("f750d6cc-b2e4-460b-945c-993df1c069a4"), "133281953975052131" },
-                    { 3, 3, "133281953975052137", "INVOICE", new Guid("59b2716d-4a05-4356-9066-cba58bcca141"), "133281953975052143" }
+                    { 1, 1, "133281975060342338", "INVOICE", new Guid("976d48fd-e7ba-45f6-b578-02f612e810f5"), "133281975060342345" },
+                    { 2, 2, "133281975060342354", "INVOICE", new Guid("721dd915-9975-410a-bfdd-51ca9d20280f"), "133281975060342359" },
+                    { 3, 3, "133281975060342366", "INVOICE", new Guid("ff0c1315-4a19-4f1c-829f-27027902884a"), "133281975060342372" }
                 });
 
             migrationBuilder.InsertData(
