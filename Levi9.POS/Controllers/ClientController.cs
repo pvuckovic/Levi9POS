@@ -23,10 +23,38 @@ namespace Levi9.POS.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<ClientResponse>> AddClient(ClientRequest clientRequest)
         {
-            AddClientDto clientMap = _mapper.Map<AddClientDto>(clientRequest);
-            AddClientDto clientDto = await _clientService.AddClient(clientMap);
+            ClientDto clientMap = _mapper.Map<ClientDto>(clientRequest);
+            ClientDto clientDto = await _clientService.AddClient(clientMap);
 
             return Ok(_mapper.Map<ClientResponse>(clientDto));
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetClientById(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Id must be a positive integer");
+            }
+
+            var client = await _clientService.GetClientById(id);
+            if (client == null)
+            {
+                return NotFound($"Client with Id {id} not found");
+            }
+
+            var clientResponse = _mapper.Map<ClientResponse>(client);
+            return Ok(clientResponse);
+        }
+        [HttpGet("global/{id}")]
+        public async Task<IActionResult> GetClientByGlobalId(Guid id)
+        {
+            var client = await _clientService.GetClientByGlobalId(id);
+            if (client == null)
+            {
+                return NotFound($"Client with Id {id} not found");
+            }
+            var clientResponse = _mapper.Map<ClientResponse>(client);
+            return Ok(clientResponse);
         }
     }
 }

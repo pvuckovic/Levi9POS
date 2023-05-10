@@ -3,7 +3,6 @@ using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace Levi9.POS.Domain.Repository
 {
@@ -18,20 +17,26 @@ namespace Levi9.POS.Domain.Repository
             _mapper = mapper;
         }
 
-        public AddClientDto AddClient(AddClientDto client)
+        public ClientDto AddClient(ClientDto client)
         {
             Client clientMap = _mapper.Map<Client>(client);
 
-            _dbContext.Clients.AddAsync(clientMap);
-            _dbContext.SaveChangesAsync();
+            _dbContext.Clients.Add(clientMap);
+            _dbContext.SaveChanges();
 
             return client;
         }
 
-        public async Task<bool> DoesClientExist(int clientId)
+        public async Task<Client> GetClientByGlobalId(Guid globalId)
         {
-            var client = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == clientId);
-            return client != null;
+            return await _dbContext.Clients.FirstOrDefaultAsync(c => c.GlobalId == globalId);
         }
+
+        public async Task<Client> GetClientById(int id)
+        {
+            return await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        
     }
 }

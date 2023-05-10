@@ -1,10 +1,12 @@
 ﻿using Levi9.POS.Domain.DTOs;
+using Levi9.POS.Domain.Models;
 
 namespace Levi9.POS.Domain.Common
 {
     public interface IClientRepository
     {
-        AddClientDto AddClient(AddClientDto client);
-        public Task<bool> DoesClientExist(int clientId);
+        ClientDto AddClient(ClientDto client);
+        Task<Client> GetClientById(int id);
+        Task<Client> GetClientByGlobalId(Guid id);
     }
 }
