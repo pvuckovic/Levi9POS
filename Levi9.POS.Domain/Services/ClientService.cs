@@ -18,7 +18,7 @@ namespace Levi9.POS.Domain.Services
             _mapper = mapper;
         }
 
-        public async Task<AddClientDto> AddClient(AddClientDto addClientDto)
+        public async Task<ClientDto> AddClient(ClientDto addClientDto)
         {
             addClientDto.GlobalId = Guid.NewGuid();
             addClientDto.Salt = AuthenticationHelper.GenerateRandomSalt();

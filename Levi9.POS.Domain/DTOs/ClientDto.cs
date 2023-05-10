@@ -1,6 +1,6 @@
 ﻿namespace Levi9.POS.Domain.DTOs
 {
-    public class AddClientDto
+    public class ClientDto
     {
         public int Id { get; set; }
         public Guid GlobalId { get; set; }
