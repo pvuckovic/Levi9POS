@@ -22,8 +22,4 @@
     <ProjectReference Include="..\Levi9.POS.Data.Migrations\Levi9.POS.Data.Migrations.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Request\" />
-  </ItemGroup>
-
 </Project>

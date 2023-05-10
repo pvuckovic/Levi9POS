@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DBContext;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
 
