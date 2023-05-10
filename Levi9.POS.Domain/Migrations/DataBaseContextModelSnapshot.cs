@@ -130,7 +130,7 @@ namespace Levi9.POS.Domain.Migrations
                         .HasMaxLength(18)
                         .HasColumnType("nvarchar(18)");
 
-                    b.Property<string>("DocumetType")
+                    b.Property<string>("DocumentType")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");

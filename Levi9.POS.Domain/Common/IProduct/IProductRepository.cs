@@ -5,5 +5,6 @@ namespace Levi9.POS.Domain.Common.IProduct
     {
         Task<Product> GetProductByIdAsync(int id);
         Task<IEnumerable<Product>> SearchProductsAsync(int page, string name, string orderBy, string direction);
+        public Task<bool> DoesProductExist(int productId, string name);
     }
 }
