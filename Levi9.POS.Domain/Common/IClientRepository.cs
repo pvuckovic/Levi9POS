@@ -5,5 +5,6 @@ namespace Levi9.POS.Domain.Common
     public interface IClientRepository
     {
         AddClientDto AddClient(AddClientDto client);
+        public Task<bool> DoesClientExist(int clientId);
     }
 }

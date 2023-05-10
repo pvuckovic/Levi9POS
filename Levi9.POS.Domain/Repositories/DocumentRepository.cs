@@ -1,4 +1,4 @@
-﻿using Levi9.POS.Domain.Common;
+﻿using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +18,12 @@ namespace Levi9.POS.Domain.Repositories
                     .ThenInclude(pd => pd.Product)
                 .Where(d => d.Id == id)
                 .FirstOrDefaultAsync();
+        }
+        public async Task<Document> CreateDocument(Document newDocument)
+        {
+            await _data.Documents.AddAsync(newDocument);
+            await _data.SaveChangesAsync();
+            return newDocument;
         }
     }
 }

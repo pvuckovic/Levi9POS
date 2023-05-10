@@ -2,6 +2,8 @@
 using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace Levi9.POS.Domain.Repository
 {
@@ -25,6 +27,11 @@ namespace Levi9.POS.Domain.Repository
 
             return client;
         }
-        
+
+        public async Task<bool> DoesClientExist(int clientId)
+        {
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == clientId);
+            return client != null;
+        }
     }
 }

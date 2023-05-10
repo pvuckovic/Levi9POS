@@ -1,6 +1,6 @@
-﻿namespace Levi9.POS.WebApi.Response
+﻿namespace Levi9.POS.Domain.DTOs.DocumentDTOs
 {
-    public class DocumentItemResponse
+    public class DocumentItemDTO
     {
         public string Name { get; set; }
         public float Price { get; set; }

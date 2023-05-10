@@ -45,9 +45,9 @@ namespace Levi9.POS.Domain
             );
 
             modelBuilder.Entity<Document>().HasData(
-                new Document { Id = 1, GlobalId = Guid.NewGuid(), ClientId = 1, CreationDay = DateTime.Now.ToFileTimeUtc().ToString(), LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), DocumetType = "INVOICE" },
-                new Document { Id = 2, GlobalId = Guid.NewGuid(), ClientId = 2, CreationDay = DateTime.Now.ToFileTimeUtc().ToString(), LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), DocumetType = "INVOICE" },
-                new Document { Id = 3, GlobalId = Guid.NewGuid(), ClientId = 3, CreationDay = DateTime.Now.ToFileTimeUtc().ToString(), LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), DocumetType = "INVOICE" }
+                new Document { Id = 1, GlobalId = Guid.NewGuid(), ClientId = 1, CreationDay = DateTime.Now.ToFileTimeUtc().ToString(), LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), DocumentType = "INVOICE" },
+                new Document { Id = 2, GlobalId = Guid.NewGuid(), ClientId = 2, CreationDay = DateTime.Now.ToFileTimeUtc().ToString(), LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), DocumentType = "INVOICE" },
+                new Document { Id = 3, GlobalId = Guid.NewGuid(), ClientId = 3, CreationDay = DateTime.Now.ToFileTimeUtc().ToString(), LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), DocumentType = "INVOICE" }
             );
 
             modelBuilder.Entity<ProductDocument>().HasData(
