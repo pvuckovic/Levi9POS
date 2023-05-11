@@ -28,19 +28,19 @@ namespace Levi9.POS.WebApi.Controllers
             _logger.LogInformation("Entering {FunctionName} in DocumentController.", nameof(GetDocumentById));
             if (documentId < 1)
             {
-                _logger.LogError("Invalid document ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}. Request ID: {RequestId}.", documentId, nameof(GetDocumentById), DateTime.UtcNow, Request.HttpContext.TraceIdentifier);
+                _logger.LogError("Invalid document ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
                 return BadRequest("The ID must be a positive number.");
             }
 
             var document = await _documentService.GetDocumentById(documentId);
             if (document == null)
             {
-                _logger.LogWarning("Document not found with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}. Request ID: {RequestId}.", documentId, nameof(GetDocumentById), DateTime.UtcNow, Request.HttpContext.TraceIdentifier);
+                _logger.LogWarning("Document not found with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
                 return NotFound("There is no document with the desired ID.");
             }
 
             var result = _mapper.Map<GetByIdDocumentResponse>(document);
-            _logger.LogInformation("Document retrieved successfully with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}. Request ID: {RequestId}.", documentId, nameof(GetDocumentById), DateTime.UtcNow, Request.HttpContext.TraceIdentifier);
+            _logger.LogInformation("Document retrieved successfully with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
             return Ok(result);
         }
 

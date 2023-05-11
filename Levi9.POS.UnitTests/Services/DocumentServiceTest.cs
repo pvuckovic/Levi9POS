@@ -4,6 +4,7 @@ using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Models.Enum;
+using Levi9.POS.Domain.Repositories;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.UnitTests.Fixtures;
 using Levi9.POS.WebApi.Mapper;

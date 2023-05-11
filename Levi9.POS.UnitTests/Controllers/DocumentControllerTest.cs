@@ -2,6 +2,7 @@
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models.Enum;
+using Levi9.POS.Domain.Services;
 using Levi9.POS.UnitTests.Fixtures;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mapper;
