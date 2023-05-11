@@ -3,6 +3,7 @@ using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.WebApi.Request.ProductRequest;
 using Levi9.POS.WebApi.Response.ProductResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Levi9.POS.WebApi.Controllers
 {
@@ -20,6 +21,7 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetProductById(int id)
         {
             if (id <= 0)
@@ -37,6 +39,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(productResponse);
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchProducts([FromQuery] ProductSearchRequest request)
         {
             if (request.Page <= 0)
@@ -61,6 +64,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(response);
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> InsertProduct([FromBody] ProductInsertRequest request)
         {
             if (request == null)
@@ -84,6 +88,7 @@ namespace Levi9.POS.WebApi.Controllers
             return CreatedAtAction(nameof(GetProductById), new { id = response.Id }, response);
         }
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdateRequest request)
         {
             if (request == null)
