@@ -13,6 +13,19 @@ namespace Levi9.POS.WebApi.Mapper
             CreateMap<ProductDTO, Product>();
             CreateMap<ProductDTO, ProductResponse>();
             CreateMap<ProductSearchRequest, ProductSearchRequestDTO>();
+            CreateMap<ProductInsertRequest, ProductInsertRequestDTO>();
+            CreateMap<ProductInsertRequestDTO, Product>()
+                .ForMember(dest => dest.ProductImageUrl, opt => opt.MapFrom(src => src.ProductImageUrl));
+            CreateMap<ProductDTO, ProductInsertResponse>();
+            CreateMap<ProductInsertRequest, ProductDTO>();
+            CreateMap<ProductUpdateRequest, ProductDTO>();
+            CreateMap<ProductDTO, ProductUpdateRequestDTO>();
+            CreateMap<Product, ProductUpdateResponse>();
+            CreateMap<ProductUpdateRequestDTO, Product>()
+                .ForMember(dest => dest.GlobalId, opt => opt.Ignore())
+                .ForMember(dest => dest.LastUpdate, opt => opt.MapFrom(src => DateTime.Now.ToFileTimeUtc().ToString()))
+                .ForMember(dest => dest.ProductImageUrl, opt => opt.Ignore());
+            CreateMap<ProductDTO, ProductUpdateResponse>();
         }
     }
 }

@@ -84,7 +84,7 @@ namespace Levi9.POS.UnitTests.Services
             };
             var expectedProducts = new List<Product>
             {
-                new Product { 
+                new Product {
                     Id = 1,
                     GlobalId = Guid.NewGuid(),
                     Name = "Test Product 1",
@@ -93,7 +93,7 @@ namespace Levi9.POS.UnitTests.Services
                     LastUpdate = "133277539861042364",
                     Price = 9.99f
                 },
-                new Product { 
+                new Product {
                     Id = 2,
                     GlobalId = Guid.NewGuid(),
                     Name = "Test Product 2",
@@ -126,7 +126,7 @@ namespace Levi9.POS.UnitTests.Services
                     Price = 8.88f
                 }
             };
-           
+
             // Act
             var result = await _productService.SearchProductsAsync(requestDTO);
 
@@ -211,6 +211,171 @@ namespace Levi9.POS.UnitTests.Services
             // Assert
             Assert.That(result, Is.InstanceOf<IEnumerable<ProductDTO>>());
             Assert.That(result.Any(), Is.False);
+        }
+        #endregion
+        #region InsertProductAsync Tests
+        [Test]
+        public async Task InsertProductAsync_ValidProduct_ReturnsCreatedProduct()
+        {
+            // Arrange
+            var globalIdTest = Guid.NewGuid();
+            var insertRequest = new ProductInsertRequestDTO
+            {
+                GlobalId = globalIdTest,
+                Name = "Test Product",
+                ProductImageUrl = "https://example.com/test.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "133277539861042364",
+                Price = 19.99f
+            };
+            var expectedProduct = new Product
+            {
+                Id = 1,
+                GlobalId = globalIdTest,
+                Name = "Test Product",
+                ProductImageUrl = "https://example.com/test.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "133277539861042364",
+                Price = 19.99f
+            };
+            _productRepositoryMock.Setup(r => r.InsertProductAsync(It.IsAny<Product>())).ReturnsAsync(expectedProduct);
+
+            // Act
+            var result = await _productService.InsertProductAsync(insertRequest);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<ProductDTO>());
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Id, Is.EqualTo(expectedProduct.Id));
+                Assert.That(result.Name, Is.EqualTo(expectedProduct.Name));
+                Assert.That(result.ProductImageUrl, Is.EqualTo(expectedProduct.ProductImageUrl));
+                Assert.That(result.AvailableQuantity, Is.EqualTo(expectedProduct.AvailableQuantity));
+                Assert.That(result.LastUpdate, Is.EqualTo(expectedProduct.LastUpdate));
+                Assert.That(result.Price, Is.EqualTo(expectedProduct.Price));
+            });
+        }
+        #endregion
+        #region UpdateProductAsync Tests
+        [Test]
+        public async Task UpdateProductAsync_ShouldReturnNull_WhenProductNotFound()
+        {
+            // Arrange
+            var productUpdateRequestDto = new ProductUpdateRequestDTO
+            {
+                GlobalId = Guid.NewGuid(),
+                Name = "Test Product 1",
+                ProductImageUrl = "https://example.com/product1.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "133277539861042364",
+                Price = 9.99f
+            };
+            _productRepositoryMock.Setup(x => x.GetProductByGlobalIdAsync(productUpdateRequestDto.GlobalId)).ReturnsAsync(null as Product);
+
+            // Act
+            var result = await _productService.UpdateProductAsync(productUpdateRequestDto);
+
+            // Assert
+            Assert.That(result, Is.Null);
+        }
+        [Test]
+        public async Task UpdateProductAsync_ValidProduct_ReturnsUpdatedProduct()
+        {
+            // Arrange
+            var globalId = Guid.NewGuid();
+            var productToUpdate = new ProductUpdateRequestDTO
+            {
+                GlobalId = globalId,
+                Name = "New Product Name",
+                ProductImageUrl = "https://test123.com/test-new.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "133277539861042364",
+                Price = 99.99f
+            };
+            var existingProduct = new Product
+            {
+                GlobalId = globalId,
+                Name = "Old Product Name",
+                ProductImageUrl = "https://test123.com/test-old.jpg",
+                AvailableQuantity = 15,
+                LastUpdate = "133277539861042364",
+                Price = 50.00f
+            };
+            _productRepositoryMock.Setup(x => x.GetProductByGlobalIdAsync(globalId))
+                .ReturnsAsync(existingProduct);
+            _productRepositoryMock.Setup(x => x.UpdateProductAsync(existingProduct))
+                .ReturnsAsync(new Product
+                {
+                    GlobalId = globalId,
+                    Name = productToUpdate.Name,
+                    ProductImageUrl = productToUpdate.ProductImageUrl,
+                    AvailableQuantity = productToUpdate.AvailableQuantity,
+                    LastUpdate = productToUpdate.LastUpdate,
+                    Price = productToUpdate.Price
+                });
+
+            // Act
+            var result = await _productService.UpdateProductAsync(productToUpdate);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.GlobalId, Is.EqualTo(globalId));
+                Assert.That(result.Name, Is.EqualTo(productToUpdate.Name));
+                Assert.That(result.ProductImageUrl, Is.EqualTo(productToUpdate.ProductImageUrl));
+                Assert.That(result.AvailableQuantity, Is.EqualTo(productToUpdate.AvailableQuantity));
+                Assert.That(result.Price, Is.EqualTo(productToUpdate.Price));
+            });
+        }
+        #endregion
+        #region GetProductByGlobalId Tests
+        [Test]
+        public async Task GetProductByGlobalIdAsync_ShouldReturnNull_WhenProductNotFound()
+        {
+            // Arrange
+            var globalId = Guid.NewGuid();
+            _productRepositoryMock.Setup(x => x.GetProductByGlobalIdAsync(globalId)).ReturnsAsync(null as Product);
+
+            // Act
+            var result = await _productService.GetProductByGlobalIdAsync(globalId);
+
+            // Assert
+            Assert.That(result, Is.Null);
+        }
+        [Test]
+        public async Task GetProductByGlobalIdAsync_ShouldReturnProduct_WhenProductFound()
+        {
+            // Arrange
+            var globalId = Guid.NewGuid();
+            var product = new Product
+            {
+                Id = 1,
+                GlobalId = globalId,
+                Name = "Test Product",
+                ProductImageUrl = "https://example.com/product.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "133277539861042364",
+                Price = 19.99f
+            };
+            _productRepositoryMock.Setup(x => x.GetProductByGlobalIdAsync(globalId)).ReturnsAsync(product);
+
+            // Act
+            var result = await _productService.GetProductByGlobalIdAsync(globalId);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<ProductDTO>());
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Id, Is.EqualTo(product.Id));
+                Assert.That(result.Name, Is.EqualTo(product.Name));
+                Assert.That(result.ProductImageUrl, Is.EqualTo(product.ProductImageUrl));
+                Assert.That(result.AvailableQuantity, Is.EqualTo(product.AvailableQuantity));
+                Assert.That(result.LastUpdate, Is.EqualTo(product.LastUpdate));
+                Assert.That(result.Price, Is.EqualTo(product.Price));
+            });
         }
         #endregion
     }
