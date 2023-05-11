@@ -20,7 +20,7 @@ namespace Levi9.POS.UnitTests.Fixtures
                 GlobalId = Guid.NewGuid(),
                 LastUpdate = "133277539861042858",
                 ClientId = 1,
-                DocumetType = "INVOICE",
+                DocumentType = "INVOICE",
                 CreationDay = "133277539861042858",
                 DocumentItems = new List<DocumentItemDTO>
                 {

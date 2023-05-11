@@ -2,12 +2,12 @@
 using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
-using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Models.Enum;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.UnitTests.Fixtures;
 using Levi9.POS.WebApi.Mapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -19,6 +19,7 @@ namespace Levi9.POS.UnitTests.Services
         private Mock<IDocumentRepository> _documentRepositoryMock;
         private Mock<IProductRepository> _productRepositoryMock;
         private Mock<IClientRepository> _clientRepositoryMock;
+        private Mock<ILogger<DocumentService>> _loggerMock;
         private IMapper _mapper;
 
         [SetUp]
@@ -27,6 +28,7 @@ namespace Levi9.POS.UnitTests.Services
             _documentRepositoryMock = new Mock<IDocumentRepository>();
             _productRepositoryMock = new Mock<IProductRepository>();
             _clientRepositoryMock = new Mock<IClientRepository>();
+            _loggerMock = new Mock<ILogger<DocumentService>>();
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<DocumentMappingProfile>();
@@ -71,7 +73,7 @@ namespace Levi9.POS.UnitTests.Services
 
             _documentRepositoryMock.Setup(repo => repo.GetDocumentById(1))
                 .ReturnsAsync(document);
-            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _mapper);
+            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await service.GetDocumentById(1);
@@ -87,7 +89,7 @@ namespace Levi9.POS.UnitTests.Services
             // Arrange
             _documentRepositoryMock.Setup(repo => repo.GetDocumentById(1))
                 .ReturnsAsync((Document)null);
-            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _mapper);
+            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await service.GetDocumentById(1);
@@ -103,7 +105,7 @@ namespace Levi9.POS.UnitTests.Services
             var newDocument = DocumentsFixture.GetDataForCreateDocumentService();
             _clientRepositoryMock.Setup(x => x.DoesClientExist(newDocument.ClientId)).ReturnsAsync(true);
             _productRepositoryMock.Setup(x => x.DoesProductExist(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
-            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _mapper);
+            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await service.CreateDocument(newDocument);
@@ -118,7 +120,7 @@ namespace Levi9.POS.UnitTests.Services
             // Arrange
             var newDocument = DocumentsFixture.GetDataForCreateDocumentService();
             _clientRepositoryMock.Setup(x => x.DoesClientExist(newDocument.ClientId)).ReturnsAsync(false);
-            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _mapper);
+            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await service.CreateDocument(newDocument);
@@ -138,7 +140,7 @@ namespace Levi9.POS.UnitTests.Services
                 .ReturnsAsync(true);
             _productRepositoryMock.Setup(x => x.DoesProductExist(2, "Product2"))
                 .ReturnsAsync(false);
-            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _mapper);
+            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await service.CreateDocument(newDocument);

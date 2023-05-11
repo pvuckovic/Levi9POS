@@ -10,6 +10,7 @@ using Levi9.POS.WebApi.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Microsoft.OpenApi.Models;
 using Levi9.POS.Domain.Common.IClient;
 
@@ -31,18 +32,21 @@ builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//mapper
+//Mappers
 builder.Services.AddAutoMapper(typeof(DocumentMappingProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ClientMappingProfile).Assembly);
-//repositories
+//Repositories
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
-//services
+//Services
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddAuthentication(options =>
 {
@@ -105,6 +109,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
