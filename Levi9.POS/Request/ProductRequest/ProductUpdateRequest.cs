@@ -1,4 +1,5 @@
-﻿namespace Levi9.POS.WebApi.Request.ProductRequest
+﻿using System.ComponentModel.DataAnnotations;
+namespace Levi9.POS.WebApi.Request.ProductRequest
 {
     public class ProductUpdateRequest
     {
