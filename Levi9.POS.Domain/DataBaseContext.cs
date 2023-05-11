@@ -39,9 +39,9 @@ namespace Levi9.POS.Domain
             );
 
             modelBuilder.Entity<Client>().HasData(
-                new Client { Id = 1, GlobalId = Guid.NewGuid(), Name = "Marko", Email = "marko@gmail.com", Phone = "+387 65 132 527", Address = "1.maja, Derventa", LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), PasswordHash="password", Salt="Salt" },
-                new Client { Id = 2, GlobalId = Guid.NewGuid(), Name = "Aleksa", Email = "aleksa@gmail.com", Phone = "+387 64 862 476", Address = "Koste Racina 24, Novi Sad", LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), PasswordHash = "password123", Salt="Salt123" },
-                new Client { Id = 3, GlobalId = Guid.NewGuid(), Name = "Milos", Email = "milos@gmail.com", Phone = "+387 65 912 127", Address = "Strumicka 13, Novi Sad", LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), PasswordHash = "password123", Salt = "Salt123" }
+                new Client { Id = 1, GlobalId = Guid.NewGuid(), Name = "Marko", Email = "marko@gmail.com", Phone = "+387 65 132 527", Address = "1.maja, Derventa", LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), Password ="password", Salt="Salt" },
+                new Client { Id = 2, GlobalId = Guid.NewGuid(), Name = "Aleksa", Email = "aleksa@gmail.com", Phone = "+387 64 862 476", Address = "Koste Racina 24, Novi Sad", LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), Password = "password123", Salt="Salt123" },
+                new Client { Id = 3, GlobalId = Guid.NewGuid(), Name = "Milos", Email = "milos@gmail.com", Phone = "+387 65 912 127", Address = "Strumicka 13, Novi Sad", LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), Password = "password123", Salt = "Salt123" }
             );
 
             modelBuilder.Entity<Document>().HasData(

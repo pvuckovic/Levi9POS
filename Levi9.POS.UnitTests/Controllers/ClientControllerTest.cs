@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
+using Levi9.POS.Domain.Common.IClient;
+using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Request;
+using Levi9.POS.WebApi.Request.ClientRequests;
 using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

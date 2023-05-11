@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
-using Levi9.POS.WebApi.Request;
+using Levi9.POS.Domain.Common.IClient;
+using Levi9.POS.Domain.DTOs.ClientDTOs;
+using Levi9.POS.WebApi.Request.ClientRequests;
 using Levi9.POS.WebApi.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Levi9.POS.WebApi.Controllers
@@ -29,6 +30,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(_mapper.Map<ClientResponse>(clientDto));
         }
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetClientById(int id)
         {
             if (id <= 0)
@@ -46,6 +48,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(clientResponse);
         }
         [HttpGet("global/{id}")]
+        [Authorize]
         public async Task<IActionResult> GetClientByGlobalId(Guid id)
         {
             var client = await _clientService.GetClientByGlobalId(id);
