@@ -30,6 +30,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(_mapper.Map<ClientResponse>(clientDto));
         }
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetClientById(int id)
         {
             if (id <= 0)

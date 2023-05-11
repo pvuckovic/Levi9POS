@@ -23,14 +23,9 @@ namespace Levi9.POS.Domain.Helpers
         }
         public static bool Validate(string passwordHash, string salt, string password)
         {
-            if(HashPassword(password, salt) == passwordHash)
-            {
+            if (HashPassword(password, salt) == passwordHash)
                 return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public static string GenerateJwt(JwtOptions jwtOptions)
         {
