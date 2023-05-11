@@ -3,6 +3,7 @@ using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.WebApi.Request.ProductRequest;
 using Levi9.POS.WebApi.Response.ProductResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Levi9.POS.WebApi.Controllers
 {
@@ -20,6 +21,7 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetProductById(int id)
         {
             if (id <= 0)
@@ -37,11 +39,16 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(productResponse);
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchProducts([FromQuery] ProductSearchRequest request)
         {
             if (request.Page <= 0)
             {
                 return BadRequest("The 'page' parameter must be greater than 0.");
+            }
+            if(!string.IsNullOrEmpty(request.OrderBy) && string.IsNullOrEmpty(request.Direction))
+            {
+                return BadRequest("If OrderBy is not empty, you must enter Direction!");
             }
             var productsRequest = _mapper.Map<ProductSearchRequestDTO>(request);
 
@@ -59,6 +66,58 @@ namespace Levi9.POS.WebApi.Controllers
             };
 
             return Ok(response);
-        }        
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> InsertProduct([FromBody] ProductInsertRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request cannot be null");
+            }
+            if (string.IsNullOrEmpty(request.Name))
+            {
+                return BadRequest("Name is required");
+            }
+            var product = _mapper.Map<ProductInsertRequestDTO>(request);
+            var insertedProduct = await _productService.InsertProductAsync(product);
+
+            if (insertedProduct == null)
+            {
+                return StatusCode(500, "Failed to insert product");
+            }
+
+           
+            var response = _mapper.Map<ProductInsertResponse>(insertedProduct);
+            return CreatedAtAction(nameof(GetProductById), new { id = response.Id }, response);
+        }
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdateRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request cannot be null");
+            }
+
+            var product = await _productService.GetProductByGlobalIdAsync(request.GlobalId);
+
+            if (product == null)
+            {
+                return NotFound($"Product with GlobalId {request.GlobalId} not found");
+            }
+
+            _mapper.Map(request, product);
+            var productUpdate = _mapper.Map<ProductUpdateRequestDTO>(product);
+            var updatedProduct = await _productService.UpdateProductAsync(productUpdate);
+
+            if (updatedProduct == null)
+            {
+                return StatusCode(500, "Failed to update product");
+            }
+
+            var response = _mapper.Map<ProductUpdateResponse>(updatedProduct);
+            return Ok(response);
+        }
     }
 }
