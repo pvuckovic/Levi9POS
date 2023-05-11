@@ -9,8 +9,6 @@ namespace Levi9.POS.Domain.Services
     {
         private readonly IClientRepository _clientRepository;
         private readonly IMapper _mapper;
-
-
         public ClientService(IClientRepository clientRepository, IMapper mapper)
         {
             _clientRepository = clientRepository;
@@ -40,7 +38,6 @@ namespace Levi9.POS.Domain.Services
             var clientDto = _mapper.Map<ClientDto>(client);
             return clientDto;
         }
-
         public async Task<ClientDto> GetClientByEmail(string email)
         {
             var client = await _clientRepository.GetClientByEmail(email);

@@ -2,7 +2,7 @@
 using Levi9.POS.Domain.DTOs;
 using Levi9.POS.Domain.Helpers;
 using Levi9.POS.WebApi.Request.ClientRequests;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Levi9.POS.WebApi.Controllers
@@ -10,13 +10,15 @@ namespace Levi9.POS.WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthenticationController : ControllerBase
     {
         private readonly IClientService _clientService;
-
-        public AuthenticationController(IClientService clientService)
+        private readonly JwtOptions _config;
+        public AuthenticationController(IClientService clientService, JwtOptions config)
         {
             _clientService = clientService;
+            _config = config;
         }
         [HttpPost]
         public async Task<IActionResult> ClientAuthentication(ClientLogin clientLogin)
@@ -31,8 +33,8 @@ namespace Levi9.POS.WebApi.Controllers
             {
                 return BadRequest("Bad Request - wrong password");
             }
-            //var token = AuthenticationHelper.GenerateJwt(_config);
-            return Ok();
+            var token = AuthenticationHelper.GenerateJwt(_config);
+            return Ok(token);
         }
     }
 }
