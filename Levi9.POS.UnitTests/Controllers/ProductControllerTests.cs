@@ -212,6 +212,252 @@ namespace Levi9.POS.UnitTests.Controllers
             // Assert
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
+        [Test]
+        public async Task SearchProducts_WithOrderByButNoDirection_ReturnsBadRequest()
+        {
+            // Arrange
+            var request = new ProductSearchRequest
+            {
+                Page = 1,
+                Name = "test",
+                OrderBy = "name",
+                Direction = null
+            };
+
+            // Act
+            var result = await _productController.SearchProducts(request);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestResult.Value, Is.EqualTo("If OrderBy is not empty, you must enter Direction!"));
+        }
+        #endregion
+        #region InsertProduct Tests
+        [Test]
+        public async Task InsertProduct_NullRequest_ReturnsBadRequest()
+        {
+            // Arrange
+            var controller = new ProductController(_productServiceMock.Object, _mapper);
+
+            // Act
+            var response = await controller.InsertProduct(null);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Request cannot be null"));
+        }
+        [Test]
+        public async Task InsertProduct_ReturnsBadRequest_WhenNameIsNull()
+        {
+            // Arrange
+            ProductInsertRequest request = new ProductInsertRequest
+            {
+                Name = null
+            };
+
+            // Act
+            var result = await _productController.InsertProduct(request);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestObjectResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestObjectResult.Value, Is.EqualTo("Name is required"));
+        }
+        [Test]
+        public async Task InsertProduct_ReturnsBadRequest_WhenNameIsEmpty()
+        {
+            // Arrange
+            ProductInsertRequest request = new ProductInsertRequest
+            {
+                Name = ""
+            };
+
+            // Act
+            var result = await _productController.InsertProduct(request);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestObjectResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestObjectResult.Value, Is.EqualTo("Name is required"));
+        }
+
+        [Test]
+        public async Task ProductInsert_ReturnsBadRequest_WhenRequestIsNull()
+        {
+            // Act
+            var result = await _productController.InsertProduct(null);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+        [Test]
+        public async Task InsertProduct_Returns_CreatedAtAction_With_ProductInsertResponse()
+        {
+            // Arrange
+            var mapperMock = new Mock<IMapper>();
+            var globalIdTest = new Guid("3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58");
+            var productRequest = new ProductInsertRequest
+            {
+                GlobalId = new Guid("3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58"),
+                Name = "Product Name",
+                ProductImageUrl = "[baseURL]/product/3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "634792557112051692",
+                Price = 9.99f
+            };
+            var productRequestDTO = new ProductInsertRequestDTO
+            {
+                GlobalId = productRequest.GlobalId,
+                Name = productRequest.Name,
+                ProductImageUrl = productRequest.ProductImageUrl,
+                AvailableQuantity = productRequest.AvailableQuantity,
+                LastUpdate = productRequest.LastUpdate,
+                Price = productRequest.Price
+            };
+            var insertedProduct = new ProductDTO
+            {
+                Id = 1,
+                GlobalId = globalIdTest,
+                Name = "Product Name",
+                ProductImageUrl = "[baseURL]/product/3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "634792557112051692",
+                Price = 9.99f
+            };
+            var productResponse = new ProductInsertResponse
+            {
+                Id = 1,
+                GlobalId = globalIdTest,
+                Name = "Product Name",
+                ProductImageUrl = "[baseURL]/product/3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58.jpg",
+                AvailableQuantity = 10,
+                Price = 9.99f
+            };
+
+            _productServiceMock.Setup(x => x.InsertProductAsync(productRequestDTO)).ReturnsAsync(insertedProduct);
+            mapperMock.Setup(x => x.Map<ProductInsertResponse>(insertedProduct)).Returns(productResponse);
+
+            _productServiceMock.Setup(x => x.InsertProductAsync(It.IsAny<ProductInsertRequestDTO>()))
+                              .ReturnsAsync(insertedProduct);
+
+            // Act
+            var result = await _productController.InsertProduct(productRequest);
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(productResponse, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(productResponse.Id, Is.EqualTo(insertedProduct.Id));
+                Assert.That(productResponse.GlobalId, Is.EqualTo(insertedProduct.GlobalId));
+                Assert.That(productResponse.Name, Is.EqualTo(insertedProduct.Name));
+                Assert.That(productResponse.ProductImageUrl, Is.EqualTo(insertedProduct.ProductImageUrl));
+                Assert.That(productResponse.AvailableQuantity, Is.EqualTo(insertedProduct.AvailableQuantity));
+                Assert.That(productResponse.Price, Is.EqualTo(insertedProduct.Price));
+            });
+        }
+        #endregion
+        #region UpdateProduct Tests
+        [Test]
+        public async Task UpdateProduct_ValidRequestTest1_ReturnsOkResult()
+        {
+            // Arrange
+            var globalId = new Guid("3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58");
+            var productUpdateRequest = new ProductUpdateRequest
+            {
+                GlobalId = globalId,
+                Name = "New Product Name",
+                ProductImageUrl = "http://newimageurl.com",
+                AvailableQuantity = 10,
+                Price = 9.99f
+            };
+            var productUpdateRequestDTO = new ProductUpdateRequestDTO
+            {
+                GlobalId = productUpdateRequest.GlobalId,
+                Name = productUpdateRequest.Name,
+                ProductImageUrl = productUpdateRequest.ProductImageUrl,
+                AvailableQuantity = productUpdateRequest.AvailableQuantity,
+                LastUpdate = productUpdateRequest.LastUpdate,
+                Price = productUpdateRequest.Price
+            };
+            var productDTO = new ProductDTO
+            {
+                Id = 1,
+                GlobalId = globalId,
+                Name = "Product Name",
+                ProductImageUrl = "http://imageurl.com",
+                AvailableQuantity = 5,
+                Price = 4.99f
+            };
+            _productServiceMock.Setup(x => x.GetProductByGlobalIdAsync(productUpdateRequest.GlobalId)).ReturnsAsync(productDTO);
+            var updatedProductResponse = new ProductUpdateResponse
+            {
+                Id = productDTO.Id,
+                GlobalId = productDTO.GlobalId,
+                Name = productUpdateRequest.Name,
+                ProductImageUrl = productUpdateRequest.ProductImageUrl,
+                AvailableQuantity = productUpdateRequest.AvailableQuantity,
+                Price = productUpdateRequest.Price
+            };
+            _productServiceMock.Setup(x => x.UpdateProductAsync(It.IsAny<ProductUpdateRequestDTO>())).ReturnsAsync(productDTO);
+
+            // Act
+            var result = await _productController.UpdateProduct(productUpdateRequest);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var productUpdateResponse = ((OkObjectResult)result).Value as ProductUpdateResponse;
+            Assert.That(productUpdateResponse, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(productUpdateResponse.Id, Is.EqualTo(productDTO.Id));
+                Assert.That(productUpdateResponse.GlobalId, Is.EqualTo(productDTO.GlobalId));
+                Assert.That(productUpdateResponse.Name, Is.EqualTo(productUpdateRequest.Name));
+                Assert.That(productUpdateResponse.ProductImageUrl, Is.EqualTo(productUpdateRequest.ProductImageUrl));
+                Assert.That(productUpdateResponse.AvailableQuantity, Is.EqualTo(productUpdateRequest.AvailableQuantity));
+                Assert.That(productUpdateResponse.Price, Is.EqualTo(productUpdateRequest.Price));
+            });
+        }
+        [Test]
+        public async Task UpdateProduct_NullRequest_ReturnsBadRequest()
+        {
+            // Arrange
+            ProductUpdateRequest request = null;
+
+            // Act
+            var result = await _productController.UpdateProduct(request);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            var badRequestResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestResult.Value, Is.EqualTo("Request cannot be null"));
+        }
+        [Test]
+        public async Task UpdateProduct_NonexistentProduct_ReturnsNotFound()
+        {
+            // Arrange
+            var globalId = new Guid("3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58");
+            var request = new ProductUpdateRequest
+            {
+                GlobalId = globalId,
+                Name = "New product name",
+                ProductImageUrl = "[baseURL]/product/newurl.jpg",
+                AvailableQuantity = 10,
+                LastUpdate = "634792557112051692",
+                Price = 20.5f
+            };
+            _productServiceMock.Setup(x => x.GetProductByGlobalIdAsync(globalId)).ReturnsAsync(null as ProductDTO);
+
+            // Act
+            var result = await _productController.UpdateProduct(request);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var notFoundResult = (NotFoundObjectResult)result;
+            Assert.That(notFoundResult.Value, Is.EqualTo($"Product with GlobalId {globalId} not found"));
+        }
         #endregion
     }
 }

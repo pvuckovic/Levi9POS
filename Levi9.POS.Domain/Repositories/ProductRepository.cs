@@ -58,5 +58,21 @@ namespace Levi9.POS.Domain.Repositories
             var product = await _dataBaseContext.Products.FirstOrDefaultAsync(c => c.Id == productId && c.Name == name);
             return product != null;
         }
+        public async Task<Product> InsertProductAsync(Product product)
+        {
+            await _dataBaseContext.Products.AddAsync(product);
+            await _dataBaseContext.SaveChangesAsync();
+            return product;
+        }
+        public async Task<Product> UpdateProductAsync(Product product)
+        {
+            _dataBaseContext.Products.Update(product);
+            await _dataBaseContext.SaveChangesAsync();
+            return product;
+        }
+        public async Task<Product> GetProductByGlobalIdAsync(Guid globalId)
+        {
+            return await _dataBaseContext.Products.FirstOrDefaultAsync(p => p.GlobalId == globalId);
+        }
     }
 }

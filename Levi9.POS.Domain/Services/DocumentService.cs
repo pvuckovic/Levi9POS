@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Azure.Core;
-using Levi9.POS.Domain.Common;
+using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.DocumentDTOs;
