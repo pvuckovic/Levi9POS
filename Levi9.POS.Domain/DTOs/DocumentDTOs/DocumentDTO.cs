@@ -6,7 +6,7 @@
         public Guid GlobalId { get; set; }
         public int ClientId { get; set; }
         public string LastUpdate { get; set; }
-        public string DocumetType { get; set; }
+        public string DocumentType { get; set; }
         public string CreationDay { get; set; }
         public List<DocumentItemDTO> DocumentItems { get; set; }
     }

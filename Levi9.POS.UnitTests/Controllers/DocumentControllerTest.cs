@@ -8,6 +8,7 @@ using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Request;
 using Levi9.POS.WebApi.Response.DocumentResponse;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.ComponentModel.DataAnnotations;
@@ -18,12 +19,14 @@ namespace Levi9.POS.UnitTests.Controllers
     public class DocumentControllerTest
     {
         private Mock<IDocumentService> _documentServiceMock;
+        private Mock<ILogger<DocumentController>> _loggerMock;
         private IMapper _mapper;
 
         [SetUp]
         public void Setup()
         {
             _documentServiceMock = new Mock<IDocumentService>();
+            _loggerMock = new Mock<ILogger<DocumentController>>();
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new DocumentMappingProfile());
@@ -38,7 +41,7 @@ namespace Levi9.POS.UnitTests.Controllers
             int documentId = 1;
             var document = DocumentsFixture.GetDataForGetDocumentByIdDocumentController();
             _documentServiceMock.Setup(s => s.GetDocumentById(documentId)).ReturnsAsync(document);
-            var controller = new DocumentController(_documentServiceMock.Object, _mapper);
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.GetDocumentById(documentId);
@@ -59,7 +62,7 @@ namespace Levi9.POS.UnitTests.Controllers
             // Arrange
             int documentId = 1;
             _documentServiceMock.Setup(s => s.GetDocumentById(documentId)).ReturnsAsync((DocumentDTO)null);
-            var controller = new DocumentController(_documentServiceMock.Object, _mapper);
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.GetDocumentById(documentId);
@@ -76,7 +79,7 @@ namespace Levi9.POS.UnitTests.Controllers
         {
             // Arrange
             int documentId = -1;
-            var controller = new DocumentController(_documentServiceMock.Object, _mapper);
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.GetDocumentById(documentId);
@@ -98,7 +101,7 @@ namespace Levi9.POS.UnitTests.Controllers
                 .Setup(x => x.CreateDocument(It.IsAny<CreateDocumentDTO>()))
                 .ReturnsAsync(CreateDocumentResult.Success);
 
-            var controller = new DocumentController(_documentServiceMock.Object, _mapper);
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.CreateDocument(documentRequest);
@@ -119,7 +122,7 @@ namespace Levi9.POS.UnitTests.Controllers
                 .Setup(x => x.CreateDocument(It.IsAny<CreateDocumentDTO>()))
                 .ReturnsAsync(CreateDocumentResult.ClientNotFound);
 
-            var controller = new DocumentController(_documentServiceMock.Object, _mapper);
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.CreateDocument(documentRequest);
@@ -140,7 +143,7 @@ namespace Levi9.POS.UnitTests.Controllers
                 .Setup(x => x.CreateDocument(It.IsAny<CreateDocumentDTO>()))
                 .ReturnsAsync(CreateDocumentResult.ProductNotFound);
 
-            var controller = new DocumentController(_documentServiceMock.Object, _mapper);
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.CreateDocument(documentRequest);
