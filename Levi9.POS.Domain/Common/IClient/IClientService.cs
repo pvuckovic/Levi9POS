@@ -1,6 +1,6 @@
-﻿using Levi9.POS.Domain.DTOs;
+﻿using Levi9.POS.Domain.DTOs.ClientDTOs;
 
-namespace Levi9.POS.Domain.Common
+namespace Levi9.POS.Domain.Common.IClient
 {
     public interface IClientService
     {

@@ -1,16 +1,11 @@
-﻿using Levi9.POS.Domain.Common;
-using Levi9.POS.Domain.DTOs;
+﻿using Levi9.POS.Domain.Common.IClient;
+using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.Domain.Helpers;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Request.ClientRequests;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Levi9.POS.UnitTests.Controllers
 {
@@ -19,7 +14,6 @@ namespace Levi9.POS.UnitTests.Controllers
     {
         private Mock<IClientService> _clientServiceMock;
         private JwtOptions _jwtOptions;
-
         [SetUp]
         public void SetUp()
         {
@@ -32,7 +26,6 @@ namespace Levi9.POS.UnitTests.Controllers
                 ExpirationSeconds = 30
             };
         }
-
         [Test]
         public async Task ClientAuthentication_WithValidClientLogin_ReturnsJwtToken()
         {

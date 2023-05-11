@@ -1,4 +1,4 @@
-﻿namespace Levi9.POS.Domain.DTOs
+﻿namespace Levi9.POS.Domain.DTOs.ClientDTOs
 {
     public class ClientDto
     {

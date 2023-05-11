@@ -1,5 +1,4 @@
 ﻿using Levi9.POS.Domain;
-using Levi9.POS.Domain.Common;
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.Helpers;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Levi9.POS.Domain.Common.IClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
