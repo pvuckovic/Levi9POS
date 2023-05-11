@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Levi9.POS.WebApi.Request
+namespace Levi9.POS.WebApi.Request.ClientRequests
 {
     public class ClientRequest
     {

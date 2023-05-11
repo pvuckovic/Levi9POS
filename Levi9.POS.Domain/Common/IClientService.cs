@@ -7,5 +7,6 @@ namespace Levi9.POS.Domain.Common
         Task<ClientDto> AddClient(ClientDto client);
         Task<ClientDto> GetClientById(int id);
         Task<ClientDto> GetClientByGlobalId(Guid id);
+        Task<ClientDto> GetClientByEmail(string email);
     }
 }

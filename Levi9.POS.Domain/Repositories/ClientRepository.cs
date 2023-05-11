@@ -26,7 +26,6 @@ namespace Levi9.POS.Domain.Repository
 
             return client;
         }
-
         public async Task<Client> GetClientByGlobalId(Guid globalId)
         {
             return await _dbContext.Clients.FirstOrDefaultAsync(c => c.GlobalId == globalId);
@@ -36,7 +35,15 @@ namespace Levi9.POS.Domain.Repository
         {
             return await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == id);
         }
+        public async Task<Client> GetClientByEmail(string email)
+        {
+            return await _dbContext.Clients.FirstOrDefaultAsync(c => c.Email == email);
+        }
+        public async Task<bool> DoesClientExist(int clientId)
+        {
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == clientId);
+            return client != null;
+        }
 
-        
     }
 }

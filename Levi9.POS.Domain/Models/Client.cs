@@ -26,7 +26,7 @@ namespace Levi9.POS.Domain.Models
         public string LastUpdate { get; set; }
         [Required]
         [StringLength (100)]
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
         [Required]
         [StringLength(50)]
         public string Salt { get; set; }

@@ -15,14 +15,14 @@ namespace Levi9.POS.Domain.Helpers
             }
         }
 
-        public static string GenerateRandomSalt(int length = 32)
+        public static string GenerateRandomSalt(int length = 10)
         {
             string randomString = Convert.ToBase64String(RandomNumberGenerator.GetBytes(length));
             return new string(randomString);
         }
-        public static bool Validate(string password, string salt, string passwordHash)
+        public static bool Validate(string passwordHash, string salt, string password)
         {
-            if (HashPassword(password, salt) == passwordHash)
+            if(HashPassword(password, salt) == passwordHash)
             {
                 return true;
             }

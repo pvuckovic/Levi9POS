@@ -31,7 +31,7 @@ namespace Levi9.POS.UnitTests.Services
                 Name = "Zlatko",
                 Address = "address",
                 Email = "zlatko@example.com",
-                PasswordHash = "R+AKYqbYP0P/E9P1mCH5SjXOGZPbEVk79fNnUydFmWY=",
+                Password = "R+AKYqbYP0P/E9P1mCH5SjXOGZPbEVk79fNnUydFmWY=",
                 Salt = "RZVxPvmCKmwVTA==",
                 Phone = "064322222",
                 LastUpdate = "634792557112051692"
@@ -40,7 +40,7 @@ namespace Levi9.POS.UnitTests.Services
             {
                 GlobalId = Guid.NewGuid(),
                 Email = clientModel.Email,
-                PasswordHash = clientModel.PasswordHash,
+                Password = clientModel.Password,
                 Salt = clientModel.Salt,
                 LastUpdate = DateTime.Now.ToFileTimeUtc().ToString()
             };

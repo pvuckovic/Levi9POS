@@ -19,8 +19,9 @@ namespace Levi9.POS.Domain.Services
         public async Task<ClientDto> AddClient(ClientDto addClientDto)
         {
             addClientDto.GlobalId = Guid.NewGuid();
-            addClientDto.Salt = AuthenticationHelper.GenerateRandomSalt();
-            addClientDto.PasswordHash = AuthenticationHelper.HashPassword(addClientDto.PasswordHash, addClientDto.Salt);
+            string salt = AuthenticationHelper.GenerateRandomSalt();
+            addClientDto.Password = AuthenticationHelper.HashPassword(addClientDto.Password, salt);
+            addClientDto.Salt = salt;
             addClientDto.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
 
             _clientRepository.AddClient(addClientDto);
@@ -36,6 +37,13 @@ namespace Levi9.POS.Domain.Services
         public async Task<ClientDto> GetClientByGlobalId(Guid id)
         {
             var client = await _clientRepository.GetClientByGlobalId(id);
+            var clientDto = _mapper.Map<ClientDto>(client);
+            return clientDto;
+        }
+
+        public async Task<ClientDto> GetClientByEmail(string email)
+        {
+            var client = await _clientRepository.GetClientByEmail(email);
             var clientDto = _mapper.Map<ClientDto>(client);
             return clientDto;
         }
