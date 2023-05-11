@@ -1,4 +1,4 @@
-﻿namespace Levi9.POS.Domain.Common
+﻿namespace Levi9.POS.Domain.Common.IClient
 {
     public interface IAuthenticationService
     {

@@ -1,6 +1,6 @@
-﻿namespace Levi9.POS.WebApi.Response
+﻿namespace Levi9.POS.Domain.DTOs.DocumentDTOs
 {
-    public class DocumentResponse
+    public class DocumentDTO
     {
         public int Id { get; set; }
         public Guid GlobalId { get; set; }
@@ -8,6 +8,6 @@
         public string LastUpdate { get; set; }
         public string DocumetType { get; set; }
         public string CreationDay { get; set; }
-        public List<DocumentItemResponse> Items { get; set; }
+        public List<DocumentItemDTO> DocumentItems { get; set; }
     }
 }
