@@ -46,6 +46,10 @@ namespace Levi9.POS.WebApi.Controllers
             {
                 return BadRequest("The 'page' parameter must be greater than 0.");
             }
+            if(!string.IsNullOrEmpty(request.OrderBy) && string.IsNullOrEmpty(request.Direction))
+            {
+                return BadRequest("If OrderBy is not empty, you must enter Direction!");
+            }
             var productsRequest = _mapper.Map<ProductSearchRequestDTO>(request);
 
             var products = await _productService.SearchProductsAsync(productsRequest);

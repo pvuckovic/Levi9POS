@@ -212,6 +212,26 @@ namespace Levi9.POS.UnitTests.Controllers
             // Assert
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
+        [Test]
+        public async Task SearchProducts_WithOrderByButNoDirection_ReturnsBadRequest()
+        {
+            // Arrange
+            var request = new ProductSearchRequest
+            {
+                Page = 1,
+                Name = "test",
+                OrderBy = "name",
+                Direction = null
+            };
+
+            // Act
+            var result = await _productController.SearchProducts(request);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestResult.Value, Is.EqualTo("If OrderBy is not empty, you must enter Direction!"));
+        }
         #endregion
         #region InsertProduct Tests
         [Test]
@@ -229,7 +249,7 @@ namespace Levi9.POS.UnitTests.Controllers
             Assert.That(result.Value, Is.EqualTo("Request cannot be null"));
         }
         [Test]
-        public async Task InsertProduct_ReturnsBadRequest_WhenNameIsNullOrEmpty()
+        public async Task InsertProduct_ReturnsBadRequest_WhenNameIsNull()
         {
             // Arrange
             ProductInsertRequest request = new ProductInsertRequest
@@ -244,18 +264,25 @@ namespace Levi9.POS.UnitTests.Controllers
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
             var badRequestObjectResult = (BadRequestObjectResult)result;
             Assert.That(badRequestObjectResult.Value, Is.EqualTo("Name is required"));
-
+        }
+        [Test]
+        public async Task InsertProduct_ReturnsBadRequest_WhenNameIsEmpty()
+        {
             // Arrange
-            request.Name = "";
+            ProductInsertRequest request = new ProductInsertRequest
+            {
+                Name = ""
+            };
 
             // Act
-            result = await _productController.InsertProduct(request);
+            var result = await _productController.InsertProduct(request);
 
             // Assert
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
-            badRequestObjectResult = (BadRequestObjectResult)result;
+            var badRequestObjectResult = (BadRequestObjectResult)result;
             Assert.That(badRequestObjectResult.Value, Is.EqualTo("Name is required"));
         }
+
         [Test]
         public async Task ProductInsert_ReturnsBadRequest_WhenRequestIsNull()
         {
