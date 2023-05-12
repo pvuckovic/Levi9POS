@@ -16,7 +16,7 @@ namespace Levi9.POS.Domain.Repositories
         }
         public async Task<Document> GetDocumentById(int id)
         {
-            _logger.LogInformation("Entering {FunctionName} in document repository.", nameof(GetDocumentById));            
+            _logger.LogInformation("Entering {FunctionName} in DocumentRepository. Timestamp: {Timestamp}.", nameof(GetDocumentById), DateTime.UtcNow);            
             var result = await _data.Documents
                 .Include(d => d.ProductDocuments)
                     .ThenInclude(pd => pd.Product)
@@ -25,17 +25,19 @@ namespace Levi9.POS.Domain.Repositories
 
             if (result == null)
             {
-                _logger.LogWarning("Document not found with this ID: {DocumentId} in {FunctionName} of DocumentRepository. Timestamp: {Timestamp}.", id, nameof(GetDocumentById), DateTime.UtcNow);
+                _logger.LogWarning("Document not found with ID: {DocumentId} in {FunctionName} of DocumentRepository. Timestamp: {Timestamp}.", id, nameof(GetDocumentById), DateTime.UtcNow);
                 return null;
             }
 
-            _logger.LogInformation("Document retrieved successfully with this ID: {DocumentId} in {FunctionName} of DocumentRepository. Timestamp: {Timestamp}.", id, nameof(GetDocumentById), DateTime.UtcNow);
+            _logger.LogInformation("Document retrieved successfully with ID: {DocumentId} in {FunctionName} of DocumentRepository. Timestamp: {Timestamp}.", id, nameof(GetDocumentById), DateTime.UtcNow);
             return result;
         }
         public async Task<Document> CreateDocument(Document newDocument)
         {
+            _logger.LogInformation("Entering {FunctionName} in DocumentRepository. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
             var result = await _data.Documents.AddAsync(newDocument);
             await _data.SaveChangesAsync();
+            _logger.LogInformation("Document created successfully in {FunctionName} of DocumentRepository. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
             return result.Entity;
         }
     }

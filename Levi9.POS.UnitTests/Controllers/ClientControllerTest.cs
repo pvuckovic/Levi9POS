@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.DTOs.ClientDTOs;
+using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Request.ClientRequests;
 using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -14,6 +16,7 @@ namespace Levi9.POS.UnitTests.Controllers
     public class ClientControllerTests
     {
         private Mock<IClientService> _clientServiceMock;
+        private Mock<ILogger<ClientController>> _loggerMock;
         private Mock<IMapper> _mapperMock;
         private ClientController _clientController;
 
@@ -21,8 +24,9 @@ namespace Levi9.POS.UnitTests.Controllers
         public void Setup()
         {
             _clientServiceMock = new Mock<IClientService>();
+            _loggerMock = new Mock<ILogger<ClientController>>();
             _mapperMock = new Mock<IMapper>();
-            _clientController = new ClientController(_clientServiceMock.Object, _mapperMock.Object);
+            _clientController = new ClientController(_clientServiceMock.Object, _loggerMock.Object, _mapperMock.Object);
         }
 
         [Test]

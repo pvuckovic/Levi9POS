@@ -14,10 +14,12 @@ namespace Levi9.POS.WebApi.Controllers
     {
 
         private readonly IClientService _clientService;
+        private readonly ILogger<ClientController> _logger;
         private readonly IMapper _mapper;
-        public ClientController(IClientService clientService, IMapper mapper)
+        public ClientController(IClientService clientService, ILogger<ClientController> logger, IMapper mapper)
         {
             _clientService = clientService;
+            _logger = logger;
             _mapper = mapper;
         }
 
@@ -25,26 +27,31 @@ namespace Levi9.POS.WebApi.Controllers
         [Authorize]
         public async Task<ActionResult<ClientResponse>> AddClient(ClientRequest clientRequest)
         {
+            _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(AddClient), DateTime.UtcNow);
             ClientDto clientMap = _mapper.Map<ClientDto>(clientRequest);
             ClientDto clientDto = await _clientService.AddClient(clientMap);
-
+            _logger.LogInformation("Client created successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(AddClient), DateTime.UtcNow);
             return Ok(_mapper.Map<ClientResponse>(clientDto));
         }
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetClientById(int id)
         {
+            _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(GetClientById), DateTime.UtcNow);
             if (id <= 0)
             {
+                _logger.LogError("Invalid client ID: {ClientId} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", id, nameof(GetClientById), DateTime.UtcNow);
                 return BadRequest("Id must be a positive integer");
             }
 
             var client = await _clientService.GetClientById(id);
             if (client == null)
             {
+                _logger.LogWarning("Client not found with ID: {ClientId} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", id, nameof(GetClientById), DateTime.UtcNow);
                 return NotFound($"Client with Id {id} not found");
             }
-
+            
+            _logger.LogInformation("Client retrieved successfully with ID: {ClientId} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", id, nameof(GetClientById), DateTime.UtcNow);
             var clientResponse = _mapper.Map<ClientResponse>(client);
             return Ok(clientResponse);
         }
@@ -52,11 +59,15 @@ namespace Levi9.POS.WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> GetClientByGlobalId(Guid id)
         {
+            _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(GetClientByGlobalId), DateTime.UtcNow);
+
             var client = await _clientService.GetClientByGlobalId(id);
             if (client == null)
             {
+                _logger.LogWarning("Client not found with ID: {ClientId} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", id, nameof(GetClientByGlobalId), DateTime.UtcNow);
                 return NotFound($"Client with Id {id} not found");
             }
+            _logger.LogInformation("Client retrieved successfully with GlobalId: {ClientGlobalId} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", id, nameof(GetClientByGlobalId), DateTime.UtcNow);
             var clientResponse = _mapper.Map<ClientResponse>(client);
             return Ok(clientResponse);
         }
@@ -64,17 +75,23 @@ namespace Levi9.POS.WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateClient(ClientUpdate clientUpdate)
         {
+            _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
+
             if (_clientService.CheckEmailExist(clientUpdate.Email))
+            {
+                _logger.LogError("Client already exists with Email: {Email} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", clientUpdate.Email, nameof(UpdateClient), DateTime.UtcNow);
                 return BadRequest("Email already exists!");
+            }
 
             var clientMap = _mapper.Map<UpdateClientDto>(clientUpdate);
             clientMap = await _clientService.UpdateClient(clientMap);
 
             if(clientMap == null)
             {
+                _logger.LogError("Failed to update client in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
                 return BadRequest();
             }
-
+            _logger.LogInformation("Client updated successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
             var clientResponse = _mapper.Map<ClientResponse>(clientMap);
             return Ok(clientResponse);
         }

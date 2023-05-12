@@ -3,6 +3,7 @@ using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Services;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -13,13 +14,15 @@ namespace Levi9.POS.UnitTests.Services
     {
         private Mock<IClientRepository> _clientRepositoryMock;
         private Mock<IMapper> _mapperMock;
+        private Mock<ILogger<ClientService>> _loggerMock;
         private ClientService _clientService;
         [SetUp]
         public void Setup()
         {
             _clientRepositoryMock = new Mock<IClientRepository>();
+            _loggerMock = new Mock<ILogger<ClientService>>();
             _mapperMock = new Mock<IMapper>();
-            _clientService = new ClientService(_clientRepositoryMock.Object, _mapperMock.Object);
+            _clientService = new ClientService(_clientRepositoryMock.Object, _loggerMock.Object, _mapperMock.Object);
         }
         [Test]
         public async Task AddClient_ValidDto_ShouldCallRepositoryAndReturnMappedDto()

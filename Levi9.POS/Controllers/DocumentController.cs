@@ -27,7 +27,7 @@ namespace Levi9.POS.WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> GetDocumentById(int documentId)
         {
-            _logger.LogInformation("Entering {FunctionName} in DocumentController.", nameof(GetDocumentById));
+            _logger.LogInformation("Entering {FunctionName} in DocumentController. Timestamp: {Timestamp}.", nameof(GetDocumentById), DateTime.UtcNow);
             if (documentId < 1)
             {
                 _logger.LogError("Invalid document ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
@@ -37,12 +37,12 @@ namespace Levi9.POS.WebApi.Controllers
             var document = await _documentService.GetDocumentById(documentId);
             if (document == null)
             {
-                _logger.LogWarning("Document not found with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
+                _logger.LogWarning("Document not found with ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
                 return NotFound("There is no document with the desired ID.");
             }
 
             var result = _mapper.Map<GetByIdDocumentResponse>(document);
-            _logger.LogInformation("Document retrieved successfully with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
+            _logger.LogInformation("Document retrieved successfully with ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
             return Ok(result);
         }
 
@@ -50,14 +50,22 @@ namespace Levi9.POS.WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> CreateDocument(CreateDocumentRequest newDocument)
         {
+            _logger.LogInformation("Entering {FunctionName} in DocumentController. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
             var document = _mapper.Map<CreateDocumentDTO>(newDocument);
             var result = await _documentService.CreateDocument(document);
 
             CreateDocumentResult resultEnum = (CreateDocumentResult)result;
             if (resultEnum == CreateDocumentResult.ClientNotFound)
+            {
+                _logger.LogError("Invalid document ID: {ClientId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", newDocument.ClientId, nameof(CreateDocument), DateTime.UtcNow);
                 return BadRequest("Client does not exist!");
+            }
             else if (resultEnum == CreateDocumentResult.ProductNotFound)
+            {
+                _logger.LogError("Invalid product ID in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
                 return BadRequest("Product does not exist!");
+            }
+            _logger.LogInformation("Document created successfully in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
             return Ok("Document created successfully");
         }
     }

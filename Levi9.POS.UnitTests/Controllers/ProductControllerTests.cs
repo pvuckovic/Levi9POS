@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.ProductDTOs;
+using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Request.ProductRequest;
 using Levi9.POS.WebApi.Response.ProductResponse;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 namespace Levi9.POS.UnitTests.Controllers
@@ -13,16 +15,18 @@ namespace Levi9.POS.UnitTests.Controllers
     [TestFixture]
     public class ProductControllerTests
     {
-        private Mock<IProductService> _productServiceMock;
+        private Mock<IProductService> _productServiceMock; 
+        private Mock<ILogger<ProductController>> _loggerMock;
         private IMapper _mapper;
         private ProductController _productController;
         [SetUp]
         public void Setup()
         {
             _productServiceMock = new Mock<IProductService>();
+            _loggerMock = new Mock<ILogger<ProductController>>();
             var config = new MapperConfiguration(cfg => cfg.AddProfile<ProductMappingProfile>());
             _mapper = config.CreateMapper();
-            _productController = new ProductController(_productServiceMock.Object, _mapper);
+            _productController = new ProductController(_productServiceMock.Object, _loggerMock.Object, _mapper);
         }
         #region GetProductById Tests
         [Test]
@@ -81,7 +85,7 @@ namespace Levi9.POS.UnitTests.Controllers
         {
             // Arrange
             int productId = 0;
-            var controller = new ProductController(_productServiceMock.Object, _mapper);
+            var controller = new ProductController(_productServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.GetProductById(productId);
@@ -96,7 +100,7 @@ namespace Levi9.POS.UnitTests.Controllers
         {
             // Arrange
             int productId = -1;
-            var controller = new ProductController(_productServiceMock.Object, _mapper);
+            var controller = new ProductController(_productServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var result = await controller.GetProductById(productId);
@@ -238,7 +242,7 @@ namespace Levi9.POS.UnitTests.Controllers
         public async Task InsertProduct_NullRequest_ReturnsBadRequest()
         {
             // Arrange
-            var controller = new ProductController(_productServiceMock.Object, _mapper);
+            var controller = new ProductController(_productServiceMock.Object, _loggerMock.Object, _mapper);
 
             // Act
             var response = await controller.InsertProduct(null);

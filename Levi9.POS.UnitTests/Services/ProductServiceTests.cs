@@ -4,6 +4,7 @@ using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 namespace Levi9.POS.UnitTests.Services
@@ -12,6 +13,7 @@ namespace Levi9.POS.UnitTests.Services
     public class ProductServiceTests
     {
         private Mock<IProductRepository> _productRepositoryMock;
+        private Mock<ILogger<ProductService>> _loggerMock;
         private IMapper _mapper;
         private IProductService _productService;
 
@@ -19,8 +21,9 @@ namespace Levi9.POS.UnitTests.Services
         public void Setup()
         {
             _productRepositoryMock = new Mock<IProductRepository>();
+            _loggerMock = new Mock<ILogger<ProductService>>();
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<ProductMappingProfile>()).CreateMapper();
-            _productService = new ProductService(_productRepositoryMock.Object, _mapper);
+            _productService = new ProductService(_productRepositoryMock.Object, _loggerMock.Object, _mapper);
         }
         #region GetProductByIdAsync Tests
         [Test]
