@@ -60,6 +60,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(clientResponse);
         }
         [HttpPut("update")]
+        [Authorize]
         public async Task<IActionResult> UpdateClient(ClientUpdate clientUpdate)
         {
             if (_clientService.CheckEmailExist(clientUpdate.Email))
