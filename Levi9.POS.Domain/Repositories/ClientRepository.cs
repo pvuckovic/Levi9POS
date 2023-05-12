@@ -4,7 +4,7 @@ using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Levi9.POS.Domain.Repository
+namespace Levi9.POS.Domain.Repositories
 {
     public class ClientRepository : IClientRepository
     {

@@ -21,6 +21,7 @@ namespace Levi9.POS.WebApi.Controllers
             _config = config;
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> ClientAuthentication(ClientLogin clientLogin)
         {
             ClientDto clientDto = await _clientService.GetClientByEmail(clientLogin.Email);

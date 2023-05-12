@@ -3,7 +3,6 @@ using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.Helpers;
 using Levi9.POS.Domain.Repositories;
-using Levi9.POS.Domain.Repository;
 using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Mappings;
