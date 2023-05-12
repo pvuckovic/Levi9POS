@@ -4,11 +4,12 @@ using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models.Enum;
 using Levi9.POS.WebApi.Request.DocumentRequest;
 using Levi9.POS.WebApi.Response.DocumentResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Levi9.POS.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     public class DocumentController : ControllerBase
     {
@@ -23,28 +24,30 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpGet("{documentId}")]
+        [Authorize]
         public async Task<IActionResult> GetDocumentById(int documentId)
         {
             _logger.LogInformation("Entering {FunctionName} in DocumentController.", nameof(GetDocumentById));
             if (documentId < 1)
             {
-                _logger.LogError("Invalid document ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}. Request ID: {RequestId}.", documentId, nameof(GetDocumentById), DateTime.UtcNow, Request.HttpContext.TraceIdentifier);
+                _logger.LogError("Invalid document ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
                 return BadRequest("The ID must be a positive number.");
             }
 
             var document = await _documentService.GetDocumentById(documentId);
             if (document == null)
             {
-                _logger.LogWarning("Document not found with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}. Request ID: {RequestId}.", documentId, nameof(GetDocumentById), DateTime.UtcNow, Request.HttpContext.TraceIdentifier);
+                _logger.LogWarning("Document not found with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
                 return NotFound("There is no document with the desired ID.");
             }
 
             var result = _mapper.Map<GetByIdDocumentResponse>(document);
-            _logger.LogInformation("Document retrieved successfully with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}. Request ID: {RequestId}.", documentId, nameof(GetDocumentById), DateTime.UtcNow, Request.HttpContext.TraceIdentifier);
+            _logger.LogInformation("Document retrieved successfully with this ID: {DocumentId} in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", documentId, nameof(GetDocumentById), DateTime.UtcNow);
             return Ok(result);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateDocument(CreateDocumentRequest newDocument)
         {
             var document = _mapper.Map<CreateDocumentDTO>(newDocument);
