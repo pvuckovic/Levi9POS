@@ -1,9 +1,11 @@
 ﻿using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.Domain.Helpers;
+using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Request.ClientRequests;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -13,11 +15,13 @@ namespace Levi9.POS.UnitTests.Controllers
     public class AuthenticationControllerTests
     {
         private Mock<IClientService> _clientServiceMock;
+        private Mock<ILogger<AuthenticationController>> _loggerMock;
         private JwtOptions _jwtOptions;
         [SetUp]
         public void SetUp()
         {
             _clientServiceMock = new Mock<IClientService>();
+            _loggerMock = new Mock<ILogger<AuthenticationController>>();
             _jwtOptions = new JwtOptions
             {
                 SigningKey = "mysecret",
@@ -41,7 +45,7 @@ namespace Levi9.POS.UnitTests.Controllers
                 Salt = "salt"
             };
             _clientServiceMock.Setup(x => x.GetClientByEmail(clientLogin.Email)).ReturnsAsync(clientDto);
-            var controller = new AuthenticationController(_clientServiceMock.Object, _jwtOptions);
+            var controller = new AuthenticationController(_clientServiceMock.Object, _loggerMock.Object, _jwtOptions);
 
             var result = await controller.ClientAuthentication(clientLogin);
 
@@ -57,7 +61,7 @@ namespace Levi9.POS.UnitTests.Controllers
                 Password = "mysecretpassword"
             };
             _clientServiceMock.Setup(x => x.GetClientByEmail(clientLogin.Email)).ReturnsAsync((ClientDto)null);
-            var controller = new AuthenticationController(_clientServiceMock.Object, _jwtOptions);
+            var controller = new AuthenticationController(_clientServiceMock.Object, _loggerMock.Object, _jwtOptions);
 
             var result = await controller.ClientAuthentication(clientLogin) as BadRequestObjectResult;
 
@@ -80,7 +84,7 @@ namespace Levi9.POS.UnitTests.Controllers
                 Salt = "salt"
             };
             _clientServiceMock.Setup(x => x.GetClientByEmail(clientLogin.Email)).ReturnsAsync(clientDto);
-            var controller = new AuthenticationController(_clientServiceMock.Object, _jwtOptions);
+            var controller = new AuthenticationController(_clientServiceMock.Object, _loggerMock.Object, _jwtOptions);
 
             var result = await controller.ClientAuthentication(clientLogin) as BadRequestObjectResult;
 
