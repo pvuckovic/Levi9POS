@@ -43,7 +43,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODc0ODQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.yI4b1mhTymV2vscGHo6zyf_3Ydi4kEqhbcYWAvqvSVI",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -60,14 +60,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5067/api/Client",
+					"raw": "http://localhost:5067/v1/Client",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5067",
 					"path": [
-						"api",
+						"v1",
 						"Client"
 					]
 				}
@@ -85,7 +85,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODc0ODQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.yI4b1mhTymV2vscGHo6zyf_3Ydi4kEqhbcYWAvqvSVI",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -109,14 +109,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5067/api/Client/1",
+					"raw": "http://localhost:5067/v1/Client/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5067",
 					"path": [
-						"api",
+						"v1",
 						"Client",
 						"1"
 					]
@@ -132,7 +132,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODc0ODQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.yI4b1mhTymV2vscGHo6zyf_3Ydi4kEqhbcYWAvqvSVI",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -140,14 +140,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5067/api/Client/global/aa8b3557-b7e5-45ef-970d-5e63333e66df",
+					"raw": "http://localhost:5067/v1/Client/global/aa8b3557-b7e5-45ef-970d-5e63333e66df",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5067",
 					"path": [
-						"api",
+						"v1",
 						"Client",
 						"global",
 						"aa8b3557-b7e5-45ef-970d-5e63333e66df"
@@ -164,7 +164,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODYxMzIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.R7E21yP0WvOMa063yB3zpqWbTsmEx7da_515gGj4WVM",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -181,14 +181,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5067/api/Client/update",
+					"raw": "http://localhost:5067/v1/Client/update",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5067",
 					"path": [
-						"api",
+						"v1",
 						"Client",
 						"update"
 					]
@@ -207,7 +207,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODc0ODQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.yI4b1mhTymV2vscGHo6zyf_3Ydi4kEqhbcYWAvqvSVI",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -224,14 +224,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5067/api/Document/1",
+					"raw": "http://localhost:5067/v1/Document/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5067",
 					"path": [
-						"api",
+						"v1",
 						"Document",
 						"1"
 					]
@@ -247,7 +247,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODYzMTQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.p-QDcLtAXQKES-wBlniSZo3Wd0AGuvbmh5EZ7QAqoms",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -264,14 +264,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5067/api/Document",
+					"raw": "http://localhost:5067/v1/Document",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5067",
 					"path": [
-						"api",
+						"v1",
 						"Document"
 					]
 				}
@@ -289,7 +289,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODc0ODQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.yI4b1mhTymV2vscGHo6zyf_3Ydi4kEqhbcYWAvqvSVI",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -324,7 +324,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODc0ODQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.yI4b1mhTymV2vscGHo6zyf_3Ydi4kEqhbcYWAvqvSVI",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -372,7 +372,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODcxOTYsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.4xTH70m79IpwIubEd8VwKnEMxsVnhwYK76cGZJoQr4k",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -411,7 +411,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODM4ODcxOTYsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA2NyJ9.4xTH70m79IpwIubEd8VwKnEMxsVnhwYK76cGZJoQr4k",
+							"value": "",
 							"type": "string"
 						}
 					]
