@@ -2,6 +2,7 @@
 using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.Domain.Helpers;
+using Levi9.POS.Domain.Models;
 
 namespace Levi9.POS.Domain.Services
 {
@@ -43,6 +44,20 @@ namespace Levi9.POS.Domain.Services
             var client = await _clientRepository.GetClientByEmail(email);
             var clientDto = _mapper.Map<ClientDto>(client);
             return clientDto;
+        }
+        public bool CheckEmailExist(string email)
+        {
+            return _clientRepository.CheckEmailExist(email);
+        }
+        public async Task<UpdateClientDto> UpdateClient(UpdateClientDto client)
+        {
+            client.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
+
+            var clientMap = _mapper.Map<Client>(client);
+
+            clientMap = await _clientRepository.UpdateClient(clientMap);
+
+            return client;
         }
     }
 }

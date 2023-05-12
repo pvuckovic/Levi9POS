@@ -8,5 +8,8 @@ namespace Levi9.POS.Domain.Common.IClient
         Task<ClientDto> GetClientById(int id);
         Task<ClientDto> GetClientByGlobalId(Guid id);
         Task<ClientDto> GetClientByEmail(string email);
+        Task<UpdateClientDto> UpdateClient(UpdateClientDto client);
+        bool CheckEmailExist(string email);
+
     }
 }

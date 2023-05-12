@@ -59,5 +59,23 @@ namespace Levi9.POS.WebApi.Controllers
             var clientResponse = _mapper.Map<ClientResponse>(client);
             return Ok(clientResponse);
         }
+        [HttpPut("update")]
+        [Authorize]
+        public async Task<IActionResult> UpdateClient(ClientUpdate clientUpdate)
+        {
+            if (_clientService.CheckEmailExist(clientUpdate.Email))
+                return BadRequest("Email already exists!");
+
+            var clientMap = _mapper.Map<UpdateClientDto>(clientUpdate);
+            clientMap = await _clientService.UpdateClient(clientMap);
+
+            if(clientMap == null)
+            {
+                return BadRequest();
+            }
+
+            var clientResponse = _mapper.Map<ClientResponse>(clientMap);
+            return Ok(clientResponse);
+        }
     }
 }

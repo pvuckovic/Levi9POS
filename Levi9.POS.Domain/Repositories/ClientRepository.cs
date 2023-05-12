@@ -4,7 +4,7 @@ using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Levi9.POS.Domain.Repository
+namespace Levi9.POS.Domain.Repositories
 {
     public class ClientRepository : IClientRepository
     {
@@ -44,6 +44,29 @@ namespace Levi9.POS.Domain.Repository
             var client = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == clientId);
             return client != null;
         }
+        public bool CheckClientExist(int clientId)
+        {
+            return _dbContext.Clients.Any(c => c.Id == clientId);
+        }
+        public bool CheckEmailExist(string email)
+        {
+            return _dbContext.Clients.Any(c => c.Email == email);
+        }
+        public async Task<Client> UpdateClient(Client client)
+        {
+            var clientExists = CheckClientExist(client.Id);
 
+            if (clientExists)
+            {
+                _dbContext.Attach(client);
+                _dbContext.Entry(client).Property(x => x.Name).IsModified = true;
+                _dbContext.Entry(client).Property(x => x.Address).IsModified = true;
+                _dbContext.Entry(client).Property(x => x.Phone).IsModified = true;
+                _dbContext.Entry(client).Property(x => x.Email).IsModified = true;
+                await _dbContext.SaveChangesAsync();
+                return client;
+            }
+            return null;
+        }
     }
 }

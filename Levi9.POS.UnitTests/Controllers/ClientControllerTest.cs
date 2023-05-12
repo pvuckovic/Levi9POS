@@ -2,7 +2,6 @@
 using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.WebApi.Controllers;
-using Levi9.POS.WebApi.Request;
 using Levi9.POS.WebApi.Request.ClientRequests;
 using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -135,7 +134,44 @@ namespace Levi9.POS.UnitTests.Controllers
             var notFoundResult = (NotFoundObjectResult)result;
             Assert.That(notFoundResult.Value, Is.EqualTo($"Client with Id {globalId} not found"));
         }
+        [Test]
+        public async Task UpdateClient_ShouldReturnBadRequest_WhenEmailAlreadyExists()
+        {
+            var clientUpdate = new ClientUpdate { Email = "test@example.com" };
+            _clientServiceMock.Setup(x => x.CheckEmailExist(clientUpdate.Email)).Returns(true);
 
+            var result = await _clientController.UpdateClient(clientUpdate);
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestResult = (BadRequestObjectResult)result;
+            Assert.That(badRequestResult.Value, Is.EqualTo("Email already exists!"));
+        }
+        [Test]
+        public async Task UpdateClient_ShouldReturnBadRequest_WhenUpdateClientDtoIsNull()
+        {
+            var clientUpdate = new ClientUpdate { Email = "test@example.com" };
+            var updateClientDto = (UpdateClientDto)null;
+            _clientServiceMock.Setup(x => x.CheckEmailExist(clientUpdate.Email)).Returns(false);
+            _clientServiceMock.Setup(x => x.UpdateClient(It.IsAny<UpdateClientDto>())).ReturnsAsync(updateClientDto);
+
+            var result = await _clientController.UpdateClient(clientUpdate);
+
+            Assert.IsInstanceOf<BadRequestResult>(result);
+        }
+        [Test]
+        public async Task UpdateClient_ShouldReturnOk_WhenClientIsUpdated()
+        {
+            var clientUpdate = new ClientUpdate { Email = "test@example.com" };
+            var updateClientDto = new UpdateClientDto { Id = 1 };
+            var clientResponse = new ClientResponse { Id = 1 };
+            _clientServiceMock.Setup(x => x.CheckEmailExist(clientUpdate.Email)).Returns(false);
+            _clientServiceMock.Setup(x => x.UpdateClient(It.IsAny<UpdateClientDto>())).ReturnsAsync(updateClientDto);
+
+            var result = await _clientController.UpdateClient(clientUpdate);
+            
+            var createdResult = (OkObjectResult)result;
+            Assert.That(createdResult.StatusCode, Is.EqualTo(200));
+
+        }
     }
-
 }
