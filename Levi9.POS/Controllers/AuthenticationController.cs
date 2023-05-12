@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Levi9.POS.WebApi.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     [AllowAnonymous]
     public class AuthenticationController : ControllerBase

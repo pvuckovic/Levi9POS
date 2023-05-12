@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Levi9.POS.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     public class ClientController : ControllerBase
     {
@@ -22,6 +22,7 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ClientResponse>> AddClient(ClientRequest clientRequest)
         {
             ClientDto clientMap = _mapper.Map<ClientDto>(clientRequest);
