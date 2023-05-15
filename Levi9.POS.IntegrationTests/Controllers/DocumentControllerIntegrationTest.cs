@@ -1,10 +1,18 @@
 ﻿using Levi9.POS.Domain;
+using Levi9.POS.Domain.Helpers;
 using Levi9.POS.Domain.Models;
+using Levi9.POS.IntegrationTests.Fixtures;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace Levi9.POS.IntegrationTests.Controllers
 {
@@ -37,6 +45,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
                         options.UseInMemoryDatabase("TestDatabase");
                     });
 
+
                     // Build the service provider to resolve and initialize the database context
                     var serviceProvider = services.BuildServiceProvider();
 
@@ -63,12 +72,11 @@ namespace Levi9.POS.IntegrationTests.Controllers
         public async Task GetDocumentById_ValidId_ReturnsOk()
         {
             // Arrange
-
             // Act
-            //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "your_token_here");
 
+            string token = DocumentsFixture.GenerateJwt();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync("/v1/document/1");
-            
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -77,6 +85,32 @@ namespace Levi9.POS.IntegrationTests.Controllers
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Id);
         }
-        
+
+        [Test]
+        public async Task GetDocumentById_InvalidId_ReturnsBadRequest()
+        {
+            // Arrange
+            // Act
+            string token = DocumentsFixture.GenerateJwt();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _client.GetAsync("/v1/document/0");
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Test]
+        public async Task GetDocumentById_NoUserFound_ReturnsNotFound()
+        {
+            // Arrange
+            // Act
+            string token = DocumentsFixture.GenerateJwt();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _client.GetAsync("/v1/document/10000");
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
     }
 }

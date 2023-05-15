@@ -24,7 +24,7 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpGet("{documentId}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetDocumentById(int documentId)
         {
             _logger.LogInformation("Entering {FunctionName} in DocumentController. Timestamp: {Timestamp}.", nameof(GetDocumentById), DateTime.UtcNow);
