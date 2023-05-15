@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Levi9.POS.Data.Migrations\Levi9.POS.Data.Migrations.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Levi9.POS.IntegrationTests"/>
+  </ItemGroup>
+
 </Project>
