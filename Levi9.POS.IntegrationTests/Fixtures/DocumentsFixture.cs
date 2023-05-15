@@ -1,12 +1,7 @@
-﻿using Levi9.POS.Domain.DTOs.DocumentDTOs;
-using Levi9.POS.Domain.Models;
+﻿using Levi9.POS.Domain.Models;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Levi9.POS.IntegrationTests.Fixtures
 {

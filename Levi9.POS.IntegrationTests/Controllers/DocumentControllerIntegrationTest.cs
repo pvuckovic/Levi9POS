@@ -1,18 +1,13 @@
 ﻿using Levi9.POS.Domain;
-using Levi9.POS.Domain.Helpers;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.IntegrationTests.Fixtures;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IdentityModel.Tokens.Jwt;
+using NUnit.Framework;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace Levi9.POS.IntegrationTests.Controllers
 {
