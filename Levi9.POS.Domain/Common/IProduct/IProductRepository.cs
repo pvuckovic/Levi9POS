@@ -9,5 +9,6 @@ namespace Levi9.POS.Domain.Common.IProduct
         Task<Product> UpdateProductAsync(Product product);
         Task<Product> GetProductByGlobalIdAsync(Guid globalId);
         public Task<bool> DoesProductExist(int productId, string name);
+        Task<Product> GetProductByNameAsync(string name);
     }
 }

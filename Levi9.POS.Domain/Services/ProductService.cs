@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.Domain.Models;
@@ -49,6 +48,7 @@ namespace Levi9.POS.Domain.Services
             _logger.LogInformation("Retrieving confirmation of new product in {FunctionName} of ProductService. Timestamp: {Timestamp}.", nameof(InsertProductAsync), DateTime.UtcNow);
             return insertedProductDTO;
         }
+
         public async Task<ProductDTO> UpdateProductAsync(ProductUpdateRequestDTO product)
         {
             _logger.LogInformation("Entering {FunctionName} in ProductService. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
