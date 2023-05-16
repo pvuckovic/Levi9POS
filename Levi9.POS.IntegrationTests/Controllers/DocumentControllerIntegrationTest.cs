@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace Levi9.POS.IntegrationTests.Controllers
 {
@@ -68,7 +69,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-
             string token = DocumentsFixture.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync("/v1/document/1");
@@ -89,23 +89,137 @@ namespace Levi9.POS.IntegrationTests.Controllers
             string token = DocumentsFixture.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync("/v1/document/0");
+            var result = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.AreEqual("The ID must be a positive number.", result);
         }
 
         [Test]
-        public async Task GetDocumentById_NoUserFound_ReturnsNotFound()
+        public async Task GetDocumentById_NoDocumentFound_ReturnsNotFound()
         {
             // Arrange
             // Act
             string token = DocumentsFixture.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync("/v1/document/10000");
+            var result = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.AreEqual("There is no document with the desired ID.", result);
         }
+
+
+        [Test]
+        public async Task GetDocumentById_InvalidToken_ReturnsUnauthorized()
+        {
+            // Arrange
+            // Act
+            string token = "Invalid.token.value";
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _client.GetAsync("/v1/document/1");
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Test]
+        public async Task CreateDocument_ValidDocument_ReturnsOk()
+        {
+            // Arrange
+            // Act
+            string token = DocumentsFixture.GenerateJwt();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var document = DocumentsFixture.GetDataForValidCreateDocument();
+
+            var jsonRequest = JsonConvert.SerializeObject(document);
+            var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("/v1/document", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("Document created successfully", result);
+        }
+
+        [Test]
+        public async Task CreateDocument_InvalidClientId_ReturnsBadRequest()
+        {
+            // Arrange
+            // Act
+            string token = DocumentsFixture.GenerateJwt();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var document = DocumentsFixture.GetDataForInvalidClientIdCreateDocument();
+
+            var jsonRequest = JsonConvert.SerializeObject(document);
+            var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("/v1/document", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.AreEqual("Client does not exist!", result);
+        }
+
+        [Test]
+        public async Task CreateDocument_InvalidProductId_ReturnsBadRequest()
+        {
+            // Arrange
+            // Act
+            string token = DocumentsFixture.GenerateJwt();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var document = DocumentsFixture.GetDataForInvalidProductIdCreateDocument();
+
+            var jsonRequest = JsonConvert.SerializeObject(document);
+            var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("/v1/document", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.AreEqual("Product does not exist!", result);
+        }
+
+        [Test]
+        public async Task CreateDocument_InvalidDocumentInput_ReturnsBadRequest()
+        {
+            // Arrange
+            // Act
+            string token = DocumentsFixture.GenerateJwt();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var document = DocumentsFixture.GetDataForInvalidDocumentInputCreateDocument();
+
+            var jsonRequest = JsonConvert.SerializeObject(document);
+            var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("/v1/document", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Test]
+        public async Task CreateDocument_InvalidToken_ReturnsUnauthorized()
+        {
+            // Arrange
+            // Act
+            string token = "Invalid.token.value";
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var document = DocumentsFixture.GetDataForValidCreateDocument();
+
+            var jsonRequest = JsonConvert.SerializeObject(document);
+            var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("/v1/document", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
 
     }
 }

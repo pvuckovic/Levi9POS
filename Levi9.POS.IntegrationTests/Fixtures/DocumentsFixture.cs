@@ -1,4 +1,5 @@
 ﻿using Levi9.POS.Domain.Models;
+using Levi9.POS.WebApi.Request.DocumentRequest;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -7,39 +8,118 @@ namespace Levi9.POS.IntegrationTests.Fixtures
 {
     public static class DocumentsFixture
     {
-        public static Document GetDataForDocumentRepository()
+        public static CreateDocumentRequest GetDataForValidCreateDocument()
         {
-            return new Document()
+            return new CreateDocumentRequest
             {
-                Id = 1,
-                GlobalId = Guid.NewGuid(),
-                LastUpdate = "133277539861042858",
                 ClientId = 1,
                 DocumentType = "INVOICE",
-                CreationDay = "133277539861042858",
-                ProductDocuments = new List<ProductDocument>()
+                Items = new List<CreateDocumentItemRequest>
                 {
-                    new ProductDocument()
+                    new CreateDocumentItemRequest
                     {
-                        ProductId = 1,
-                        DocumentId = 1,
-                        Currency = "RSD",
-                        Product = new Product()
-                        {
-                            Id = 1,
-                            Name = "Levi 9 T-Shirt",
-                            GlobalId = Guid.NewGuid(),
-                            ProductImageUrl = "baseURL//nekiurl1.png",
-                            AvailableQuantity = 30,
-                            Price = 60,
-                            LastUpdate = DateTime.Now.AddDays(-1).ToFileTimeUtc().ToString()
-                        },
-                        Price = 1200f,
-                        Quantity = 20
+                        Name = "Novis T-Shirt",
+                        ProductId = 2,
+                        Price = 10.5f,
+                        Currency = "USD",
+                        Quantity = 100
+                    },
+                    new CreateDocumentItemRequest
+                    {
+                        Name = "Vega IT T-Shirt",
+                        ProductId = 3,
+                        Price = 15.25f,
+                        Currency = "EUR",
+                        Quantity = 5
                     }
                 }
             };
         }
+
+        public static CreateDocumentRequest GetDataForInvalidClientIdCreateDocument()
+        {
+            return new CreateDocumentRequest
+            {
+                ClientId = 999999,
+                DocumentType = "INVOICE",
+                Items = new List<CreateDocumentItemRequest>
+                {
+                    new CreateDocumentItemRequest
+                    {
+                        Name = "Novis T-Shirt",
+                        ProductId = 2,
+                        Price = 10.5f,
+                        Currency = "USD",
+                        Quantity = 100
+                    },
+                    new CreateDocumentItemRequest
+                    {
+                        Name = "Vega IT T-Shirt",
+                        ProductId = 3,
+                        Price = 15.25f,
+                        Currency = "EUR",
+                        Quantity = 5
+                    }
+                }
+            };
+        }
+
+        public static CreateDocumentRequest GetDataForInvalidProductIdCreateDocument()
+        {
+            return new CreateDocumentRequest
+            {
+                ClientId = 1,
+                DocumentType = "INVOICE",
+                Items = new List<CreateDocumentItemRequest>
+                {
+                    new CreateDocumentItemRequest
+                    {
+                        Name = "Novis T-Shirt",
+                        ProductId = 2,
+                        Price = 10.5f,
+                        Currency = "USD",
+                        Quantity = 100
+                    },
+                    new CreateDocumentItemRequest
+                    {
+                        Name = "Vega IT T-Shirt",
+                        ProductId = 99999,
+                        Price = 15.25f,
+                        Currency = "EUR",
+                        Quantity = 5
+                    }
+                }
+            };
+        }
+
+        public static CreateDocumentRequest GetDataForInvalidDocumentInputCreateDocument()
+        {
+            return new CreateDocumentRequest
+            {
+                ClientId = 1,
+                DocumentType = "TYPE",
+                Items = new List<CreateDocumentItemRequest>
+                {
+                    new CreateDocumentItemRequest
+                    {
+                        Name = "Novis T-Shirt",
+                        ProductId = 2,
+                        Price = -2.4f,
+                        Currency = "KKD",
+                        Quantity = -2
+                    },
+                    new CreateDocumentItemRequest
+                    {
+                        Name = "Vega IT T-Shirt",
+                        ProductId = 3,
+                        Price = -15.25f,
+                        Currency = "FAR",
+                        Quantity = 0
+                    }
+                }
+            };
+        }
+
 
         public static string GenerateJwt()
         {
