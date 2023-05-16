@@ -24,10 +24,15 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<ClientResponse>> AddClient(ClientRequest clientRequest)
         {
             _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(AddClient), DateTime.UtcNow);
+            if (_clientService.CheckEmailExist(clientRequest.Email))
+            {
+                _logger.LogError("Client already exists with Email: {Email} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", clientRequest.Email, nameof(UpdateClient), DateTime.UtcNow);
+                return BadRequest("Email already exists!");
+            }
             ClientDto clientMap = _mapper.Map<ClientDto>(clientRequest);
             ClientDto clientDto = await _clientService.AddClient(clientMap);
             _logger.LogInformation("Client created successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(AddClient), DateTime.UtcNow);
@@ -41,7 +46,7 @@ namespace Levi9.POS.WebApi.Controllers
             if (id <= 0)
             {
                 _logger.LogError("Invalid client ID: {ClientId} in {FunctionName} of ClientController. Timestamp: {Timestamp}.", id, nameof(GetClientById), DateTime.UtcNow);
-                return BadRequest("Id must be a positive integer");
+                return BadRequest("Id must be a positive number");
             }
 
             var client = await _clientService.GetClientById(id);
