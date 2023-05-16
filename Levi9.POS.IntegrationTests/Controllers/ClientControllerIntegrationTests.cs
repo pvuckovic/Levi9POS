@@ -115,7 +115,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task GetClientById_ShouldReturnClientIfExist()
         {
-            int id = 4;
+            int id = 1;
 
             var response = await _client.GetAsync($"v1/client/{id}");
 
