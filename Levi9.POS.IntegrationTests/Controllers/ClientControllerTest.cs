@@ -4,6 +4,7 @@ using Levi9.POS.WebApi.Request.ClientRequests;
 using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
