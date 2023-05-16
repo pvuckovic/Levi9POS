@@ -20,6 +20,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         private WebApplicationFactory<Program> _factory;
         private HttpClient _client;
         private DataBaseContext _dbContext;
+        private List<Product> _testProducts;
 
         [SetUp]
         public void Setup()
@@ -47,7 +48,15 @@ namespace Levi9.POS.IntegrationTests.Controllers
 
                     // Create a new instance of the database context
                     _dbContext = serviceProvider.GetRequiredService<DataBaseContext>();
-                    _dbContext.Database.EnsureCreated();
+
+                    // Check if the database is empty
+                    if (!_dbContext.Products.Any())
+                    {
+                        // Generate test products
+                        _testProducts = ProductFixture.CreateTestProducts();
+                        _dbContext.Products.AddRange(_testProducts);
+                        _dbContext.SaveChanges();
+                    }
                 });
             });
             _client = _factory.CreateClient();
@@ -68,18 +77,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         public async Task GetProductById_ValidId_ReturnsOk()
         {
             // Arrange
-            var product = new Product
-            {
-                Id = 88,
-                GlobalId = Guid.NewGuid(),
-                Name = "Test Product",
-                ProductImageUrl = "https://test.com/product1.jpg",
-                AvailableQuantity = 10,
-                LastUpdate = "133277539861042364",
-                Price = 99.99f
-            };
-            _dbContext.Products.Add(product);
-            _dbContext.SaveChanges();
+            var product = _testProducts.First();
 
             // Act
             var response = await _client.GetAsync($"/v1/Product/{product.Id}");
@@ -115,7 +113,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         public async Task GetProductById_ProductNotFound_ReturnsNotFound()
         {
             // Arrange
-            int nonExistentId = 999999999;
+            int nonExistentId = 30;
 
             // Act
             var response = await _client.GetAsync($"/v1/Product/{nonExistentId}");
@@ -127,18 +125,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         public async Task GetProductById_Unauthorized_ReturnsUnauthorized()
         {
             // Arrange
-            var product = new Product
-            {
-                Id = 88,
-                GlobalId = Guid.NewGuid(),
-                Name = "Test Product",
-                ProductImageUrl = "https://test.com/product1.jpg",
-                AvailableQuantity = 10,
-                LastUpdate = "133277539861042364",
-                Price = 99.99f
-            };
-            _dbContext.Products.Add(product);
-            _dbContext.SaveChanges();
+            var product = _testProducts.First();
 
             // Remove the authorization header
             _client.DefaultRequestHeaders.Authorization = null;
@@ -158,7 +145,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
             var request = new ProductSearchRequest
             {
                 Page = 1,
-                Name = "T-Shirt",
+                Name = "Product",
                 OrderBy = "id",
                 Direction = "asc"
             };
@@ -210,7 +197,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
             var request = new ProductSearchRequest
             {
                 Page = 1,
-                Name = "T-Shirt",
+                Name = "Product",
                 OrderBy = "id",
                 Direction = ""
             };// Act
@@ -247,7 +234,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
             var request = new ProductSearchRequest
             {
                 Page = 1,
-                Name = "T-Shirt",
+                Name = "Product",
                 OrderBy = "name",
                 Direction = "asc"
             };
@@ -324,23 +311,12 @@ namespace Levi9.POS.IntegrationTests.Controllers
         public async Task InsertProduct_DuplicateName_ReturnsBadRequest()
         {
             // Arrange
-            var existingProduct = new Product
-            {
-                GlobalId = Guid.Parse("025d4482-79e2-4ad1-bbee-94e267572418"),
-                Name = "Levi9 T-Shirt", // Duplicate name
-                ProductImageUrl = "[baseURL]/product/025d4482-79e2-4ad1-bbee-94e267572418.png",
-                AvailableQuantity = 15000,
-                LastUpdate = "634792557112051692",
-                Price = 15.23f
-            };
-
-            _dbContext.Products.Add(existingProduct);
-            _dbContext.SaveChanges();
+            var product = _testProducts[2];
 
             var request = new ProductInsertRequest
             {
                 GlobalId = Guid.NewGuid(),
-                Name = "Levi9 T-Shirt", // Duplicate name
+                Name = "Test Product 2", // Duplicate name
                 ProductImageUrl = "[baseURL]/product/new-product.png",
                 AvailableQuantity = 500,
                 LastUpdate = "634792557112051800",
@@ -384,29 +360,13 @@ namespace Levi9.POS.IntegrationTests.Controllers
         public async Task UpdateProduct_ValidRequest_ReturnsOk()
         {
             // Arrange
-            var insertRequest = new ProductInsertRequest
-            {
-                GlobalId = Guid.Parse("025d4482-79e2-4ad1-bbee-94e267572418"),
-                Name = "T-Shirt Levi9",
-                ProductImageUrl = "[baseURL]/product/025d4482-79e2-4ad1-bbee-94e267572418.png",
-                AvailableQuantity = 15000,
-                LastUpdate = "634792557112051692",
-                Price = 15.23f
-            };
-
-            var insertContent = new StringContent(JsonConvert.SerializeObject(insertRequest), Encoding.UTF8, "application/json");
-
-            // Insert the product
-            var insertResponse = await _client.PostAsync("/v1/Product", insertContent);
-            insertResponse.EnsureSuccessStatusCode();
-
             var updateRequest = new ProductUpdateRequest
             {
-                GlobalId = Guid.Parse("025d4482-79e2-4ad1-bbee-94e267572418"),
-                Name = "Updated T-Shirt Levi9",
-                ProductImageUrl = "[baseURL]/product/025d4482-79e2-4ad1-bbee-94e267572418.png",
+                GlobalId = Guid.Parse(_testProducts[2].GlobalId.ToString()),
+                Name = "Updated Test Product 2",
+                ProductImageUrl = "[baseURL]/product/updated-product.png",
                 AvailableQuantity = 15000,
-                LastUpdate = "634792557112051692",
+                LastUpdate = "133277539861042362",
                 Price = 18.99f
             };
 
@@ -438,28 +398,13 @@ namespace Levi9.POS.IntegrationTests.Controllers
         public async Task UpdateProduct_MissingGlobalId_ReturnsBadRequest()
         {
             // Arrange
-            var insertRequest = new ProductInsertRequest
-            {
-                GlobalId = Guid.Parse("025d4482-79e2-4ad1-bbee-94e267572418"),
-                Name = "T-Shirt Levi9",
-                ProductImageUrl = "[baseURL]/product/025d4482-79e2-4ad1-bbee-94e267572418.png",
-                AvailableQuantity = 15000,
-                LastUpdate = "634792557112051692",
-                Price = 15.23f
-            };
-
-            var insertContent = new StringContent(JsonConvert.SerializeObject(insertRequest), Encoding.UTF8, "application/json");
-
-            // Insert the product
-            var insertResponse = await _client.PostAsync("/v1/Product", insertContent);
-            insertResponse.EnsureSuccessStatusCode();
 
             var request = new ProductUpdateRequest
             {
-                Name = "Updated T-Shirt Levi9",
-                ProductImageUrl = "[baseURL]/product/025d4482-79e2-4ad1-bbee-94e267572418.png",
+                Name = "Test Product 3",
+                ProductImageUrl = "[baseURL]/product/updatedproduct3.png",
                 AvailableQuantity = 15000,
-                LastUpdate = "634792557112051692",
+                LastUpdate = "133277539861042363",
                 Price = 18.99f
             };
 
@@ -498,11 +443,11 @@ namespace Levi9.POS.IntegrationTests.Controllers
             // Arrange
             var request = new ProductUpdateRequest
             {
-                GlobalId = Guid.Parse("025d4482-79e2-4ad1-bbee-94e267572418"),
+                GlobalId = Guid.Parse(_testProducts[5].GlobalId.ToString()),
                 Name = "", // Invalid: empty name
-                ProductImageUrl = "[baseURL]/product/025d4482-79e2-4ad1-bbee-94e267572418.png",
+                ProductImageUrl = "[baseURL]/product/updateproduct5.png",
                 AvailableQuantity = 15000,
-                LastUpdate = "634792557112051692",
+                LastUpdate = "133277539861042365",
                 Price = 18.99f
             };
 
@@ -520,11 +465,11 @@ namespace Levi9.POS.IntegrationTests.Controllers
             // Arrange
             var request = new ProductUpdateRequest
             {
-                GlobalId = Guid.Parse("025d4482-79e2-4ad1-bbee-94e267572418"),
-                Name = "Updated T-Shirt Levi9",
-                ProductImageUrl = "[baseURL]/product/025d4482-79e2-4ad1-bbee-94e267572418.png",
+                GlobalId = Guid.Parse(_testProducts[7].GlobalId.ToString()),
+                Name = "Updated Test Product 7",
+                ProductImageUrl = "[baseURL]/product/updatedproduct7.png",
                 AvailableQuantity = 15000,
-                LastUpdate = "634792557112051692",
+                LastUpdate = "133277539861042367",
                 Price = 18.99f
             };
 
