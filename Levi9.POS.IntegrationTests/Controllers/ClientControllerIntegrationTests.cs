@@ -12,7 +12,7 @@ using System.Net.Http.Json;
 namespace Levi9.POS.IntegrationTests.Controllers
 {
     [TestFixture]
-    public class ClientControllerTest
+    public class ClientControllerIntegrationTests
     {
         private HttpClient _client;
         private WebApplicationFactory<Program> _factory;
