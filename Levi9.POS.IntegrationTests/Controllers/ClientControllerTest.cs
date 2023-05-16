@@ -24,6 +24,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
             token = AuthenticationHelper.GenerateJwtTestCase();
             _factory = new CustomWebAppFactory<Program>();
             _client = _factory.CreateClient();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         [TearDown]
@@ -36,8 +37,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task AddClient_ValidRequest_ShouldReturnOk()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var clientRequest = new ClientRequest
             {
                 Address = "address",
@@ -58,8 +57,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task AddClient_EmailExist_ShouldReturnBadRequest()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var clientRequest = new ClientRequest
             {
                 Address = "address",
@@ -78,8 +75,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task UpdateClient_ValidRequest_ShouldReturnOk()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var clienUpdate = new ClientUpdate
             {
                 Id = 1,
@@ -101,8 +96,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task UpdateClient_EmailExist_ShouldReturnBadRequest()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var clienUpdate = new ClientUpdate
             {
                 Id = 1,
@@ -122,8 +115,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task GetClientById_ShouldReturnClientIfExist()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            int id = 1;
+            int id = 4;
 
             var response = await _client.GetAsync($"v1/client/{id}");
 
@@ -131,12 +123,11 @@ namespace Levi9.POS.IntegrationTests.Controllers
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<Client>(content);
             Assert.NotNull(result);
-            Assert.That(result.Id, Is.EqualTo(1));
+            Assert.That(result.Id, Is.EqualTo(id));
         }
         [Test]
         public async Task GetClientById_InvalidId_ReturnsBadRequest()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             int id = 0;
 
             var response = await _client.GetAsync($"/v1/client/{id}");
@@ -146,7 +137,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task GetClientByNegativeId_ShouldReturnBadRequest()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             int id = -1;
 
             var response = await _client.GetAsync($"v1/client/{id}");
@@ -159,7 +149,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task GetClientById_NoClientFound_ReturnsNotFound()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             int id = 100000;
 
             var response = await _client.GetAsync($"/v1/client/{id}");
@@ -169,6 +158,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task GetClientById_Unauthorized_ReturnsUnauthorized()
         {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", string.Empty);
             int id = 1;
 
             var response = await _client.GetAsync($"/v1/client/{id}");
@@ -180,8 +170,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             var globalId = "10bc28f5-7042-4736-97ad-1cb3dce98b1c";
             string name = "Marko";
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await _client.GetAsync($"v1/client/global/{globalId}");
 
@@ -196,7 +184,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             var globalId = new Guid();
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync($"/v1/client/global/{globalId}");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
@@ -204,6 +191,8 @@ namespace Levi9.POS.IntegrationTests.Controllers
         [Test]
         public async Task GetClientByGlobalId_Unauthorized_ReturnsUnauthorized()
         {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", string.Empty);
+
             var response = await _client.GetAsync("/v1/client/global/10bc28f5-7042-4736-97ad-1cb3dce98b1c");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
