@@ -49,26 +49,26 @@ namespace Levi9.POS.UnitTests.Services
                 DocumentType = "INVOICE",
                 CreationDay = "133277539861042858",
                 ProductDocuments = new List<ProductDocument>()
-            {
-                new ProductDocument()
                 {
-                    ProductId = 1,
-                    DocumentId = 1,
-                    Currency = "RSD",
-                    Product = new Product()
+                    new ProductDocument()
                     {
-                        Id = 1,
-                        Name = "Levi 9 T-Shirt",
-                        GlobalId = Guid.NewGuid(),
-                        ProductImageUrl = "baseURL//nekiurl1.png",
-                        AvailableQuantity = 30,
-                        Price = 60,
-                        LastUpdate = DateTime.Now.AddDays(-1).ToFileTimeUtc().ToString()
-                    },
-                    Price = 1200f,
-                    Quantity = 20
+                        ProductId = 1,
+                        DocumentId = 1,
+                        Currency = "RSD",
+                        Product = new Product()
+                        {
+                            Id = 1,
+                            Name = "Levi 9 T-Shirt",
+                            GlobalId = Guid.NewGuid(),
+                            ProductImageUrl = "baseURL//nekiurl1.png",
+                            AvailableQuantity = 30,
+                            Price = 60,
+                            LastUpdate = DateTime.Now.AddDays(-1).ToFileTimeUtc().ToString()
+                        },
+                        Price = 1200f,
+                        Quantity = 20
+                    }
                 }
-            }
             };
 
             _documentRepositoryMock.Setup(repo => repo.GetDocumentById(1))

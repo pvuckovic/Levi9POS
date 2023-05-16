@@ -24,7 +24,6 @@ namespace Levi9.POS.WebApi.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
         public async Task<ActionResult<ClientResponse>> AddClient(ClientRequest clientRequest)
         {
             _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(AddClient), DateTime.UtcNow);

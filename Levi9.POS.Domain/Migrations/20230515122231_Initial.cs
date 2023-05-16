@@ -106,9 +106,9 @@ namespace Levi9.POS.Domain.Migrations
                 columns: new[] { "Id", "Address", "Email", "GlobalId", "LastUpdate", "Name", "Password", "Phone", "Salt" },
                 values: new object[,]
                 {
-                    { 1, "1.maja, Derventa", "marko@gmail.com", new Guid("c67794b3-0526-4d39-9017-e89f9c350b2a"), "133282694796458748", "Marko", "password", "+387 65 132 527", "Salt" },
-                    { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("aa8b3557-b7e5-45ef-970d-5e63333e66df"), "133282694796458760", "Aleksa", "password123", "+387 64 862 476", "Salt123" },
-                    { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("f9496a21-fb71-44f9-ab87-92c458a37862"), "133282694796458767", "Milos", "password123", "+387 65 912 127", "Salt123" }
+                    { 1, "1.maja, Derventa", "marko@gmail.com", new Guid("ad7a834c-826d-4f74-b6d3-13ad034c4ed0"), "133286269502564550", "Marko", "password", "+387 65 132 527", "Salt" },
+                    { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("54d9ddda-36b8-477c-8b35-801605c7eea4"), "133286269502564585", "Aleksa", "password123", "+387 64 862 476", "Salt123" },
+                    { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("3b3614e3-d1cf-4fae-bc2a-46571d68b627"), "133286269502564620", "Milos", "password123", "+387 65 912 127", "Salt123" }
                 });
 
             migrationBuilder.InsertData(
@@ -116,9 +116,9 @@ namespace Levi9.POS.Domain.Migrations
                 columns: new[] { "Id", "AvailableQuantity", "GlobalId", "LastUpdate", "Name", "Price", "ProductImageUrl" },
                 values: new object[,]
                 {
-                    { 1, 30, new Guid("8314f321-8794-40ab-8bc7-08061281b52f"), "133282694796458548", "Levi 9 T-Shirt", 10f, "baseURL//nekiurl1.png" },
-                    { 2, 10, new Guid("e351d51f-d1f6-46b0-8b55-9e182d9ef187"), "133282694796458615", "Novis T-Shirt", 15f, "baseURL//nekiurl2.png" },
-                    { 3, 20, new Guid("8795bb38-3676-4d87-80e4-b736c0143126"), "133282694796458624", "Vega IT T-Shirt", 20f, "baseURL//nekiurl3.png" }
+                    { 1, 30, new Guid("b7ac2921-596b-4d4c-95ac-34d027e83365"), "133286269502564085", "Levi 9 T-Shirt", 10f, "baseURL//nekiurl1.png" },
+                    { 2, 10, new Guid("6804e45f-25a9-4e03-a36b-97cb3c94feca"), "133286269502564196", "Novis T-Shirt", 15f, "baseURL//nekiurl2.png" },
+                    { 3, 20, new Guid("dad3e696-5583-47ae-93e2-ff8d7fe43778"), "133286269502564218", "Vega IT T-Shirt", 20f, "baseURL//nekiurl3.png" }
                 });
 
             migrationBuilder.InsertData(
@@ -126,9 +126,9 @@ namespace Levi9.POS.Domain.Migrations
                 columns: new[] { "Id", "ClientId", "CreationDay", "DocumentType", "GlobalId", "LastUpdate" },
                 values: new object[,]
                 {
-                    { 1, 1, "133282694796458787", "INVOICE", new Guid("c2c59765-01b9-43ac-a6be-e48bee16a806"), "133282694796458793" },
-                    { 2, 2, "133282694796458800", "INVOICE", new Guid("84d6ae61-3805-4c85-bc97-251a94594f81"), "133282694796458805" },
-                    { 3, 3, "133282694796458815", "INVOICE", new Guid("48483636-0502-40db-87d1-b6461dcb6b15"), "133282694796458893" }
+                    { 1, 1, "133286269502564671", "INVOICE", new Guid("9be6a0f1-f02c-4e9b-b7f8-08c995ca88e0"), "133286269502564685" },
+                    { 2, 2, "133286269502564699", "INVOICE", new Guid("3e3f168c-fe0b-4259-af18-9c674b89cfce"), "133286269502564711" },
+                    { 3, 3, "133286269502564725", "INVOICE", new Guid("3120a08a-8dba-4d99-b0bc-5ed8db5799b7"), "133286269502564736" }
                 });
 
             migrationBuilder.InsertData(

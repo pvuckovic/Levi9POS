@@ -29,4 +29,8 @@
     <InternalsVisibleTo Include="Levi9.POS.IntegrationTests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Levi9.POS.IntegrationTests"/>
+  </ItemGroup>
+
 </Project>
