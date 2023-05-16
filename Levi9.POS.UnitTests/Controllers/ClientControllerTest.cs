@@ -96,7 +96,7 @@ namespace Levi9.POS.UnitTests.Controllers
 
             // Assert
             var badRequestResult = (BadRequestObjectResult)result;
-            Assert.That(badRequestResult.Value, Is.EqualTo("Id must be a positive integer"));
+            Assert.That(badRequestResult.Value, Is.EqualTo("Id must be a positive number"));
         }
         [Test]
         public async Task GetClientByGlobalId_WithExistingClient_ReturnsOk()
