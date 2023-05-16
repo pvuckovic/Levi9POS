@@ -13,7 +13,7 @@ using System.Text;
 namespace Levi9.POS.IntegrationTests.Controllers
 {
     [TestFixture]
-    public class DocumentContollerIntegrationTest
+    public class DocumentContollerTests
     {
 
         private WebApplicationFactory<Program> _factory;
@@ -47,7 +47,17 @@ namespace Levi9.POS.IntegrationTests.Controllers
 
                     // Create a new instance of the database context
                     _dbContext = serviceProvider.GetRequiredService<DataBaseContext>();
-                    _dbContext.Database.EnsureCreated();
+
+                    // Clear the data in specific tables
+                    _dbContext.ProductDocuments.RemoveRange(_dbContext.ProductDocuments);
+                    _dbContext.Documents.RemoveRange(_dbContext.Documents);
+                    _dbContext.Clients.RemoveRange(_dbContext.Clients);
+                    _dbContext.Products.RemoveRange(_dbContext.Products);
+                    //adding
+                    _dbContext.Clients.Add(DocumentsFixture.RegisterClient());
+                    _dbContext.Products.AddRange(DocumentsFixture.RegisterProducts());
+                    _dbContext.Documents.Add(DocumentsFixture.RegisterDocument());
+                    _dbContext.SaveChanges();
                 });
             });
 
@@ -69,7 +79,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-            string token = DocumentsFixture.GenerateJwt();
+            string token = TokenGenerator.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync("/v1/document/1");
 
@@ -86,7 +96,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-            string token = DocumentsFixture.GenerateJwt();
+            string token = TokenGenerator.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync("/v1/document/0");
             var result = await response.Content.ReadAsStringAsync();
@@ -101,7 +111,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-            string token = DocumentsFixture.GenerateJwt();
+            string token = TokenGenerator.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.GetAsync("/v1/document/10000");
             var result = await response.Content.ReadAsStringAsync();
@@ -110,7 +120,6 @@ namespace Levi9.POS.IntegrationTests.Controllers
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             Assert.AreEqual("There is no document with the desired ID.", result);
         }
-
 
         [Test]
         public async Task GetDocumentById_InvalidToken_ReturnsUnauthorized()
@@ -130,7 +139,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-            string token = DocumentsFixture.GenerateJwt();
+            string token = TokenGenerator.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var document = DocumentsFixture.GetDataForValidCreateDocument();
 
@@ -150,7 +159,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-            string token = DocumentsFixture.GenerateJwt();
+            string token = TokenGenerator.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var document = DocumentsFixture.GetDataForInvalidClientIdCreateDocument();
 
@@ -169,7 +178,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-            string token = DocumentsFixture.GenerateJwt();
+            string token = TokenGenerator.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var document = DocumentsFixture.GetDataForInvalidProductIdCreateDocument();
 
@@ -188,7 +197,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
         {
             // Arrange
             // Act
-            string token = DocumentsFixture.GenerateJwt();
+            string token = TokenGenerator.GenerateJwt();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var document = DocumentsFixture.GetDataForInvalidDocumentInputCreateDocument();
 
