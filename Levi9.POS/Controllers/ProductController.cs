@@ -5,6 +5,7 @@ using Levi9.POS.WebApi.Request.ProductRequest;
 using Levi9.POS.WebApi.Response.ProductResponse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 namespace Levi9.POS.WebApi.Controllers
 {
     [ApiController]
@@ -56,7 +57,7 @@ namespace Levi9.POS.WebApi.Controllers
                 _logger.LogError("Invalid Page: {Page} in {FunctionName} of ProductController. Timestamp: {Timestamp}.", request.Page, nameof(SearchProducts), DateTime.UtcNow);
                 return BadRequest("The 'page' parameter must be greater than 0.");
             }
-            if(!string.IsNullOrEmpty(request.OrderBy) && string.IsNullOrEmpty(request.Direction))
+            if (!string.IsNullOrEmpty(request.OrderBy) && string.IsNullOrEmpty(request.Direction))
             {
                 _logger.LogError("Direction must have value in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(SearchProducts), DateTime.UtcNow);
                 return BadRequest("If OrderBy is not empty, you must enter Direction!");
@@ -101,10 +102,10 @@ namespace Levi9.POS.WebApi.Controllers
             if (insertedProduct == null)
             {
                 _logger.LogError("Failed to insert product in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(InsertProduct), DateTime.UtcNow);
-                return StatusCode(500, "Failed to insert product");
+                return BadRequest("Product name must be unique");
             }
 
-           
+
             var response = _mapper.Map<ProductInsertResponse>(insertedProduct);
             _logger.LogInformation("Product created successfully in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(InsertProduct), DateTime.UtcNow);
             return CreatedAtAction(nameof(GetProductById), new { id = response.Id }, response);
@@ -114,21 +115,22 @@ namespace Levi9.POS.WebApi.Controllers
         public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdateRequest request)
         {
             _logger.LogInformation("Entering {FunctionName} in ProductController. Timestamp: {Timestamp}.", nameof(UpdateProduct), DateTime.UtcNow);
-
             if (request == null)
             {
                 _logger.LogError("Invalid request value in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(UpdateProduct), DateTime.UtcNow);
                 return BadRequest("Request cannot be null");
             }
-
-            var product = await _productService.GetProductByGlobalIdAsync(request.GlobalId);
-
+            if (request.GlobalId == Guid.Empty)
+            {
+                _logger.LogError("Product with GlobalId must exist. GlobalId: {product.GlobalId}. Function: {functionName}. Timestamp: {timestamp}.", nameof(UpdateProduct), DateTime.UtcNow);
+                return BadRequest("GlobalId is must be exist");
+            }
+            var product = await _productService.GetProductByGlobalIdAsync(request.GlobalId);            
             if (product == null)
             {
                 _logger.LogError("Product not found with GlobalId: {GlobalId} in {FunctionName} of ProductController. Timestamp: {Timestamp}.", request.GlobalId, nameof(UpdateProduct), DateTime.UtcNow);
                 return NotFound($"Product with GlobalId {request.GlobalId} not found");
             }
-
             _mapper.Map(request, product);
             var productUpdate = _mapper.Map<ProductUpdateRequestDTO>(product);
             var updatedProduct = await _productService.UpdateProductAsync(productUpdate);
