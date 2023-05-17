@@ -21,16 +21,16 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Levi9.POS.Data.Migrations\Levi9.POS.Data.Migrations.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Levi9.POS.IntegrationTests" />
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Levi9.POS.IntegrationTests"/>
+    <InternalsVisibleTo Include="Levi9.POS.IntegrationTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Levi9.POS.Domain\Levi9.POS.Domain.csproj" />
   </ItemGroup>
 
 </Project>
