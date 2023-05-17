@@ -29,6 +29,7 @@ namespace Levi9.POS.IntegrationTests
                 var serviceProvider = services.BuildServiceProvider();
                 // Create a new instance of the database context
                 _dataBaseContext = serviceProvider.GetRequiredService<DataBaseContext>();
+                _dataBaseContext.Database.EnsureDeleted();
                 _dataBaseContext.Database.EnsureCreated();
             });
         }
