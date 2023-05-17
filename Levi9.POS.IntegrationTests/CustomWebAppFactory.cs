@@ -29,6 +29,7 @@ namespace Levi9.POS.IntegrationTests
                     options.UseInMemoryDatabase("TestDB");
                 });
 
+                // Build the service provider to resolve and initialize the database context
                 var serviceProvider = services.BuildServiceProvider();
 
                 _dataBaseContext = serviceProvider.GetRequiredService<DataBaseContext>();

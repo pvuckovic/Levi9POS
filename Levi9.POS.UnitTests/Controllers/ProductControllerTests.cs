@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.ProductDTOs;
-using Levi9.POS.Domain.Services;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Request.ProductRequest;

@@ -2,7 +2,6 @@
 using Levi9.POS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Xml.Linq;
 
 namespace Levi9.POS.Domain.Repositories
 {
@@ -71,11 +70,23 @@ namespace Levi9.POS.Domain.Repositories
         public async Task<Product> InsertProductAsync(Product product)
         {
             _logger.LogInformation("Entering {FunctionName} in ProductRepository. Timestamp: {Timestamp}.", nameof(InsertProductAsync), DateTime.UtcNow);
+
+            // Check if product name already exists
+            bool isDuplicate = await _dataBaseContext.Products.AnyAsync(p => p.Name == product.Name);
+            if (isDuplicate)
+            {
+                _logger.LogError("Duplicate product name in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", nameof(InsertProductAsync), DateTime.UtcNow);
+                return null;
+            }
+
+            // Add the product to the database
             await _dataBaseContext.Products.AddAsync(product);
             await _dataBaseContext.SaveChangesAsync();
+
             _logger.LogInformation("Retrieving confirmation of new product in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", nameof(InsertProductAsync), DateTime.UtcNow);
             return product;
         }
+
         public async Task<Product> UpdateProductAsync(Product product)
         {
             _logger.LogInformation("Entering {FunctionName} in ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
@@ -89,6 +100,13 @@ namespace Levi9.POS.Domain.Repositories
             _logger.LogInformation("Entering {FunctionName} in ProductRepository. Timestamp: {Timestamp}.", nameof(GetProductByGlobalIdAsync), DateTime.UtcNow);
             var result = await _dataBaseContext.Products.FirstOrDefaultAsync(p => p.GlobalId == globalId);
             _logger.LogInformation("Retrieving product with ID: {Id} in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", globalId, nameof(GetProductByGlobalIdAsync), DateTime.UtcNow);
+            return result;
+        }
+        public async Task<Product> GetProductByNameAsync(string name)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ProductRepository. Timestamp: {Timestamp}.", nameof(GetProductByNameAsync), DateTime.UtcNow);
+            var result = await _dataBaseContext.Products.FirstOrDefaultAsync(p => p.Name == name);
+            _logger.LogInformation("Retrieving product with name: {ProductName} in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", name, nameof(GetProductByNameAsync), DateTime.UtcNow);
             return result;
         }
     }
