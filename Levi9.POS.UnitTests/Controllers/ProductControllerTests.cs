@@ -462,5 +462,37 @@ namespace Levi9.POS.UnitTests.Controllers
             Assert.That(notFoundResult.Value, Is.EqualTo($"Product with GlobalId {globalId} not found"));
         }
         #endregion
+        public async Task SyncProducts_InvalidProducts_ReturnsBadRequest()
+        {
+            // Arrange
+            var products = new List<ProductSyncRequest>
+            {
+                new ProductSyncRequest
+                {
+                    GlobalId = new Guid("3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58"),
+                },
+            };
+            var mapper = new Mock<IMapper>();
+            var productSyncRequestDTOs = new List<ProductSyncRequestDTO>
+            {
+                new ProductSyncRequestDTO {
+                            GlobalId = new Guid("3f3e9a33-4786-4a1e-9b0a-8be47e4c4b58"),
+                        },
+            };
+
+            mapper.Setup(m => m.Map<List<ProductSyncRequestDTO>>(products)).Returns(productSyncRequestDTOs);
+            string expectedResult = null;
+            _productServiceMock.Setup(p => p.SyncProducts(productSyncRequestDTOs)).ReturnsAsync(expectedResult);
+
+            // Act
+            var result = await _productController.SyncProducts(products);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestResult = (BadRequestObjectResult)result;
+
+            Assert.IsNotNull(badRequestResult);
+            Assert.AreEqual("Update failed!", badRequestResult.Value);
+        }
     }
 }

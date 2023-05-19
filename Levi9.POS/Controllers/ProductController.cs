@@ -145,5 +145,20 @@ namespace Levi9.POS.WebApi.Controllers
             _logger.LogInformation("Product updated successfully in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(InsertProduct), DateTime.UtcNow);
             return Ok(response);
         }
+        [HttpPost("snyc")]
+        [Authorize]
+        public async Task<IActionResult> SyncProducts(List<ProductSyncRequest> products)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ProductController. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);
+            var newProducts = _mapper.Map<List<ProductSyncRequestDTO>>(products);
+            string result = await _productService.SyncProducts(newProducts);
+            if (result == null)
+            {
+                _logger.LogError("Filed to update products in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);
+                return BadRequest("Update failed!");
+            }
+            _logger.LogInformation("Products updated successfully in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);
+            return Ok(result);
+        }
     }
 }

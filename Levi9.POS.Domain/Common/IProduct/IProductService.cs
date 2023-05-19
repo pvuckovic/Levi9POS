@@ -8,5 +8,7 @@ namespace Levi9.POS.Domain.Common.IProduct
         Task<ProductDTO> InsertProductAsync(ProductInsertRequestDTO product);
         Task<ProductDTO> UpdateProductAsync(ProductUpdateRequestDTO product);
         Task<ProductDTO> GetProductByGlobalIdAsync(Guid globalId);
+        public Task<string> SyncProducts(List<ProductSyncRequestDTO> products);
+
     }
 }

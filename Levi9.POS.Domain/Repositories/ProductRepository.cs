@@ -109,5 +109,21 @@ namespace Levi9.POS.Domain.Repositories
             _logger.LogInformation("Retrieving product with name: {ProductName} in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", name, nameof(GetProductByNameAsync), DateTime.UtcNow);
             return result;
         }
+
+        public async Task<bool> DoesProductByGlobalIdExists(Guid globalId)
+        {
+            _logger.LogInformation("Entering { FunctionName} in ProductRepository.Timestamp { Timestamp}.", nameof(DoesProductByGlobalIdExists), DateTime.UtcNow);
+            var result = await _dataBaseContext.Products.AnyAsync(p => p.GlobalId == globalId);
+            _logger.LogInformation("Retrieving confirmation of product with GlobalId { Id} in { FunctionName}of ProductRepository. Timestamp { Timestamp}.", globalId, nameof(DoesProductByGlobalIdExists), DateTime.UtcNow);
+            return result;
+        }
+
+        public async Task<bool> DoesProductNameAlreadyExists(Guid globalId, string name)
+        {
+            _logger.LogInformation("Entering { FunctionName} in ProductRepository.Timestamp { Timestamp}.", nameof(DoesProductNameAlreadyExists), DateTime.UtcNow);
+            var result = await _dataBaseContext.Products.AnyAsync(p => p.GlobalId != globalId && p.Name == name);
+            _logger.LogInformation("Retrieving confirmation if Name { Name} already exists in { FunctionName} of ProductRepository. Timestamp { Timestamp}.", name, nameof(DoesProductNameAlreadyExists), DateTime.UtcNow);
+            return result;
+        }
     }
 }
