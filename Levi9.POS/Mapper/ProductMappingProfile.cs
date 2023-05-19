@@ -26,6 +26,9 @@ namespace Levi9.POS.WebApi.Mapper
                 .ForMember(dest => dest.LastUpdate, opt => opt.MapFrom(src => DateTime.Now.ToFileTimeUtc().ToString()))
                 .ForMember(dest => dest.ProductImageUrl, opt => opt.Ignore());
             CreateMap<ProductDTO, ProductUpdateResponse>();
+            //sync path
+            CreateMap<ProductSyncRequest, ProductSyncRequestDTO>();
+            CreateMap<ProductSyncRequestDTO, Product>();
         }
     }
 }

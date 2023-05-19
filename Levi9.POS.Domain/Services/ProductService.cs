@@ -77,5 +77,37 @@ namespace Levi9.POS.Domain.Services
             _logger.LogInformation("Product retrieved successfully with GlobalID: {GlobalId} in {FunctionName} of ProductService. Timestamp: {Timestamp}.", globalId, nameof(GetProductByGlobalIdAsync), DateTime.UtcNow);
             return _mapper.Map<ProductDTO>(entity);
         }
+
+        public async Task<string> SyncProducts(List<ProductSyncRequestDTO> products)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ProductService. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);
+            foreach (var product in products)
+            {
+                if (await _productRepository.DoesProductNameAlreadyExists(product.GlobalId, product.Name))
+                {
+                    _logger.LogError("Product name: {Name} already exists for GlobalId: {GlobalId} in {FunctionName} of ProductService. Timestamp: {Timestamp}.", product.Name, product.GlobalId, nameof(GetProductByGlobalIdAsync), DateTime.UtcNow);
+                    return null;
+                }
+            }
+
+            var mapedProducts = _mapper.Map<List<Product>>(products);
+            string lastUpdate = null;
+            foreach (var product in mapedProducts)  
+            {
+                lastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
+                product.LastUpdate = lastUpdate;
+                if (await _productRepository.DoesProductByGlobalIdExists(product.GlobalId))
+                {
+                    await _productRepository.UpdateProductAsync(product);
+                    _logger.LogInformation("Product updated successfully in {FunctionName} of ProductService. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);
+                }
+                else
+                {
+                    _logger.LogInformation("Product inserted successfully in {FunctionName} of ProductService. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);
+                    await _productRepository.InsertProductAsync(product);
+                }
+            }
+            return lastUpdate;
+        }
     }
 }
