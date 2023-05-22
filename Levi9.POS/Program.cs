@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Microsoft.OpenApi.Models;
 using Levi9.POS.Domain.Common.IClient;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,6 +102,11 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
+builder.Services.AddHealthChecks()
+    .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -133,5 +140,14 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapControllers();
+
+app.MapHealthChecks("/healthcheck", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecksUI(options =>
+{
+    options.UIPath = "/healthcheck-ui"; //URL path for the Health Checks UI dashboard
+});
 
 app.Run();

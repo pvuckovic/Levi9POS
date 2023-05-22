@@ -13,5 +13,7 @@ namespace Levi9.POS.Domain.Common.IClient
         Task<bool> DoesClientExist(int clientId);
         bool CheckClientExist(int clientId);
         bool CheckEmailExist(string email);
+        Task<IEnumerable<Client>> GetClientsByLastUpdate(string lastUpdate);
+        
     }
 }

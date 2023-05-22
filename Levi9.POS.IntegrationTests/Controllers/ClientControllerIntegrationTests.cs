@@ -1,8 +1,10 @@
+using Levi9.POS.Domain;
 using Levi9.POS.Domain.Helpers;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.WebApi.Request.ClientRequests;
 using Levi9.POS.WebApi.Response;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Net;
@@ -196,6 +198,39 @@ namespace Levi9.POS.IntegrationTests.Controllers
             var response = await _client.GetAsync("/v1/client/global/10bc28f5-7042-4736-97ad-1cb3dce98b1c");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        }
+        [Test]
+        public async Task GetAllClients_ReturnsOkWithMappedList_WhenServiceReturnsNonEmptyList()
+        {
+            var response = await _client.GetAsync("/v1/Client/sync/133288706851213387");
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var result = JsonConvert.DeserializeObject<IEnumerable<ClientResponse>>(content);
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result, Is.Not.Null);
+            });
+        }
+        [Test]
+        public async Task GetAllClients_ReturnsOkWithEmptyList_WhenServiceReturnsEmptyList()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
+                dbContext.Clients.RemoveRange(dbContext.Clients);
+                dbContext.SaveChanges();
+            }
+            var response = await _client.GetAsync("/v1/Client/sync/933288706851213387");
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(content, Is.EqualTo("[]"));
+            });
         }
 
     }

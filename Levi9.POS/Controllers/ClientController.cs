@@ -99,5 +99,20 @@ namespace Levi9.POS.WebApi.Controllers
             var clientResponse = _mapper.Map<ClientResponse>(clientMap);
             return Ok(clientResponse);
         }
+        [Authorize]
+        [HttpGet("sync/{lastUpdate}")]
+        public async Task<IActionResult> GetAllClients(string lastUpdate)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(GetAllClients), DateTime.UtcNow);
+            var clients = await _clientService.GetClientsByLastUpdate(lastUpdate);
+            if (!clients.Any())
+            {
+                _logger.LogWarning("Clients not found in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(GetAllClients), DateTime.UtcNow);
+                return Ok(clients);
+            }
+            var mappedClients = clients.Select(c => _mapper.Map<ClientResponse>(c));
+            _logger.LogInformation("Clients retrieved successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(GetAllClients), DateTime.UtcNow);
+            return Ok(mappedClients);
+        }
     }
 }

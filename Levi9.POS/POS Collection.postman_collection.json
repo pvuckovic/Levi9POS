@@ -441,6 +441,25 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "HealthCheck",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5067/healthcheck",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5067",
+					"path": [
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
