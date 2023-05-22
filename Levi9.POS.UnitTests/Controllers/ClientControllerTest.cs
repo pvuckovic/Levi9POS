@@ -175,7 +175,43 @@ namespace Levi9.POS.UnitTests.Controllers
             
             var createdResult = (OkObjectResult)result;
             Assert.That(createdResult.StatusCode, Is.EqualTo(200));
+        }
+        [Test]
+        public async Task GetAllClients_ReturnsOkWithMappedList_WhenServiceReturnsNonEmptyList()
+        {
+            var lastUpdate = "123288706851213387";
+            var clientDto1 = new UpdateClientDto { Id = 1, Name = "Client 1" };
+            var clientDto2 = new UpdateClientDto { Id = 2, Name = "Client 2" };
+            var clientsDto = new List<UpdateClientDto> { clientDto1, clientDto2 };
+            var expectedResponse1 = new ClientResponse { Id = 1, Name = "Client 1" };
+            var expectedResponse2 = new ClientResponse { Id = 2, Name = "Client 2" };
+            var expectedResponses = new List<ClientResponse> { expectedResponse1, expectedResponse2 };
 
+            _clientServiceMock.Setup(x => x.GetClientsByLastUpdate(lastUpdate)).ReturnsAsync(clientsDto);
+            _mapperMock.Setup(x => x.Map<ClientResponse>(clientDto1)).Returns(expectedResponse1);
+            _mapperMock.Setup(x => x.Map<ClientResponse>(clientDto2)).Returns(expectedResponse2);
+
+            var result = await _clientController.GetAllClients(lastUpdate);
+
+            var okResult = result as OkObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+            var responseList = okResult.Value as IEnumerable<ClientResponse>;
+            Assert.That(responseList, Is.Not.Null);
+            CollectionAssert.AreEqual(expectedResponses, responseList);
+        }
+        [Test]
+        public async Task GetAllClients_ReturnsOkWithEmptyList_WhenServiceReturnsEmptyList()
+        {
+            var lastUpdate = "833288706851213387";
+            var emptyList = Enumerable.Empty<UpdateClientDto>();
+            _clientServiceMock.Setup(x => x.GetClientsByLastUpdate(lastUpdate)).ReturnsAsync(emptyList);
+
+            var result = await _clientController.GetAllClients(lastUpdate);
+
+            var okResult = result as OkObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+            var responseList = okResult.Value as IEnumerable<UpdateClientDto>;
+            CollectionAssert.AreEqual(responseList, emptyList);
         }
     }
 }

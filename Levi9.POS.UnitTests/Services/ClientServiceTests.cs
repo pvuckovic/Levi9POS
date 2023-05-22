@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.DTOs.ClientDTOs;
+using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Services;
+using Levi9.POS.WebApi.Controllers;
+using Levi9.POS.WebApi.Response;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -112,6 +116,41 @@ namespace Levi9.POS.UnitTests.Services
             var result = await _clientService.UpdateClient(updateClientDto);
 
             Assert.That(result, Is.EqualTo(updateClientDto));
+        }
+        [Test]
+        public async Task GetAllClients_ReturnsOkWithMappedList_WhenServiceReturnsNonEmptyList()
+        {
+            var lastUpdate = "123288706851213387";
+            var client1 = new Client { Id = 1, Name = "Client 1" };
+            var client2 = new Client { Id = 2, Name = "Client 2" };
+            var clients = new List<Client> { client1, client2 };
+            var expectedResponse1 = new UpdateClientDto { Id = 1, Name = "Client 1" };
+            var expectedResponse2 = new UpdateClientDto { Id = 2, Name = "Client 2" };
+            var expectedResponses = new List<UpdateClientDto> { expectedResponse1, expectedResponse2 };
+
+            _clientRepositoryMock.Setup(x => x.GetClientsByLastUpdate(lastUpdate)).ReturnsAsync(clients);
+            _mapperMock.Setup(x => x.Map<UpdateClientDto>(client1)).Returns(expectedResponse1);
+            _mapperMock.Setup(x => x.Map<UpdateClientDto>(client2)).Returns(expectedResponse2);
+
+            var result = await _clientService.GetClientsByLastUpdate(lastUpdate);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<IEnumerable<UpdateClientDto>>());
+            Assert.That(result.Count(), Is.EqualTo(expectedResponses.Count));
+            CollectionAssert.AreEqual(expectedResponses, result);
+        }
+        [Test]
+        public async Task GetAllClients_ReturnsOkWithEmptyList_WhenServiceReturnsEmptyList()
+        {
+            var lastUpdate = "833288706851213387";
+            var emptyList = Enumerable.Empty<Client>();
+            _clientRepositoryMock.Setup(x => x.GetClientsByLastUpdate(lastUpdate)).ReturnsAsync(emptyList);
+
+            var result = await _clientService.GetClientsByLastUpdate(lastUpdate);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<IEnumerable<UpdateClientDto>>());
+            Assert.That(result.Any(), Is.False);
         }
     }
 }

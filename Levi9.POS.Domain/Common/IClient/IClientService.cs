@@ -10,6 +10,7 @@ namespace Levi9.POS.Domain.Common.IClient
         Task<ClientDto> GetClientByEmail(string email);
         Task<UpdateClientDto> UpdateClient(UpdateClientDto client);
         bool CheckEmailExist(string email);
+        Task<IEnumerable<UpdateClientDto>> GetClientsByLastUpdate(string lastUpdate);
 
     }
 }

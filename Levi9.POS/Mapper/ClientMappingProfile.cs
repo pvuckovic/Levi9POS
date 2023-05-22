@@ -17,6 +17,7 @@ namespace Levi9.POS.WebApi.Mappings
             CreateMap<ClientUpdate, UpdateClientDto>();
             CreateMap<UpdateClientDto, Client>();
             CreateMap<UpdateClientDto, ClientResponse>();
+            CreateMap<Client, UpdateClientDto>();
         }
     }
 }

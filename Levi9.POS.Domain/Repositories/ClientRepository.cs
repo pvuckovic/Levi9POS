@@ -92,5 +92,16 @@ namespace Levi9.POS.Domain.Repositories
             _logger.LogError("Failed to update client in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
             return null;
         }
+
+        public async Task<IEnumerable<Client>> GetClientsByLastUpdate(string lastUpdate)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(GetClientsByLastUpdate), DateTime.UtcNow);
+            var clients = await _dbContext.Clients
+                                .Where(c => string.Compare(c.LastUpdate, lastUpdate) > 0)
+                                .Include(c => c.Documents)
+                                .ToListAsync();
+            _logger.LogInformation("Retrieving clients in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(GetClientsByLastUpdate), DateTime.UtcNow);
+            return clients;
+        }
     }
 }

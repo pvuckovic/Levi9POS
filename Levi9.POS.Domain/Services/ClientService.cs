@@ -76,5 +76,14 @@ namespace Levi9.POS.Domain.Services
             _logger.LogInformation("Retrieving updated client in {FunctionName} of ClientService. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
             return client;
         }
+        public async Task<IEnumerable<UpdateClientDto>> GetClientsByLastUpdate(string lastUpdate)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ClientService. Timestamp: {Timestamp}.", nameof(GetClientsByLastUpdate), DateTime.UtcNow);
+            var clients = await _clientRepository.GetClientsByLastUpdate(lastUpdate);
+            if (!clients.Any())
+                return new List<UpdateClientDto>();
+            _logger.LogInformation("Retrieving products in {FunctionName} of ClientService. Timestamp: {Timestamp}.", nameof(GetClientsByLastUpdate), DateTime.UtcNow);
+            return clients.Select(c => _mapper.Map<UpdateClientDto>(c)); ;
+        }
     }
 }
