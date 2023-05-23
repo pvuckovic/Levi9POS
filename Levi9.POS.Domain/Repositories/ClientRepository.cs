@@ -107,7 +107,7 @@ namespace Levi9.POS.Domain.Repositories
         {
             _logger.LogInformation("Entering {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(InsertClientAsync), DateTime.UtcNow);
             client.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
-
+            _logger.LogInformation("Adding client in {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(InsertClientAsync), DateTime.UtcNow);
             await _dbContext.Clients.AddAsync(client);
             await _dbContext.SaveChangesAsync();
             _logger.LogInformation("Retrieving lastUpdate in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(InsertClientAsync), DateTime.UtcNow);        
@@ -116,15 +116,23 @@ namespace Levi9.POS.Domain.Repositories
 
         public async Task<string> UpdateClientAsync(Client client)
         {
+            _logger.LogInformation("Entering {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClientAsync), DateTime.UtcNow);
             var existingClient = await _dbContext.Clients.FirstOrDefaultAsync(c => c.GlobalId == client.GlobalId || c.Email == client.Email);
 
             if (existingClient != null)
+            {
+                _logger.LogInformation("Updating client in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClientAsync), DateTime.UtcNow);
                 return await UpdateClient(existingClient, client);
+            }
             else
+            {
+                _logger.LogInformation("No updated clients in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClientAsync), DateTime.UtcNow);
                 return null;
+            }
         }
         private async Task<string> UpdateClient(Client contextClient,Client newClient)
         {
+            _logger.LogInformation("Entering {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
             contextClient.GlobalId = newClient.GlobalId;
             contextClient.Email = newClient.Email;
             contextClient.Name = newClient.Name;
@@ -134,10 +142,12 @@ namespace Levi9.POS.Domain.Repositories
             contextClient.Salt = newClient.Salt;
             contextClient.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Retrieving lastUpdate in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
             return contextClient.LastUpdate;
         }
         public async Task<List<Client>> GetClientsWithLastUpdateGreaterThan(string syncLastUpdate, List<string> lastUpdates)
         {
+            _logger.LogInformation("Retrieving clients in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(GetClientsWithLastUpdateGreaterThan), DateTime.UtcNow);
             return await _dbContext.Clients
                 .Where(c => string.Compare(c.LastUpdate, syncLastUpdate) > 0 && !lastUpdates.Contains(c.LastUpdate))
                 .ToListAsync();

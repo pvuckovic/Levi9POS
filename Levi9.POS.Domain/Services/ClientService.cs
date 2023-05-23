@@ -82,20 +82,18 @@ namespace Levi9.POS.Domain.Services
             var clients = await _clientRepository.GetClientsByLastUpdate(lastUpdate);
             if (!clients.Any())
                 return new List<UpdateClientDto>();
-            _logger.LogInformation("Retrieving products in {FunctionName} of ClientService. Timestamp: {Timestamp}.", nameof(GetClientsByLastUpdate), DateTime.UtcNow);
+            _logger.LogInformation("Retrieving clients in {FunctionName} of ClientService. Timestamp: {Timestamp}.", nameof(GetClientsByLastUpdate), DateTime.UtcNow);
             return clients.Select(c => _mapper.Map<UpdateClientDto>(c)); ;
         }
 
         public async Task<ClientsSyncDto> SyncClients(ClientsSyncDto clientsSyncDto)
         {
             _logger.LogInformation("Entering {FunctionName} in ClientService. Timestamp: {Timestamp}.", nameof(SyncClients), DateTime.UtcNow);
-
             var mapedClients = clientsSyncDto.Clients.Select(c=> _mapper.Map<Client>(c));
             List<string> lastUpdates = new List<string>();
             string lastUpdate = null;
             foreach (var client in mapedClients)
             {
-                
                 bool clientExist = await CheckClientExistence(client.GlobalId, client.Email);
                 if(clientExist)
                 {
@@ -110,10 +108,13 @@ namespace Levi9.POS.Domain.Services
             }
             List<Client> clients = await _clientRepository.GetClientsWithLastUpdateGreaterThan(clientsSyncDto.LastUpdate, lastUpdates);
             var mapped = clients.Select(c => _mapper.Map<ClientSyncDto>(c)).ToList();
+            _logger.LogInformation("Retrieving clients in {FunctionName} of ClientService. Timestamp: {Timestamp}.", nameof(SyncClients), DateTime.UtcNow);
             return new ClientsSyncDto() { Clients = mapped, LastUpdate = lastUpdate };
         }
         private async Task<bool> CheckClientExistence(Guid globalId, string email)
         {
+            _logger.LogInformation("Entering {FunctionName} in ClientService. Timestamp: {Timestamp}.", nameof(CheckClientExistence), DateTime.UtcNow);
+
             bool userExists = false;
 
             var userByGlobalId = await _clientRepository.GetClientByGlobalId(globalId);
@@ -126,6 +127,7 @@ namespace Levi9.POS.Domain.Services
                 if (userByEmail != null)
                     userExists = true;
             }
+            _logger.LogInformation("Retrieving if clients exists in {FunctionName} of ClientService. Timestamp: {Timestamp}.", nameof(CheckClientExistence), DateTime.UtcNow);
             return userExists;
         }
     }
