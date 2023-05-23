@@ -125,7 +125,7 @@ namespace Levi9.POS.WebApi.Controllers
                 _logger.LogError("Product with GlobalId must exist. GlobalId: {product.GlobalId}. Function: {functionName}. Timestamp: {timestamp}.", nameof(UpdateProduct), DateTime.UtcNow);
                 return BadRequest("GlobalId is must be exist");
             }
-            var product = await _productService.GetProductByGlobalIdAsync(request.GlobalId);            
+            var product = await _productService.GetProductByGlobalIdAsync(request.GlobalId);
             if (product == null)
             {
                 _logger.LogError("Product not found with GlobalId: {GlobalId} in {FunctionName} of ProductController. Timestamp: {Timestamp}.", request.GlobalId, nameof(UpdateProduct), DateTime.UtcNow);
@@ -145,7 +145,7 @@ namespace Levi9.POS.WebApi.Controllers
             _logger.LogInformation("Product updated successfully in {FunctionName} of ProductController. Timestamp: {Timestamp}.", nameof(InsertProduct), DateTime.UtcNow);
             return Ok(response);
         }
-        [HttpPost("snyc")]
+        [HttpPost("sync")]
         [Authorize]
         public async Task<IActionResult> SyncProducts(List<ProductSyncRequest> products)
         {
