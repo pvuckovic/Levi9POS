@@ -213,5 +213,84 @@ namespace Levi9.POS.UnitTests.Controllers
             var responseList = okResult.Value as IEnumerable<UpdateClientDto>;
             CollectionAssert.AreEqual(responseList, emptyList);
         }
+        [Test]
+        public async Task SyncClients_ValidRequest_ReturnsOkWithResponse()
+        {
+            var clientsSyncRequest = new ClientsSyncRequest
+            {
+                Clients = new List<ClientSyncRequest>
+                {
+                    new ClientSyncRequest
+                    {
+                        GlobalId = Guid.NewGuid(),
+                        Name = "Petar",
+                        Address = "Novosadskog sajma 11",
+                        Email = "petar@example.com",
+                        Phone = "1234567890",
+                        Password = "password123",
+                        LastUpdate = "123456789987654321",
+                        Salt = "somesalt"
+                    }
+                },
+                LastUpdate = "123456789987654321"
+            };
+
+            var clientsSyncDto = new ClientsSyncDto
+            {
+                Clients = new List<ClientSyncDto>
+                {
+                    new ClientSyncDto
+                    {
+                        GlobalId = clientsSyncRequest.Clients[0].GlobalId,
+                        Name = clientsSyncRequest.Clients[0].Name,
+                        Address = clientsSyncRequest.Clients[0].Address,
+                        Email = clientsSyncRequest.Clients[0].Email,
+                        Phone = clientsSyncRequest.Clients[0].Phone,
+                        Password = clientsSyncRequest.Clients[0].Password,
+                        LastUpdate = clientsSyncRequest.Clients[0].LastUpdate,
+                        Salt = clientsSyncRequest.Clients[0].Salt
+                    }
+                },
+                LastUpdate = clientsSyncRequest.LastUpdate
+            };
+
+            var clientsSyncResponse = new ClientsSyncResponse
+            {
+                Clients = new List<ClientSyncResponse>
+                {
+                    new ClientSyncResponse
+                    {
+                        GlobalId = clientsSyncDto.Clients[0].GlobalId,
+                        Name = clientsSyncDto.Clients[0].Name,
+                        Address = clientsSyncDto.Clients[0].Address,
+                        Email = clientsSyncDto.Clients[0].Email,
+                        Phone = clientsSyncDto.Clients[0].Phone,
+                        Password = clientsSyncDto.Clients[0].Password,
+                        LastUpdate = clientsSyncDto.Clients[0].LastUpdate,
+                        Salt = clientsSyncDto.Clients[0].Salt
+                    }
+                },
+                LastUpdate = clientsSyncDto.LastUpdate
+            };
+
+            _mapperMock.Setup(x => x.Map<ClientsSyncDto>(clientsSyncRequest)).Returns(clientsSyncDto);
+            _clientServiceMock.Setup(x => x.SyncClients(clientsSyncDto)).ReturnsAsync(clientsSyncDto);
+            _mapperMock.Setup(x => x.Map<ClientsSyncResponse>(clientsSyncDto)).Returns(clientsSyncResponse);
+
+            var result = await _clientController.SyncClients(clientsSyncRequest);
+
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+
+            var okResult = result as OkObjectResult;
+            Assert.That(okResult.Value, Is.Not.Null);
+            Assert.IsAssignableFrom<ClientsSyncResponse>(okResult.Value);
+
+            var response = okResult.Value as ClientsSyncResponse;
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.LastUpdate, Is.EqualTo(clientsSyncResponse.LastUpdate));
+                Assert.That(response.Clients, Has.Count.EqualTo(clientsSyncResponse.Clients.Count));
+            });
+        }
     }
 }
