@@ -103,5 +103,44 @@ namespace Levi9.POS.Domain.Repositories
             _logger.LogInformation("Retrieving clients in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(GetClientsByLastUpdate), DateTime.UtcNow);
             return clients;
         }
+        public async Task<string> InsertClientAsync(Client client)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(InsertClientAsync), DateTime.UtcNow);
+            client.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
+
+            await _dbContext.Clients.AddAsync(client);
+            await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Retrieving lastUpdate in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(InsertClientAsync), DateTime.UtcNow);        
+            return client.LastUpdate;
+        }
+
+        public async Task<string> UpdateClientAsync(Client client)
+        {
+            var existingClient = await _dbContext.Clients.FirstOrDefaultAsync(c => c.GlobalId == client.GlobalId || c.Email == client.Email);
+
+            if (existingClient != null)
+                return await UpdateClient(existingClient, client);
+            else
+                return null;
+        }
+        private async Task<string> UpdateClient(Client contextClient,Client newClient)
+        {
+            contextClient.GlobalId = newClient.GlobalId;
+            contextClient.Email = newClient.Email;
+            contextClient.Name = newClient.Name;
+            contextClient.Address = newClient.Address;
+            contextClient.Phone = newClient.Phone;
+            contextClient.Password = newClient.Password;
+            contextClient.Salt = newClient.Salt;
+            contextClient.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
+            await _dbContext.SaveChangesAsync();
+            return contextClient.LastUpdate;
+        }
+        public async Task<List<Client>> GetClientsWithLastUpdateGreaterThan(string syncLastUpdate, List<string> lastUpdates)
+        {
+            return await _dbContext.Clients
+                .Where(c => string.Compare(c.LastUpdate, syncLastUpdate) > 0 && !lastUpdates.Contains(c.LastUpdate))
+                .ToListAsync();
+        }
     }
 }

@@ -114,5 +114,16 @@ namespace Levi9.POS.WebApi.Controllers
             _logger.LogInformation("Clients retrieved successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(GetAllClients), DateTime.UtcNow);
             return Ok(mappedClients);
         }
+        [HttpPost("sync")]
+        [Authorize]
+        public async Task<IActionResult> SyncClients(ClientsSyncRequest client)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(SyncClients), DateTime.UtcNow);
+            var clientsDto = _mapper.Map<ClientsSyncDto>(client);
+            var result = await _clientService.SyncClients(clientsDto);
+            var clientResponse = _mapper.Map<ClientsSyncResponse>(result);
+            _logger.LogInformation("Clients synced successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(SyncClients), DateTime.UtcNow);
+            return Ok(clientResponse);
+        }
     }
 }
