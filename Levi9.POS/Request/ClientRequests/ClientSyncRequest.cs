@@ -22,7 +22,6 @@ namespace Levi9.POS.WebApi.Request.ClientRequests
 
         [Required]
         [StringLength(50)]
-        [RegularExpression(@"^(\d{10})$", ErrorMessage = "Wrong mobile")]
         public string Phone { get; set; }
 
         [Required]
