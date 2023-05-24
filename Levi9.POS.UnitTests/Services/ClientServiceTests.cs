@@ -152,5 +152,69 @@ namespace Levi9.POS.UnitTests.Services
             Assert.That(result, Is.InstanceOf<IEnumerable<UpdateClientDto>>());
             Assert.That(result.Any(), Is.False);
         }
+        [Test]
+        public async Task SyncClients_ValidDto_ReturnsSyncedDto()
+        {
+            var clientsSyncDto = new ClientsSyncDto
+            {
+                Clients = new List<ClientSyncDto>
+                {
+                    new ClientSyncDto
+                    {
+                        GlobalId = Guid.NewGuid(),
+                        Name = "Petar",
+                        Address = "123 Main St",
+                        Email = "petar@example.com",
+                        Phone = "1234567890",
+                        Password = "password123",
+                        LastUpdate = "123456789987654321",
+                        Salt = "somesalt"
+                    }
+                },
+                LastUpdate = "123456789987654321"
+            };
+
+            var mappedClients = clientsSyncDto.Clients.Select(c => new Client
+            {
+                GlobalId = c.GlobalId,
+                Name = c.Name,
+                Address = c.Address,
+                Email = c.Email,
+                Phone = c.Phone,
+                Password = c.Password,
+                LastUpdate = c.LastUpdate,
+                Salt = c.Salt
+            }).ToList();
+
+            var lastUpdates = new List<string>();
+            string lastUpdate = null;
+
+            _mapperMock.Setup(x => x.Map<Client>(It.IsAny<ClientSyncDto>())).Returns((ClientSyncDto dto) =>
+            {
+                var client = mappedClients.FirstOrDefault(c => c.GlobalId == dto.GlobalId);
+                return client;
+            });
+
+            _clientRepositoryMock.Setup(x => x.UpdateClientAsync(It.IsAny<Client>())).ReturnsAsync((Client client) =>
+            {
+                lastUpdate = client.LastUpdate;
+                lastUpdates.Add(lastUpdate);
+                return lastUpdate;
+            });
+
+            _clientRepositoryMock.Setup(x => x.InsertClientAsync(It.IsAny<Client>())).ReturnsAsync((Client client) =>
+            {
+                lastUpdate = client.LastUpdate;
+                lastUpdates.Add(lastUpdate);
+                return lastUpdate;
+            });
+
+            _clientRepositoryMock.Setup(x => x.GetClientsWithLastUpdateGreaterThan(It.IsAny<string>(), It.IsAny<List<string>>())).ReturnsAsync(mappedClients);
+
+            var result = await _clientService.SyncClients(clientsSyncDto);
+
+            Assert.That(result, Is.InstanceOf<ClientsSyncDto>());
+            Assert.That(result.Clients.Count, Is.EqualTo(mappedClients.Count));
+        }
     }
 }

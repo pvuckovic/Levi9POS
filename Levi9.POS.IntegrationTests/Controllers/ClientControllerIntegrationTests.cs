@@ -10,6 +10,7 @@ using NUnit.Framework;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace Levi9.POS.IntegrationTests.Controllers
 {
@@ -232,6 +233,203 @@ namespace Levi9.POS.IntegrationTests.Controllers
                 Assert.That(content, Is.EqualTo("[]"));
             });
         }
+        [Test]
+        public async Task SyncClients_ValidRequest_ReturnsOkWithSyncedResponse()
+        {
+            var clientRequest = new ClientsSyncRequest
+            {
+                Clients = new List<ClientSyncRequest>
+                {
+                    new ClientSyncRequest
+                    {
+                        GlobalId = Guid.NewGuid(),
+                        Name = "Petar",
+                        Address = "Novosadskog sajma 11",
+                        Email = "petar@example.com",
+                        Phone = "1234567890",
+                        Password = "password123",
+                        LastUpdate = "123456789987654321",
+                        Salt = "somesalt"
+                    }
+                },
+                LastUpdate = "123456789987654321"
+            };
 
+            var expectedResponse = new ClientsSyncResponse
+            {
+                 Clients = new List<ClientSyncResponse>
+                 {
+                     new ClientSyncResponse
+                     {
+                        GlobalId = new Guid("10bc28f5-7042-4736-97ad-1cb3dce98b1c"),
+                         Name = "Marko",
+                         Email = "example@gmail.com",
+                         Phone = "+387 65 132 527",
+                         Address = "1.maja, Derventa",
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
+                         Password ="password", Salt="Salt"
+                     },
+                     new ClientSyncResponse
+                     {
+                         GlobalId = new Guid("aa7ac410-5b2a-497e-8106-266c09f705ae"),
+                         Name = "Aleksa", 
+                         Email = "aleksa@gmail.com", 
+                         Phone = "+387 64 862 476",
+                         Address = "Koste Racina 24, Novi Sad", 
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), 
+                         Password = "password123", 
+                         Salt="Salt123"
+                     },
+                     new ClientSyncResponse
+                     {
+                         GlobalId = new Guid("5f8ac59b-1604-48fe-bcd3-7d8dbf70db08"), 
+                         Name = "Milos", 
+                         Email = "milos@gmail.com", 
+                         Phone = "+387 65 912 127", 
+                         Address = "Strumicka 13, Novi Sad",
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(), 
+                         Password = "password123", Salt = "Salt123" 
+                     }
+                 },
+                 LastUpdate = "123456789987654321"
+            };
+
+            var serializedRequest = JsonConvert.SerializeObject(clientRequest);
+            var content = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("v1/Client/sync", content);
+            var result = await response.Content.ReadAsStringAsync();
+            var clientResponse = JsonConvert.DeserializeObject<ClientsSyncResponse>(result);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(clientResponse.Clients, Has.Count.EqualTo(expectedResponse.Clients.Count));
+            });
+        }
+        [Test]
+        public async Task SyncClients_ValidRequest_EmptyClients_ReturnsOkWithSyncedResponseLastUpdateTheSame()
+        {
+            var clientRequest = new ClientsSyncRequest
+            {
+                Clients = new List<ClientSyncRequest>(),
+                LastUpdate = "123456789987654321"
+            };
+
+            var expectedResponse = new ClientsSyncResponse
+            {
+                Clients = new List<ClientSyncResponse> {
+                     new ClientSyncResponse
+                     {
+                         GlobalId = new Guid("10bc28f5-7042-4736-97ad-1cb3dce98b1c"),
+                         Name = "Marko",
+                         Email = "example@gmail.com",
+                         Phone = "+387 65 132 527",
+                         Address = "1.maja, Derventa",
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
+                         Password ="password", Salt="Salt"
+                     },
+                     new ClientSyncResponse
+                     {
+                         GlobalId = new Guid("aa7ac410-5b2a-497e-8106-266c09f705ae"),
+                         Name = "Aleksa",
+                         Email = "aleksa@gmail.com",
+                         Phone = "+387 64 862 476",
+                         Address = "Koste Racina 24, Novi Sad",
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
+                         Password = "password123",
+                         Salt="Salt123"
+                     },
+                     new ClientSyncResponse
+                     {
+                         GlobalId = new Guid("5f8ac59b-1604-48fe-bcd3-7d8dbf70db08"),
+                         Name = "Milos",
+                         Email = "milos@gmail.com",
+                         Phone = "+387 65 912 127",
+                         Address = "Strumicka 13, Novi Sad",
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
+                         Password = "password123", Salt = "Salt123"
+                     }
+                 },
+                LastUpdate = "123456789987654321"
+            };
+
+            var serializedRequest = JsonConvert.SerializeObject(clientRequest);
+            var content = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("v1/Client/sync", content);
+            var result = await response.Content.ReadAsStringAsync();
+            var clientResponse = JsonConvert.DeserializeObject<ClientsSyncResponse>(result);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(clientResponse.Clients, Has.Count.EqualTo(expectedResponse.Clients.Count));
+                Assert.That(clientResponse.LastUpdate, Is.EqualTo(null));
+            });
+        }
+        [Test]
+        public async Task SyncClients_ValidRequest_ReturnsOkWithSyncedResponseLast_ClientsCountTwo()
+        {
+            var clientRequest = new ClientsSyncRequest
+            {
+                Clients = new List<ClientSyncRequest>
+                {
+                    new ClientSyncRequest
+                    {
+                        GlobalId = new Guid("10bc28f5-7042-4736-97ad-1cb3dce98b1c"),
+                        Name = "Petar",
+                        Address = "Novosadskog sajma 11",
+                        Email = "petar@example.com",
+                        Phone = "1234567890",
+                        Password = "password123",
+                        LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
+                        Salt = "somesalt"
+                    }
+                },
+                LastUpdate = "123456789987654321"
+            };
+
+            var expectedResponse = new ClientsSyncResponse
+            {
+                Clients = new List<ClientSyncResponse> {
+                     new ClientSyncResponse
+                     {
+                         GlobalId = new Guid("aa7ac410-5b2a-497e-8106-266c09f705ae"),
+                         Name = "Aleksa",
+                         Email = "aleksa@gmail.com",
+                         Phone = "+387 64 862 476",
+                         Address = "Koste Racina 24, Novi Sad",
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
+                         Password = "password123",
+                         Salt="Salt123"
+                     },
+                     new ClientSyncResponse
+                     {
+                         GlobalId = new Guid("5f8ac59b-1604-48fe-bcd3-7d8dbf70db08"),
+                         Name = "Milos",
+                         Email = "milos@gmail.com",
+                         Phone = "+387 65 912 127",
+                         Address = "Strumicka 13, Novi Sad",
+                         LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
+                         Password = "password123", Salt = "Salt123"
+                     }
+                 },
+                LastUpdate = "123456789987654321"
+            };
+
+            var serializedRequest = JsonConvert.SerializeObject(clientRequest);
+            var content = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("v1/Client/sync", content);
+            var result = await response.Content.ReadAsStringAsync();
+            var clientResponse = JsonConvert.DeserializeObject<ClientsSyncResponse>(result);
+            expectedResponse.LastUpdate = clientResponse.LastUpdate;
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(clientResponse.Clients, Has.Count.EqualTo(expectedResponse.Clients.Count));
+            });
+        }
     }
 }
