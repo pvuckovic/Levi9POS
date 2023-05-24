@@ -3,6 +3,7 @@ using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
 using Levi9.POS.Domain.DTOs.DocumentDTOs;
+using Levi9.POS.Domain.DTOs.ProductDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Models.Enum;
 using Microsoft.Extensions.Logging;
@@ -69,6 +70,17 @@ namespace Levi9.POS.Domain.Services
             await _documentRepository.CreateDocument(document);
             _logger.LogInformation("Document created successfully in {FunctionName} of DocumentService. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
             return CreateDocumentResult.Success;
+        }
+
+        public async Task<IEnumerable<DocumentSyncDto>> GetDocumentsByLastUpdate(string lastUpdate)
+        {
+            _logger.LogInformation("Entering {FunctionName} in DocumentService. Timestamp: {Timestamp}.", nameof(GetDocumentsByLastUpdate), DateTime.UtcNow);
+            var documents = await _documentRepository.GetDocumentsByLastUpdate(lastUpdate);
+            if (!documents.Any())
+                return new List<DocumentSyncDto>();
+            _logger.LogInformation("Retrieving documents in {FunctionName} of DocumentService. Timestamp: {Timestamp}.", nameof(GetDocumentsByLastUpdate), DateTime.UtcNow);
+            var mappedDocuments = documents.Select(p => _mapper.Map<DocumentSyncDto>(p));
+            return mappedDocuments;
         }
     }
 }

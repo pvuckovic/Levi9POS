@@ -4,7 +4,8 @@ namespace Levi9.POS.Domain.Common.IDocument
 {
     public interface IDocumentRepository
     {
-        public Task<Document> GetDocumentById(int id);
-        public Task<Document> CreateDocument(Document newDocument);
+        Task<Document> GetDocumentById(int id);
+        Task<Document> CreateDocument(Document newDocument);
+        Task<IEnumerable<Document>> GetDocumentsByLastUpdate(string lastUpdate);
     }
 }

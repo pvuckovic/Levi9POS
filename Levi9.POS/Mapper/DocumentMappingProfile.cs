@@ -26,6 +26,15 @@ namespace Levi9.POS.WebApi.Mapper
             CreateMap<CreateDocumentDTO, Document>()
                 .ForMember(dest => dest.ProductDocuments, opt => opt.MapFrom(src => src.DocumentItems));
             CreateMap<CreateDocumentItemDTO, ProductDocument>();
+            CreateMap<ProductDocument, DocumentItemSyncDto>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.GlobalId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name));
+            CreateMap<Document, DocumentSyncDto>()
+                .ForMember(dest => dest.GlobalId, opt => opt.MapFrom(src => src.GlobalId))
+                .ForMember(dest => dest.ClientId, opt => opt.MapFrom(src => src.Client.GlobalId))
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.ProductDocuments));
+            CreateMap<DocumentItemSyncDto, DocumentItemSyncResponse>();
+            CreateMap<DocumentSyncDto, DocumentSyncResponse>();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Levi9.POS.Domain;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.IntegrationTests.Fixtures;
+using Levi9.POS.WebApi.Response.DocumentResponse;
+using Levi9.POS.WebApi.Response.ProductResponse;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -228,7 +230,38 @@ namespace Levi9.POS.IntegrationTests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         }
+        [Test]
+        public async Task GetAllProducts_ReturnsOkWithMappedList_WhenServiceReturnsNonEmptyList()
+        {
+            var response = await _client.GetAsync("/v1/Document/sync/113288706851213387");
 
+            var content = await response.Content.ReadAsStringAsync();
 
+            var result = JsonConvert.DeserializeObject<IEnumerable<DocumentSyncResponse>>(content);
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result, Is.Not.Null);
+            });
+        }
+        [Test]
+        public async Task GetAllDocuments_ReturnsOkWithEmptyList_WhenServiceReturnsEmptyList()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
+                dbContext.Documents.RemoveRange(dbContext.Documents);
+                dbContext.SaveChanges();
+            }
+            var response = await _client.GetAsync("/v1/Document/sync/933288706851213387");
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(content, Is.EqualTo("[]"));
+            });
+        }
     }
 }
