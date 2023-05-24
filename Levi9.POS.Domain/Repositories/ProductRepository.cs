@@ -90,6 +90,13 @@ namespace Levi9.POS.Domain.Repositories
         public async Task<Product> UpdateProductAsync(Product product)
         {
             _logger.LogInformation("Entering {FunctionName} in ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
+            product.ProductDocuments = await _dataBaseContext.ProductDocuments.Where(pd => pd.ProductId == product.Id).Include(p => p.Document).ToListAsync();
+            product.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
+            foreach (var article in product.ProductDocuments)
+            {
+                article.Price = article.Quantity * product.Price;
+                article.Document.LastUpdate = product.LastUpdate;
+            }
             _dataBaseContext.Products.Update(product);
             await _dataBaseContext.SaveChangesAsync();
             _logger.LogInformation("Retrieving confirmation of updated product in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
