@@ -146,7 +146,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok(response);
         }
         [HttpPost("sync")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> SyncProducts(List<ProductSyncRequest> products)
         {
             _logger.LogInformation("Entering {FunctionName} in ProductController. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);

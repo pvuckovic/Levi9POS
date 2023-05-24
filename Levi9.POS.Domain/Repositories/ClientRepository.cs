@@ -85,6 +85,7 @@ namespace Levi9.POS.Domain.Repositories
                 _dbContext.Entry(client).Property(x => x.Address).IsModified = true;
                 _dbContext.Entry(client).Property(x => x.Phone).IsModified = true;
                 _dbContext.Entry(client).Property(x => x.Email).IsModified = true;
+                _dbContext.Entry(client).Property(x => x.LastUpdate).IsModified = true;
                 await _dbContext.SaveChangesAsync();
                 _logger.LogInformation("Client updated successfully in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
                 return client;
@@ -106,7 +107,6 @@ namespace Levi9.POS.Domain.Repositories
         public async Task<string> InsertClientAsync(Client client)
         {
             _logger.LogInformation("Entering {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(InsertClientAsync), DateTime.UtcNow);
-            client.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
             _logger.LogInformation("Adding client in {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(InsertClientAsync), DateTime.UtcNow);
             await _dbContext.Clients.AddAsync(client);
             await _dbContext.SaveChangesAsync();
@@ -140,7 +140,7 @@ namespace Levi9.POS.Domain.Repositories
             contextClient.Phone = newClient.Phone;
             contextClient.Password = newClient.Password;
             contextClient.Salt = newClient.Salt;
-            contextClient.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
+            contextClient.LastUpdate = newClient.LastUpdate;
             await _dbContext.SaveChangesAsync();
             _logger.LogInformation("Retrieving lastUpdate in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClient), DateTime.UtcNow);
             return contextClient.LastUpdate;
