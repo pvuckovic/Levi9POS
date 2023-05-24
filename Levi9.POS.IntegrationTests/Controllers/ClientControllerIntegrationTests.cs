@@ -383,7 +383,7 @@ namespace Levi9.POS.IntegrationTests.Controllers
                         Email = "petar@example.com",
                         Phone = "1234567890",
                         Password = "password123",
-                        LastUpdate = "123456789987654321",
+                        LastUpdate = DateTime.Now.ToFileTimeUtc().ToString(),
                         Salt = "somesalt"
                     }
                 },

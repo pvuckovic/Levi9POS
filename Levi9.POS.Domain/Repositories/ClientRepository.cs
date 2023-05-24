@@ -117,12 +117,12 @@ namespace Levi9.POS.Domain.Repositories
         public async Task<string> UpdateClientAsync(Client client)
         {
             _logger.LogInformation("Entering {FunctionName} in ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClientAsync), DateTime.UtcNow);
-            var existingClient = await _dbContext.Clients.FirstOrDefaultAsync(c => c.GlobalId == client.GlobalId || c.Email == client.Email);
+            var existingClient = await _dbContext.Clients.FirstOrDefaultAsync(c => (c.GlobalId == client.GlobalId || c.Email == client.Email) && string.Compare(client.LastUpdate, c.LastUpdate) > 0);
 
             if (existingClient != null)
             {
-                _logger.LogInformation("Updating client in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClientAsync), DateTime.UtcNow);
-                return await UpdateClient(existingClient, client);
+                _logger.LogInformation("Updating client in {FunctionName} of ClientRepository. Timestamp: {Timestamp}.", nameof(UpdateClientAsync), DateTime.UtcNow);    
+                 return await UpdateClient(existingClient, client);
             }
             else
             {
