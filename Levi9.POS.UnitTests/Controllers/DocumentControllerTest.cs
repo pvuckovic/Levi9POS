@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IdentityModel.OidcClient;
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models.Enum;
@@ -6,7 +7,9 @@ using Levi9.POS.UnitTests.Fixtures;
 using Levi9.POS.WebApi.Controllers;
 using Levi9.POS.WebApi.Mapper;
 using Levi9.POS.WebApi.Request;
+using Levi9.POS.WebApi.Response;
 using Levi9.POS.WebApi.Response.DocumentResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -152,6 +155,95 @@ namespace Levi9.POS.UnitTests.Controllers
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
             var badRequestResult = result as BadRequestObjectResult;
             Assert.AreEqual("Product does not exist!", badRequestResult.Value);
+        }
+        [Test]
+        public async Task GetAllDocuments_ValidRequest_ReturnsOkWithMappedDocuments()
+        {
+            string lastUpdate = "123456789987654321";
+
+            var documents = new List<DocumentSyncDto>
+            {
+                new DocumentSyncDto
+                {
+                    GlobalId = Guid.NewGuid(),
+                    ClientId = Guid.NewGuid(),
+                    DocumentType = "INVOICE",
+                    Items = new List<DocumentItemSyncDto>
+                    {
+                        new DocumentItemSyncDto
+                        {
+                            Name = "Item 1",
+                            ProductId = Guid.NewGuid(),
+                            Price = 10.0f,
+                            Currency = "USD",
+                            Quantity = 2
+                        },
+                    }
+                },
+                new DocumentSyncDto
+                {
+                    GlobalId = Guid.NewGuid(),
+                    ClientId = Guid.NewGuid(),
+                    DocumentType = "INVOICE",
+                    Items = new List<DocumentItemSyncDto>
+                    {
+                        new DocumentItemSyncDto
+                        {
+                            Name = "Item 2",
+                            ProductId = Guid.NewGuid(),
+                            Price = 20.0f,
+                            Currency = "USD",
+                            Quantity = 1
+                        }
+                    }
+                }
+            };
+
+            var expectedResponse = documents.Select(d => new DocumentSyncResponse
+            {
+                GlobalId = d.GlobalId,
+                ClientId = d.ClientId,
+                DocumentType = d.DocumentType,
+                Items = d.Items.Select(i => new DocumentItemSyncResponse
+                {
+                    Name = i.Name,
+                    ProductId = i.ProductId,
+                    Price = i.Price,
+                    Currency = i.Currency,
+                    Quantity = i.Quantity
+                }).ToList()
+            }).ToList();
+
+            _documentServiceMock.Setup(x => x.GetDocumentsByLastUpdate(lastUpdate)).ReturnsAsync(documents);
+
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
+
+            var result = await controller.GetAllDocuments(lastUpdate);
+            var okResult = result as OkObjectResult;
+            var responseList = okResult.Value as IEnumerable<DocumentSyncResponse>;
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.InstanceOf<OkObjectResult>());
+                Assert.That(okResult.Value, Is.InstanceOf<IEnumerable<DocumentSyncResponse>>());
+                Assert.That(responseList.Count, Is.EqualTo(expectedResponse.Count));
+            });
+        }
+
+        [Test]
+        public async Task GetAllProducts_ReturnsOkWithEmptyList_WhenServiceReturnsEmptyList()
+        {
+            var lastUpdate = "123456789987654321";
+            var emptyList = Enumerable.Empty<DocumentSyncDto>();
+            _documentServiceMock.Setup(x => x.GetDocumentsByLastUpdate(lastUpdate)).ReturnsAsync(emptyList);
+            var controller = new DocumentController(_documentServiceMock.Object, _loggerMock.Object, _mapper);
+
+            var result = await controller.GetAllDocuments(lastUpdate);
+
+            var okResult = result as OkObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+            var responseList = okResult.Value as IEnumerable<DocumentSyncDto>;
+            CollectionAssert.AreEqual(responseList, emptyList);
         }
     }
 }

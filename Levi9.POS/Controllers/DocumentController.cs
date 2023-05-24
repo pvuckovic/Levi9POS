@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using Levi9.POS.Domain.Common.IDocument;
+using Levi9.POS.Domain.DTOs.ClientDTOs;
 using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models.Enum;
+using Levi9.POS.WebApi.Request.ClientRequests;
 using Levi9.POS.WebApi.Request.DocumentRequest;
+using Levi9.POS.WebApi.Response;
 using Levi9.POS.WebApi.Response.DocumentResponse;
+using Levi9.POS.WebApi.Response.ProductResponse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,6 +71,22 @@ namespace Levi9.POS.WebApi.Controllers
             }
             _logger.LogInformation("Document created successfully in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
             return Ok("Document created successfully");
+        }
+        [HttpGet("sync/{lastUpdate}")]
+        public async Task<IActionResult> GetAllDocuments(string lastUpdate)
+        {
+            _logger.LogInformation("Entering {FunctionName} in DocumentController. Timestamp: {Timestamp}.", nameof(GetAllDocuments), DateTime.UtcNow);
+            var documents = await _documentService.GetDocumentsByLastUpdate(lastUpdate);
+
+            if (!documents.Any())
+            {
+                _logger.LogInformation("There is no documents to sync in database DocumentController. Timestamp: {Timestamp}.", nameof(GetAllDocuments), DateTime.UtcNow);
+                return Ok(documents);
+            }
+
+            var mappedDocuments = documents.Select(p => _mapper.Map<DocumentSyncResponse>(p));
+            _logger.LogInformation("Products retrieved successfully in {FunctionName} of DocumentController. Timestamp: {Timestamp}.", nameof(GetAllDocuments), DateTime.UtcNow);
+            return Ok(mappedDocuments);
         }
     }
 }

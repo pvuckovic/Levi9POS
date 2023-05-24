@@ -2,6 +2,7 @@
 using Levi9.POS.Domain.Common.IClient;
 using Levi9.POS.Domain.Common.IDocument;
 using Levi9.POS.Domain.Common.IProduct;
+using Levi9.POS.Domain.DTOs.DocumentDTOs;
 using Levi9.POS.Domain.Models;
 using Levi9.POS.Domain.Models.Enum;
 using Levi9.POS.Domain.Services;
@@ -147,6 +148,94 @@ namespace Levi9.POS.UnitTests.Services
 
             // Assert
             Assert.AreEqual(CreateDocumentResult.ProductNotFound, result);
+        }
+        [Test]
+        public async Task GetAllDocuments_ValidRequest_ReturnsOkWithMappedDocuments()
+        {
+            string lastUpdate = "123456789987654321";
+
+            var documents = new List<Document>
+            {
+                new Document
+                {
+                    Id = 1,
+                    GlobalId = Guid.NewGuid(),
+                    ClientId = 1,
+                    DocumentType = "INVOICE",
+                    Client = new Client{ GlobalId = Guid.NewGuid() },
+                    LastUpdate = "333333333333333333",
+                    ProductDocuments = new List<ProductDocument>
+                    {
+                        new ProductDocument
+                        {
+                            DocumentId = 1,
+                            ProductId = 1,
+                            Price = 10.0f,
+                            Currency = "USD",
+                            Quantity = 2,
+                            Product = new Product{GlobalId = Guid.NewGuid(), Name = "Test 1"}
+                        },
+                    }
+                },
+                new Document
+                {
+                    Id = 2,
+                    GlobalId = Guid.NewGuid(),
+                    ClientId = 2,
+                    DocumentType = "INVOICE",
+                    Client = new Client{ GlobalId = Guid.NewGuid() },
+                    LastUpdate = "333333333333333333",
+                    ProductDocuments = new List<ProductDocument>
+                    {
+                        new ProductDocument
+                        {
+                            DocumentId = 2,
+                            ProductId = 2,
+                            Price = 20.0f,
+                            Currency = "USD",
+                            Quantity = 1,
+                            Product = new Product{GlobalId = Guid.NewGuid(), Name = "Test 2"}
+                        }
+                    }
+                }
+            };
+
+            var expectedResponse = documents.Select(d => new DocumentSyncDto
+            {
+                GlobalId = d.GlobalId,
+                ClientId = d.Client.GlobalId,
+                DocumentType = d.DocumentType,
+                Items = d.ProductDocuments.Select(i => new DocumentItemSyncDto
+                {
+                    Name = i.Product.Name,
+                    ProductId = i.Product.GlobalId,
+                    Price = i.Price,
+                    Currency = i.Currency,
+                    Quantity = i.Quantity
+                }).ToList()
+            }).ToList();
+
+
+            _documentRepositoryMock.Setup(x => x.GetDocumentsByLastUpdate(lastUpdate)).ReturnsAsync(documents);
+
+            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _loggerMock.Object, _mapper);
+            var result = await service.GetDocumentsByLastUpdate(lastUpdate);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count, Is.EqualTo(expectedResponse.Count));
+        }
+        [Test]
+        public async Task GetAllProducts_ReturnsOkWithEmptyList_WhenServiceReturnsEmptyList()
+        {
+            var lastUpdate = "123456789987654321";
+            var emptyList = Enumerable.Empty<Document>();
+            _documentRepositoryMock.Setup(x => x.GetDocumentsByLastUpdate(lastUpdate)).ReturnsAsync(emptyList);
+
+            var service = new DocumentService(_documentRepositoryMock.Object, _productRepositoryMock.Object, _clientRepositoryMock.Object, _loggerMock.Object, _mapper);
+            var result = await service.GetDocumentsByLastUpdate(lastUpdate);
+
+            Assert.That(result, Is.Not.Null);
+            CollectionAssert.AreEqual(result, emptyList);
         }
     }
 }

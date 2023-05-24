@@ -40,5 +40,16 @@ namespace Levi9.POS.Domain.Repositories
             _logger.LogInformation("Document created successfully in {FunctionName} of DocumentRepository. Timestamp: {Timestamp}.", nameof(CreateDocument), DateTime.UtcNow);
             return result.Entity;
         }
+
+        public async Task<IEnumerable<Document>> GetDocumentsByLastUpdate(string lastUpdate)
+        {
+            _logger.LogInformation("Entering {FunctionName} in DocumentRepository. Timestamp: {Timestamp}.", nameof(GetDocumentsByLastUpdate), DateTime.UtcNow);
+            return await _data.Documents
+                            .Where(d => string.Compare(d.LastUpdate, lastUpdate) > 0)
+                            .Include(pd => pd.Client)
+                            .Include(d => d.ProductDocuments)
+                            .ThenInclude(p => p.Product)
+                            .ToListAsync();
+        }
     }
 }
