@@ -99,7 +99,7 @@ namespace Levi9.POS.WebApi.Controllers
             var clientResponse = _mapper.Map<ClientResponse>(clientMap);
             return Ok(clientResponse);
         }
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet("sync/{lastUpdate}")]
         public async Task<IActionResult> GetAllClients(string lastUpdate)
         {
@@ -114,12 +114,12 @@ namespace Levi9.POS.WebApi.Controllers
             _logger.LogInformation("Clients retrieved successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(GetAllClients), DateTime.UtcNow);
             return Ok(mappedClients);
         }
+        [AllowAnonymous]
         [HttpPost("sync")]
-        [Authorize]
-        public async Task<IActionResult> SyncClients(ClientsSyncRequest client)
+        public async Task<IActionResult> SyncClients([FromBody]ClientsSyncRequest syncRequest)
         {
             _logger.LogInformation("Entering {FunctionName} in ClientController. Timestamp: {Timestamp}.", nameof(SyncClients), DateTime.UtcNow);
-            var clientsDto = _mapper.Map<ClientsSyncDto>(client);
+            var clientsDto = _mapper.Map<ClientsSyncDto>(syncRequest);
             var result = await _clientService.SyncClients(clientsDto);
             var clientResponse = _mapper.Map<ClientsSyncResponse>(result);
             _logger.LogInformation("Clients synced successfully in {FunctionName} of ClientController. Timestamp: {Timestamp}.", nameof(SyncClients), DateTime.UtcNow);
