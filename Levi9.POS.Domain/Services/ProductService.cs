@@ -98,6 +98,8 @@ namespace Levi9.POS.Domain.Services
                 product.LastUpdate = lastUpdate;
                 if (await _productRepository.DoesProductByGlobalIdExists(product.GlobalId))
                 {
+                    var existingProduct = await _productRepository.GetProductByGlobalIdAsync(product.GlobalId);
+                    product.Id = existingProduct.Id;
                     await _productRepository.UpdateProductAsync(product);
                     _logger.LogInformation("Product updated successfully in {FunctionName} of ProductService. Timestamp: {Timestamp}.", nameof(SyncProducts), DateTime.UtcNow);
                 }

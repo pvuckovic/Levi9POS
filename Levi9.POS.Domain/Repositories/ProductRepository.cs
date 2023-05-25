@@ -90,17 +90,39 @@ namespace Levi9.POS.Domain.Repositories
         public async Task<Product> UpdateProductAsync(Product product)
         {
             _logger.LogInformation("Entering {FunctionName} in ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
-            product.ProductDocuments = await _dataBaseContext.ProductDocuments.Where(pd => pd.ProductId == product.Id).Include(p => p.Document).ToListAsync();
+            var existingProduct = await _dataBaseContext.Products.FirstOrDefaultAsync(c => (c.GlobalId == product.GlobalId));
+            product.ProductDocuments = await _dataBaseContext.ProductDocuments.Where(pd => pd.ProductId == existingProduct.Id).Include(p => p.Document).ToListAsync();
             product.LastUpdate = DateTime.Now.ToFileTimeUtc().ToString();
             foreach (var article in product.ProductDocuments)
             {
                 article.Price = article.Quantity * product.Price;
                 article.Document.LastUpdate = product.LastUpdate;
             }
-            _dataBaseContext.Products.Update(product);
+            if (existingProduct != null)
+            {
+                _logger.LogInformation("Updating product in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
+                return await UpdateProduct(existingProduct, product);
+            }
+            else
+            {
+                _logger.LogInformation("No updated products in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
+                return null;
+            }
+        }
+
+        private async Task<Product> UpdateProduct(Product contextProduct, Product newProduct)
+        {
+            _logger.LogInformation("Entering {FunctionName} in ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProduct), DateTime.UtcNow);
+            contextProduct.GlobalId = newProduct.GlobalId;
+            contextProduct.Name = newProduct.Name;
+            contextProduct.ProductImageUrl = newProduct.ProductImageUrl;
+            contextProduct.Price = newProduct.Price;
+            contextProduct.AvailableQuantity = newProduct.AvailableQuantity;
+            contextProduct.LastUpdate = newProduct.LastUpdate;
+            contextProduct.ProductDocuments = newProduct.ProductDocuments;
             await _dataBaseContext.SaveChangesAsync();
-            _logger.LogInformation("Retrieving confirmation of updated product in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProductAsync), DateTime.UtcNow);
-            return product;
+            _logger.LogInformation("Retrieving lastUpdate in {FunctionName} of ProductRepository. Timestamp: {Timestamp}.", nameof(UpdateProduct), DateTime.UtcNow);
+            return contextProduct;
         }
         public async Task<Product> GetProductByGlobalIdAsync(Guid globalId)
         {

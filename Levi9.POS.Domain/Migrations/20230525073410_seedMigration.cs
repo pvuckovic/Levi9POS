@@ -3,14 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Levi9.POS.Domain.Migrations
 {
-    /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class seedMigration : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -104,42 +100,17 @@ namespace Levi9.POS.Domain.Migrations
             migrationBuilder.InsertData(
                 table: "Clients",
                 columns: new[] { "Id", "Address", "Email", "GlobalId", "LastUpdate", "Name", "Password", "Phone", "Salt" },
-                values: new object[,]
-                {
-                    { 1, "1.maja, Derventa", "marko@gmail.com", new Guid("ad7a834c-826d-4f74-b6d3-13ad034c4ed0"), "133286269502564550", "Marko", "password", "+387 65 132 527", "Salt" },
-                    { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("54d9ddda-36b8-477c-8b35-801605c7eea4"), "133286269502564585", "Aleksa", "password123", "+387 64 862 476", "Salt123" },
-                    { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("3b3614e3-d1cf-4fae-bc2a-46571d68b627"), "133286269502564620", "Milos", "password123", "+387 65 912 127", "Salt123" }
-                });
+                values: new object[] { 1, "1.maja, Derventa", "example@gmail.com", new Guid("10bc28f5-7042-4736-97ad-1cb3dce98b1c"), "133294736504273484", "Marko", "password", "+387 65 132 527", "Salt" });
 
             migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "AvailableQuantity", "GlobalId", "LastUpdate", "Name", "Price", "ProductImageUrl" },
-                values: new object[,]
-                {
-                    { 1, 30, new Guid("b7ac2921-596b-4d4c-95ac-34d027e83365"), "133286269502564085", "Levi 9 T-Shirt", 10f, "baseURL//nekiurl1.png" },
-                    { 2, 10, new Guid("6804e45f-25a9-4e03-a36b-97cb3c94feca"), "133286269502564196", "Novis T-Shirt", 15f, "baseURL//nekiurl2.png" },
-                    { 3, 20, new Guid("dad3e696-5583-47ae-93e2-ff8d7fe43778"), "133286269502564218", "Vega IT T-Shirt", 20f, "baseURL//nekiurl3.png" }
-                });
+                table: "Clients",
+                columns: new[] { "Id", "Address", "Email", "GlobalId", "LastUpdate", "Name", "Password", "Phone", "Salt" },
+                values: new object[] { 2, "Koste Racina 24, Novi Sad", "aleksa@gmail.com", new Guid("aa7ac410-5b2a-497e-8106-266c09f705ae"), "133294736504273546", "Aleksa", "password123", "+387 64 862 476", "Salt123" });
 
             migrationBuilder.InsertData(
-                table: "Documents",
-                columns: new[] { "Id", "ClientId", "CreationDay", "DocumentType", "GlobalId", "LastUpdate" },
-                values: new object[,]
-                {
-                    { 1, 1, "133286269502564671", "INVOICE", new Guid("9be6a0f1-f02c-4e9b-b7f8-08c995ca88e0"), "133286269502564685" },
-                    { 2, 2, "133286269502564699", "INVOICE", new Guid("3e3f168c-fe0b-4259-af18-9c674b89cfce"), "133286269502564711" },
-                    { 3, 3, "133286269502564725", "INVOICE", new Guid("3120a08a-8dba-4d99-b0bc-5ed8db5799b7"), "133286269502564736" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ProductDocuments",
-                columns: new[] { "DocumentId", "ProductId", "Currency", "Price", "Quantity" },
-                values: new object[,]
-                {
-                    { 1, 1, "RSD", 1200f, 20 },
-                    { 2, 2, "EUR", 10f, 10 },
-                    { 3, 3, "USD", 15f, 15 }
-                });
+                table: "Clients",
+                columns: new[] { "Id", "Address", "Email", "GlobalId", "LastUpdate", "Name", "Password", "Phone", "Salt" },
+                values: new object[] { 3, "Strumicka 13, Novi Sad", "milos@gmail.com", new Guid("5f8ac59b-1604-48fe-bcd3-7d8dbf70db08"), "133294736504273555", "Milos", "password123", "+387 65 912 127", "Salt123" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_Email",
@@ -164,7 +135,6 @@ namespace Levi9.POS.Domain.Migrations
                 unique: true);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
