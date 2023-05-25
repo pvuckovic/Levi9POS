@@ -73,6 +73,7 @@ namespace Levi9.POS.WebApi.Controllers
             return Ok("Document created successfully");
         }
         [HttpGet("sync/{lastUpdate}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllDocuments(string lastUpdate)
         {
             _logger.LogInformation("Entering {FunctionName} in DocumentController. Timestamp: {Timestamp}.", nameof(GetAllDocuments), DateTime.UtcNow);

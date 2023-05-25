@@ -12,18 +12,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Levi9.POS.Domain.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20230515122231_Initial")]
-    partial class Initial
+    [Migration("20230525073410_seedMigration")]
+    partial class seedMigration
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "6.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Levi9.POS.Domain.Models.Client", b =>
                 {
@@ -31,7 +30,7 @@ namespace Levi9.POS.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -83,9 +82,9 @@ namespace Levi9.POS.Domain.Migrations
                         {
                             Id = 1,
                             Address = "1.maja, Derventa",
-                            Email = "marko@gmail.com",
-                            GlobalId = new Guid("ad7a834c-826d-4f74-b6d3-13ad034c4ed0"),
-                            LastUpdate = "133286269502564550",
+                            Email = "example@gmail.com",
+                            GlobalId = new Guid("10bc28f5-7042-4736-97ad-1cb3dce98b1c"),
+                            LastUpdate = "133294736504273484",
                             Name = "Marko",
                             Password = "password",
                             Phone = "+387 65 132 527",
@@ -96,8 +95,8 @@ namespace Levi9.POS.Domain.Migrations
                             Id = 2,
                             Address = "Koste Racina 24, Novi Sad",
                             Email = "aleksa@gmail.com",
-                            GlobalId = new Guid("54d9ddda-36b8-477c-8b35-801605c7eea4"),
-                            LastUpdate = "133286269502564585",
+                            GlobalId = new Guid("aa7ac410-5b2a-497e-8106-266c09f705ae"),
+                            LastUpdate = "133294736504273546",
                             Name = "Aleksa",
                             Password = "password123",
                             Phone = "+387 64 862 476",
@@ -108,8 +107,8 @@ namespace Levi9.POS.Domain.Migrations
                             Id = 3,
                             Address = "Strumicka 13, Novi Sad",
                             Email = "milos@gmail.com",
-                            GlobalId = new Guid("3b3614e3-d1cf-4fae-bc2a-46571d68b627"),
-                            LastUpdate = "133286269502564620",
+                            GlobalId = new Guid("5f8ac59b-1604-48fe-bcd3-7d8dbf70db08"),
+                            LastUpdate = "133294736504273555",
                             Name = "Milos",
                             Password = "password123",
                             Phone = "+387 65 912 127",
@@ -123,7 +122,7 @@ namespace Levi9.POS.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -151,35 +150,6 @@ namespace Levi9.POS.Domain.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("Documents");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClientId = 1,
-                            CreationDay = "133286269502564671",
-                            DocumentType = "INVOICE",
-                            GlobalId = new Guid("9be6a0f1-f02c-4e9b-b7f8-08c995ca88e0"),
-                            LastUpdate = "133286269502564685"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClientId = 2,
-                            CreationDay = "133286269502564699",
-                            DocumentType = "INVOICE",
-                            GlobalId = new Guid("3e3f168c-fe0b-4259-af18-9c674b89cfce"),
-                            LastUpdate = "133286269502564711"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClientId = 3,
-                            CreationDay = "133286269502564725",
-                            DocumentType = "INVOICE",
-                            GlobalId = new Guid("3120a08a-8dba-4d99-b0bc-5ed8db5799b7"),
-                            LastUpdate = "133286269502564736"
-                        });
                 });
 
             modelBuilder.Entity("Levi9.POS.Domain.Models.Product", b =>
@@ -188,7 +158,7 @@ namespace Levi9.POS.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AvailableQuantity")
                         .HasColumnType("int");
@@ -219,38 +189,6 @@ namespace Levi9.POS.Domain.Migrations
                         .IsUnique();
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AvailableQuantity = 30,
-                            GlobalId = new Guid("b7ac2921-596b-4d4c-95ac-34d027e83365"),
-                            LastUpdate = "133286269502564085",
-                            Name = "Levi 9 T-Shirt",
-                            Price = 10f,
-                            ProductImageUrl = "baseURL//nekiurl1.png"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AvailableQuantity = 10,
-                            GlobalId = new Guid("6804e45f-25a9-4e03-a36b-97cb3c94feca"),
-                            LastUpdate = "133286269502564196",
-                            Name = "Novis T-Shirt",
-                            Price = 15f,
-                            ProductImageUrl = "baseURL//nekiurl2.png"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AvailableQuantity = 20,
-                            GlobalId = new Guid("dad3e696-5583-47ae-93e2-ff8d7fe43778"),
-                            LastUpdate = "133286269502564218",
-                            Name = "Vega IT T-Shirt",
-                            Price = 20f,
-                            ProductImageUrl = "baseURL//nekiurl3.png"
-                        });
                 });
 
             modelBuilder.Entity("Levi9.POS.Domain.Models.ProductDocument", b =>
@@ -277,32 +215,6 @@ namespace Levi9.POS.Domain.Migrations
                     b.HasIndex("DocumentId");
 
                     b.ToTable("ProductDocuments");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = 1,
-                            DocumentId = 1,
-                            Currency = "RSD",
-                            Price = 1200f,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            ProductId = 2,
-                            DocumentId = 2,
-                            Currency = "EUR",
-                            Price = 10f,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            ProductId = 3,
-                            DocumentId = 3,
-                            Currency = "USD",
-                            Price = 15f,
-                            Quantity = 15
-                        });
                 });
 
             modelBuilder.Entity("Levi9.POS.Domain.Models.Document", b =>
